@@ -18,16 +18,16 @@
 > 
 > — *The Swift Programming Language (Swift 4.0.3)*
 
-Closure 在 Swift 等许多语言中普遍存在。熟悉 Objective-C 的同学一定对 Block 不陌生。两者其实是比较类似的，相较于 Block，Closure 的写法简化了许多，也十分灵活。
+Closure 在 Swift 等许多语言中普遍存在。熟悉 Objective-C 的同学一定对 Block 不陌生。两者其实是比较类似的，相较于 Block，Closure 的写法简化了许多，也十分灵活。
 
-在 Swift 中，`@` 开头通常代表着 Attribute。`@autoclosure` 属于 Type Attribute，意味着其可以对类型（Type）作出一些限定。
+在 Swift 中，`@` 开头通常代表着 Attribute。`@autoclosure` 属于 Type Attribute，意味着其可以对类型（Type）作出一些限定。
 
 ## How
 
 ### 自动（Auto-）
 
-- `@autoclosure` 名称中即明确了这是一种「自动」的 Closure，即可以让表达式（Expression）的类型转换为相应的 Closure 的类型，即在调用原本的 `func` 时，可以省略 Closure 参数的大括号；
-- 其只可以修饰作为参数的 Closure，但该 Closure 必须为无参，返回值可有可无。
+- `@autoclosure` 名称中即明确了这是一种「自动」的 Closure，即可以让表达式（Expression）的类型转换为相应的 Closure 的类型，即在调用原本的 `func` 时，可以省略 Closure 参数的大括号；
+- 其只可以修饰作为参数的 Closure，但该 Closure 必须为无参，返回值可有可无。
 
 ```Swift
 func logIfTrue(_ predicate: () -> Bool) {
@@ -73,7 +73,7 @@ print(array.count)
 // 3
 ```
 
-### `@escaping`
+### `@escaping`
 
 - 当 Closure 的真正执行时机可能要在其所在 `func` 返回（Return）之后时，通常使用 `@esacping`，可以用于处理一些耗时操作的回调。
 - `@autoclosure` 与 `@escaping` 是可以兼容的，顺序可以颠倒。
@@ -89,7 +89,7 @@ func foo(_ bar: @autoclosure @escaping () -> Void) {
 ### 测试用例
 
 - `swift/test/attr/attr_autoclosure.swift`
-- Swift 作为完全开源的一门编程语言，这就意味着可以随时去查看其内部的实现的机制，而根据相应的测试用例，也能将正确和错误的用法一探究竟。
+- Swift 作为完全开源的一门编程语言，这就意味着可以随时去查看其内部的实现的机制，而根据相应的测试用例，也能将正确和错误的用法一探究竟。
 
 #### `inout`
 
@@ -192,11 +192,11 @@ public func ?? <T>(optional: T?, defaultValue: @autoclosure () throws -> T?)
 ```
 
 - `swift/stdlib/public/core/AssertCommon.swift`
-- `COMPILER_INTRINSIC` 代表该 `func` 为编译器的内置函数：
-  - `swift/stdlib/public/core/StringSwitch.swift` 中提到 `The compiler intrinsic which is called to lookup a string in a table of static string case values.`（笔者译：`编译器内置，即在一个静态字符串值表中查找一个字符串。`）；
-  - WikiPedia 中解释：`In computer software, in compiler theory, an intrinsic function (or builtin function) is a function (subroutine) available for use in a given programming language which implementation is handled specially by the compiler. Typically, it may substitute a sequence of automatically generated instructions for the original function call, similar to an inline function. Unlike an inline function, the compiler has an intimate knowledge of an intrinsic function and can thus better integrate and optimize it for a given situation.`（笔者译：`在计算机软件领域，编译器理论中，内置函数（或称内建函数）是在给定编程语言中可以被编译器所专门处理的的函数（子程序）。通常，它可以用一系列自动生成的指令代替原来的函数调用，类似于内联函数。与内联函数不同的是，编译器更加了解内置函数，因此可以更好地整合和优化特定情况。`）。
-- `_assertionFailure()`：断言（Assert）失败，返回类型为 `Never`；
-- 该 `func` 的返回值类型为范型 `T`，主要是为了类型推断，但 `_assertionFailure()` 执行后程序就会报错并停止执行，类似 `fatalError()`，所以并无实际返回值。
+- `COMPILER_INTRINSIC` 代表该 `func` 为编译器的内置函数：
+  - `swift/stdlib/public/core/StringSwitch.swift` 中提到 `The compiler intrinsic which is called to lookup a string in a table of static string case values.`（笔者译：`编译器内置，即在一个静态字符串值表中查找一个字符串。`）；
+  - WikiPedia 中解释：`In computer software, in compiler theory, an intrinsic function (or builtin function) is a function (subroutine) available for use in a given programming language which implementation is handled specially by the compiler. Typically, it may substitute a sequence of automatically generated instructions for the original function call, similar to an inline function. Unlike an inline function, the compiler has an intimate knowledge of an intrinsic function and can thus better integrate and optimize it for a given situation.`（笔者译：`在计算机软件领域，编译器理论中，内置函数（或称内建函数）是在给定编程语言中可以被编译器所专门处理的的函数（子程序）。通常，它可以用一系列自动生成的指令代替原来的函数调用，类似于内联函数。与内联函数不同的是，编译器更加了解内置函数，因此可以更好地整合和优化特定情况。`）。
+- `_assertionFailure()`：断言（Assert）失败，返回类型为 `Never`；
+- 该 `func` 的返回值类型为范型 `T`，主要是为了类型推断，但 `_assertionFailure()` 执行后程序就会报错并停止执行，类似 `fatalError()`，所以并无实际返回值。
 
 ```Swift
 // FIXME(ABI)#21 (Type Checker): rename to something descriptive.
@@ -354,7 +354,7 @@ public func _sanityCheck(
 ## Why
 
 - Q: 总结一下为什么要使用 `@autoclosure` 呢？
-- A: 通过上述官方源代码的用例可以得出：当开发者需要的 `func` 的参数可能需要额外执行一些开销较大的操作的时候，可以使用。
+- A: 通过上述官方源代码的用例可以得出：当开发者需要的 `func` 的参数可能需要额外执行一些开销较大的操作的时候，可以使用。
 - 因为如果开销不大，完全可以直接将参数类型设置为返回值的类型，只是此时无论是否参数后续被用到，得到的过程必然是会被调用的。
 - 而如果不需要执行多个操作，也可以不使用 `@autoclosure`，而是直接传入 `func`，无非是括号的区分。
 
