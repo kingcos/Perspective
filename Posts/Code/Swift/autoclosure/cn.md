@@ -95,7 +95,7 @@ func foo(_ bar: @autoclosure @escaping () -> Void) {
 
 - `autoclosure + inout doesn't make sense.`
 - `inout` 与 `@autoclosure` 没有意义，不兼容。
-- 下面是一个简单的 `inout` Closure 的 Demo，其实并没有什么意义。一般来说也很少会去将一个 `func` 进行 `inout`，更多的其实是用在值类型（Value Type）的变量（Variable）中。
+- 下面是一个简单的 `inout` Closure 的 Demo，其实并没有什么意义。一般来说也很少会去将一个 `func` 进行 `inout`，更多的其实是用在值类型（Value Type）的变量（Variable）中。
 
 ```Swift
 var demo: () -> () = {
