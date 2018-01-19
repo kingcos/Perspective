@@ -75,7 +75,7 @@ print(array.count)
 
 ### `@escaping`
 
-- 当 Closure 的真正执行时机可能要在其所在 `func` 返回（Return）之后时，通常使用 `@esacping`，可以用于处理一些耗时操作的回调。
+- 当 Closure 的真正执行时机可能要在其所在 `func` 返回（Return）之后时，通常使用 `@esacping`，可以用于处理一些耗时操作的回调；
 - `@autoclosure` 与 `@escaping` 是可以兼容的，顺序可以颠倒。
 
 ```Swift
@@ -94,7 +94,7 @@ func foo(_ bar: @autoclosure @escaping () -> Void) {
 #### `inout`
 
 - `autoclosure + inout doesn't make sense.`
-- `inout` 与 `@autoclosure` 没有意义，不兼容。
+- `inout` 与 `@autoclosure` 没有意义，不兼容；
 - 下面是一个简单的 `inout` Closure 的 Demo，其实并没有什么意义。一般来说也很少会去将一个 `func` 进行 `inout`，更多的其实是用在值类型（Value Type）的变量（Variable）中。
 
 ```Swift
@@ -224,7 +224,7 @@ public func dispatchPrecondition(condition: @autoclosure () -> DispatchPredicate
 ```
 
 - `swift/stdlib/public/core/Assert.swift`
-- 断言相关的方法很多的参数选为了 Closure，并标注了 `@autoclosure`，一是可以直接将表达式直接作为参数，而不需要参数，二是当 Release 模式时，Closure 没有必要执行，即可节省开销。
+- 断言相关的方法很多的参数选为了 Closure，并标注了 `@autoclosure`，一是可以直接将表达式直接作为参数，而不需要参数，二是当 Release 模式时，Closure 没有必要执行，即可节省开销。
 
 ```Swift
 @_inlineable // FIXME(sil-serialize-all)
