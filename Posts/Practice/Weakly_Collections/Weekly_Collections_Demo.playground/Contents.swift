@@ -89,6 +89,7 @@ CFGetRetainCount(pencilHB as CFTypeRef)
 
 // NSHashTable - Set
 let weakPencilSet = NSHashTable<Pencil>(options: .weakMemory)
+let weakPencilSet2 = NSHashTable<Pencil>.weakObjects()
 
 weakPencilSet.add(pencil2B)
 weakPencilSet.add(pencilHB)
@@ -96,7 +97,7 @@ weakPencilSet.add(pencilHB)
 // NSMapTable - Dictionary
 class Eraser {
     var type: String
-    
+
     init(_ type: String) {
         self.type = type
     }
@@ -104,6 +105,8 @@ class Eraser {
 
 let weakPencilDict = NSMapTable<Eraser, Pencil>(keyOptions: .strongMemory,
                                                 valueOptions: .weakMemory)
+let weakPencilDict2 = NSMapTable<Eraser, Pencil>.strongToWeakObjects()
+
 let paintingEraser = Eraser("Painting")
 
 weakPencilDict.setObject(pencil2B, forKey: paintingEraser)
