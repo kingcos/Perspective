@@ -6,4 +6,4 @@
 
 ## Practice
 
-- [在 Swift 中对数组元素的弱引用](Posts/Practice/Weakly_Arrays)
+- [在 Swift 中对集合类型元素的弱引用](Posts/Practice/Weakly_Collections)

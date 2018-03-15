@@ -1,9 +1,10 @@
-# Practice - 在 Swift 中对数组元素的弱引用
+# Practice - 在 Swift 中对集合类型元素的弱引用
 
 - Source link: [Weakly Arrays - objc.io](https://www.objc.io/blog/2017/12/28/weak-arrays/)
 
 | Date | Notes | Swift | Xcode |
 |:-----:|:-----:|:-----:|:-----:|
+| 2018-03-15 | 更新部分表述，并将题目扩展至集合类型 | 4.1 | 9.2 |
 | 2018-03-08 | 首次提交 | 4.1 | 9.2 |
 
 ## Preface
@@ -124,26 +125,26 @@ CFGetRetainCount(pencilHB as CFTypeRef)
 > 
 > — [*Apple Documentation*](https://developer.apple.com/documentation/foundation/nspointerarray)
 
-即 `NSPointerArray` 比普通的 Array 多了一层内存语义。可以更方便的控制其中元素的引用关系。但由于仍是 `NS-` 开头，少了 Swift 中着重强调的类型安全，所以更推荐第一种做法。
+即 `NSPointerArray` 比普通的 `NSArray` 多了一层内存语义。可以更方便的控制其中元素的引用关系，但少了 Swift 中着重强调的类型安全，所以更推荐第一种做法。
 
 ### Extension
 
-其实不只是数组，集合类型的数据结构对其中的元素默认均是强引用。所以为了更加方便地自定义内存管理方式，Objective-C/Swift 中均有普通类型的对应。但为了突出 Swift 的类型安全，仍然建议采取第一种的 `WeakBox` 方式。
+其实不只是数组，集合类型的数据结构对其中的元素默认均是强引用。所以为了更加方便地自定义内存管理方式，Objective-C/Swift 中均有普通类型的对应。但在目前的 Swift 中，`NSHashTable` 和 `NSMapTable` 均需要指定类型，更加的类型安全（在网上的过时资料中可以看出，之前的 Swift 也没有规定需指定类型），而在 Objective-C 中只要满足 `id` 类型即可。
 
-- Set: 
+- `NSHashTable`: 
 
 ```Swift
-// NSHashTable - Set
+// NSHashTable - NSSet
 let weakPencilSet = NSHashTable<Pencil>(options: .weakMemory)
 
 weakPencilSet.add(pencil2B)
 weakPencilSet.add(pencilHB)
 ```
 
-- Dictionary:
+- `NSMapTable`:
 
 ```Swift
-// NSMapTable - Dictionary
+// NSMapTable - NSDictionary
 class Eraser {
     var type: String
     
@@ -152,11 +153,18 @@ class Eraser {
     }
 }
 
-let weakPencilDict = NSMapTable<Eraser, Pencil>(keyOptions: .strongMemory,
-                                                valueOptions: .weakMemory)
+let weakPencilDict = NSMapTable<Eraser, Pencil>(keyOptions: .strongMemory, valueOptions: .weakMemory)
 let paintingEraser = Eraser("Painting")
 
 weakPencilDict.setObject(pencil2B, forKey: paintingEraser)
+```
+
+- Objective-C:
+
+```ObjC
+NSHashTable *set = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+[set addObject:@"Test"];
+[set addObject:@12];
 ```
 
 ## Reference
@@ -165,3 +173,4 @@ weakPencilDict.setObject(pencil2B, forKey: paintingEraser)
 - [Automatic Reference Counting - The Swift Programming Language (Swift 4.1)](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/AutomaticReferenceCounting.html)
 - [How do I declare an array of weak references in Swift? - StackOverflow](https://www.google.com.sg/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwi3lrPE4dnZAhWBLo8KHcimAwwQFggqMAA&url=https%3A%2F%2Fstackoverflow.com%2Fquestions%2F24127587%2Fhow-do-i-declare-an-array-of-weak-references-in-swift&usg=AOvVaw0XHV471sUykyviiUH7TX2o)
 - [Swift Arrays Holding Elements With Weak References - Macro Santa](https://marcosantadev.com/swift-arrays-holding-elements-weak-references/)
+- [Cocoa 集合类型：NSPointerArray，NSMapTable，NSHashTable](http://www.saitjr.com/ios/nspointerarray-nsmaptable-nshashtable.html)
