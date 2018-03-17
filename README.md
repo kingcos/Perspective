@@ -4,7 +4,7 @@
 
 ## Focus
 
-- [Swift 中的 @autoclosure](Posts/Code/Swift/autoclosure)
+- [Swift 中的 @autoclosure](Posts/Focus/Swift_Autoclosure)
 
 ## Practice
 
