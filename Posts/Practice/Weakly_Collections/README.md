@@ -1,7 +1,5 @@
 # Practice - 在 Swift 中对集合类型元素的弱引用
 
-- Source link: [Weakly Arrays - objc.io](https://www.objc.io/blog/2017/12/28/weak-arrays/)
-
 | Date | Notes | Swift | Xcode |
 |:-----:|:-----:|:-----:|:-----:|
 | 2018-03-15 | 更新部分表述，并将题目扩展至集合类型 | 4.1 | 9.2 |
@@ -9,7 +7,11 @@
 
 ## Preface
 
-Practice，即实践。该系列将会把网上各处的知识点进行实际的代码总结、扩展。文章将着重 Demo，非核心相关将以链接方式放置在文末。
+> Practice，即实践。该系列将会把网上各处的知识点进行实际的代码总结、扩展。文章将着重 Demo（均开源在 GitHub），非核心相关的内容将以链接形式放置在文末供读者延伸。
+>
+> 本文也会同步在笔者的 GitHub 的 Perspective 仓库：[https://github.com/kingcos/Perspective](https://github.com/kingcos/Perspective)，欢迎 Star 🌟。
+
+- Source link: [Weakly Arrays - objc.io](https://www.objc.io/blog/2017/12/28/weak-arrays/)
 
 为了方便下述 Demo，这里定义一个 Pencil 类，并会使用 `func CFGetRetainCount(_ cf: CoreFoundation.CFTypeRef!) -> CFIndex` 方法，即传入一个 `CFTypeRef` 类型的对象即可获取其引用计数。什么是 `CFTypeRef`？查阅[官方文档](https://developer.apple.com/documentation/corefoundation/cftyperef)即可得知 `typealias CFTypeRef = AnyObject`，所以 `CFTypeRef` 其实就是 `AnyObject`。而 `AnyObject` 又是所有类隐含遵守的协议。
 

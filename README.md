@@ -1,6 +1,8 @@
 # Perspective
 
-## Details
+> Perspective，即透视。
+
+## Focus
 
 - [Swift 中的 @autoclosure](Posts/Code/Swift/autoclosure)
 
