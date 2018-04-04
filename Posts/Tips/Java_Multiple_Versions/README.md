@@ -1,6 +1,8 @@
 # Tips - macOS 管理多个 Java 版本
 
-> Tips，三言两语简述缘由，解决方案，也可有延展，供读者自行查阅。
+> Tips，即提示。笔者将三言两语简述缘由，提供解决方案，也可有延展，供读者自行查阅。
+> 
+> 本文及更新会首发于笔者的 GitHub 的 Perspective 仓库：[https://github.com/kingcos/Perspective](https://github.com/kingcos/Perspective)，欢迎 Star 🌟。
 
 ## Reason
 
@@ -32,6 +34,8 @@ alias java8='export JAVA_HOME=$JAVA_8_HOME'
 - 检查版本：`java -version`
 
 ![Terminal](3.png)
+
+> 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
 
 ## Extension
 

@@ -2,14 +2,14 @@
 
 | Date | Notes | Swift | Xcode |
 |:-----:|:-----:|:-----:|:-----:|
-| 2018-03-15 | 更新部分表述，并将题目扩展至集合类型 | 4.1 | 9.2 |
-| 2018-03-08 | 首次提交 | 4.1 | 9.2 |
+| 2018-03-15 | 更新部分表述，并将题目扩展至集合类型 | 4.0 | 9.2 |
+| 2018-03-08 | 首次提交 | 4.0 | 9.2 |
 
 ## Preface
 
 > Practice，即实践。该系列将会把网上各处的知识点进行实际的代码总结、扩展。文章将着重 Demo（均开源在 GitHub），非核心相关的内容将以链接形式放置在文末供读者参考、延伸。但笔者能力有限，不免出现错误，您可以评论或提出 Issue，还请大家多多批评、指正。
 >
-> 本文也会同步在笔者的 GitHub 的 Perspective 仓库：[https://github.com/kingcos/Perspective](https://github.com/kingcos/Perspective)，欢迎 Star 🌟。
+> 本文及更新会首发于笔者的 GitHub 的 Perspective 仓库：[https://github.com/kingcos/Perspective](https://github.com/kingcos/Perspective)，欢迎 Star 🌟。
 
 - Source link: [Weakly Arrays - objc.io](https://www.objc.io/blog/2017/12/28/weak-arrays/)
 
@@ -168,6 +168,8 @@ NSHashTable *set = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemor
 [set addObject:@"Test"];
 [set addObject:@12];
 ```
+
+> 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
 
 ## Reference
 
