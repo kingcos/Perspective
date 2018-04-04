@@ -29,7 +29,7 @@ alias java8='export JAVA_HOME=$JAVA_8_HOME'
 ![.zsh_rc](2.png)
 
 - 切换版本：`java8` / `java9`
-- 检查版本：`java --version`
+- 检查版本：`java -version`
 
 ![Terminal](3.png)
 
