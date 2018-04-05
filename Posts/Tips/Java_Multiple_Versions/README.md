@@ -1,4 +1,4 @@
-# Tips - macOS 管理多个 Java 版本
+# Tips - macOS 下管理多个 Java 版本
 
 ## Reason
 
