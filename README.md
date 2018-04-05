@@ -13,6 +13,7 @@
 
 ## [Tips](Posts/Tips)
 
-- [macOS 管理多个 Java 版本](Posts/Tips/Java_Multiple_Versions)
+- [macOS 下管理多个 Java 版本](Posts/Tips/Java_Multiple_Versions)
+- [使用 Homebrew 安装 Jenkins](Posts/Tips/Jenkins_by_Homebrew)
 
 > 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
