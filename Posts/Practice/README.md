@@ -2,4 +2,4 @@
 
 > Practice，即实践。该系列将会把网上各处的知识点进行实际的代码总结、扩展。文章将着重 Demo，非核心相关的内容将以链接形式放置在文末供读者参考、延伸。但笔者能力有限，不免出现错误，您可以评论或提出 Issue，还请大家多多批评、指正。
 
-- [在 Swift 中对集合类型元素的弱引用](Practice/Weakly_Collections)
+- [在 Swift 中对集合类型元素的弱引用](./Weakly_Collections)
