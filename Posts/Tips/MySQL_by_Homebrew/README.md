@@ -8,7 +8,7 @@
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
-- 安装 MySQL（注意观察可能有错误信息，比如需要 `brew link`，需要在相应文件夹下开启「写」权限）
+- 安装 MySQL（注意观察可能有错误信息，比如 `brew link` 失败，可能要先在相应文件夹下开启「写」权限后再手动尝试）
 
 ```shell
 brew install mysql
@@ -34,10 +34,10 @@ mysql -uroot
 
 ```sql
 -- CREATE USER 'USERNAME'@'HOST_NAME' IDENTIFIED BY 'PASSWORD';
-CREATE USER 'USERNAME'@'localhost' IDENTIFIED BY 'PASSWORD';
+CREATE USER 'temp_user'@'localhost' IDENTIFIED BY '1234';
 
 -- GRANT PRIVILEGE ON DATABASE_NAME.TABLE_NAME TO 'USERNAME'@'HOST_NAME'
-GRANT ALL ON *.* TO 'pig'@'%';
+GRANT ALL ON *.* TO 'temp_user'@'localhost';
 ```
 
 - 关闭 MySQL 服务
