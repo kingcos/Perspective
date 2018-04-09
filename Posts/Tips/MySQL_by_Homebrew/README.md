@@ -24,7 +24,7 @@ brew services start mysql
 mysql.server start
 ```
 
-- 连接 MySQL
+- 连接 MySQL（默认端口为 3306）
 
 ```shell
 mysql -uroot
