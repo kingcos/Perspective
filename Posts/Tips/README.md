@@ -4,3 +4,4 @@
 
 - [macOS 下管理多个 Java 版本](./Java_Multiple_Versions)
 - [使用 Homebrew 安装 Jenkins](./Jenkins_by_Homebrew)
+- [使用 Homebrew 安装 MySQL](./MySQL_by_Homebrew)
