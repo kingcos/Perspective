@@ -18,12 +18,6 @@
 brew install jenkins
 ```
 
-> Tips
-> 
-> 若出现下图问题，可能是 Jenkins 尚未很好支持 Java 9，请安装 Java 8 以兼容：
-> 
-> ![Jenkins Oops!](1.png)
-
 - 运行 Jenkins
 
 ```shell
@@ -36,6 +30,12 @@ brew install jenkins
 # nohup java -jar /usr/local/Cellar/jenkins/$JENKINS_VERSION_CODE/libexec/jenkins.war >$OUTPUT_FILENAME &
 nohup java -jar /usr/local/Cellar/jenkins/2.114/libexec/jenkins.war >temp.txt &
 ```
+
+> Tips
+> 
+> 若出现下图问题，可能是 Jenkins 尚未很好支持 Java 9，请安装 Java 8 以兼容：
+> 
+> ![Jenkins Oops!](1.png)
 
 ## Extension
 
