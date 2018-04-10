@@ -1,5 +1,9 @@
 # Tips - 使用 Homebrew 安装 MySQL
 
+| Platform | Notes |
+|:-----:|:-----:|
+| macOS 10.13.4 | MySQL 5.7.21 |
+
 ## Solution
 
 - 安装 Homebrew

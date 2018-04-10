@@ -1,10 +1,8 @@
 # Tips - macOS 下管理多个 Java 版本
 
-## Reason
-
-由于 Jenkins 是基于 Java 开发的 CI 工具，自然需要 JRE 才能运行。但目前的 Jenkins 尚未很好的兼容本机的 Java 9。
-
-![Jenkins Oops](1.png)
+| Platform | Notes |
+|:-----:|:-----:|
+| macOS 10.13.4 | Java 8 & 9 |
 
 ## Solution
 

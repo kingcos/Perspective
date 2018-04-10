@@ -1,10 +1,8 @@
 # Tips - 使用 Homebrew 安装 Jenkins
 
-## Reason
-
-Jenkins 官网下载的 pkg 安装显然不够优雅，看似安装简单，卸载却比较麻烦，而且会自动创建 Jenkins 账户。
-
-***Why NOT Homebrew?***
+| Platform | Notes |
+|:-----:|:-----:|
+| macOS 10.13.4 | Jenkins 2.114 & Java 8 |
 
 ## Solution
 
@@ -25,5 +23,9 @@ brew install jenkins
 ```shell
 java -jar /usr/local/Cellar/jenkins/$JENKINS_VERSION_CODE/libexec/jenkins.war --httpPort=8080
 ```
+
+## Extension
+
+- [macOS 下管理多个 Java 版本](../Java_Multiple_Versions)
 
 > 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
