@@ -24,6 +24,7 @@ brew install jenkins
 # 当前窗口启动（关闭窗口则关闭 Jenkins）
 # $JENKINS_VERSION_CODE 为版本号，$PORT 为 Jenkins Web 页面端口号
 # java -jar /usr/local/Cellar/jenkins/$JENKINS_VERSION_CODE/libexec/jenkins.war --httpPort=$PORT
+java -jar /usr/local/Cellar/jenkins/$JENKINS_VERSION_CODE/libexec/jenkins.war --httpPort=8080
 
 # 后台启动（关闭窗口无影响）
 # $OUTPUT_FILENAME 为终端输出内容存放的文件名
