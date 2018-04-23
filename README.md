@@ -22,5 +22,6 @@
 - [macOS 下管理多个 Java 版本](Posts/Tips/Java_Multiple_Versions)
 - [使用 Homebrew 安装 Jenkins](Posts/Tips/Jenkins_by_Homebrew)
 - [使用 Homebrew 安装 MySQL](Posts/Tips/MySQL_by_Homebrew)
+- [Supervisor 安装与基本使用](Posts/Tips/Supervisor)
 
 > 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
