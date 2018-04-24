@@ -1,8 +1,8 @@
-# Tips - macOS 下管理多个 Java 版本
+# Tips - macOS 下管理多版本 JDK
 
 | Platform | Notes |
 |:-----:|:-----:|
-| macOS 10.13.4 | Java 8 & 9 |
+| macOS 10.13.4 | JDK 8 & 9 |
 
 ## Solution
 
