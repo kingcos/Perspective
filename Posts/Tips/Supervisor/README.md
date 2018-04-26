@@ -1,13 +1,16 @@
-# Tips - Supervisor 安装与基本使用
+# Tips - Supervisor 的安装与基本使用
 
 | Platform | Notes |
 |:-----:|:-----:|
 | macOS 10.13.4 | Supervisor 3.3.4 |
-| Cent OS 6.5 | Supervisor 2.1-9 |
 
-## Installation
+## Info
 
-### macOS
+Supervisor 是 Linux/UNIX 下的一个由 Python 编写的进程管理工具，可以很方便的用来启动、重启、关闭进程。
+
+## Solution
+
+### Installation
 
 - 使用 HomeBrew 安装
 
@@ -15,28 +18,11 @@
 brew install supervisor
 ```
 
-### CentOS
+### Usage
 
-- 配置清华大学 epel 镜像
+- 安装完成后，可以在「/etc/supervisord.conf」中看到该默认示例，但并非所有配置项均必须定义，可根据自己需要进行配置。
 
-```shell
-# CentOS 7 请选择相应版本的 rpm 文件
-wget https://mirrors.tuna.tsinghua.edu.cn/epel/epel-release-latest-6.noarch.rpm
-
-rpm -ivh epel-release-latest-6.noarch.rpm
 ```
-
-- 使用 Yum 安装
-
-```shell
-yum install supervisor
-```
-
-## Usage
-
-- 可以在「/etc/supervisord.conf」中，看到该示例。
-
-```shell
 [supervisord]
 http_port=/var/tmp/supervisor.sock ; (default is to run a UNIX domain socket server)
 ;http_port=127.0.0.1:9001  ; (alternately, ip_address:port specifies AF_INET)
@@ -89,6 +75,47 @@ serverurl=unix:///var/tmp/supervisor.sock ; use a unix:// URL  for a unix socket
 ;logfile_backups=10          ; # of logfile backups (default 10)
 ```
 
-> 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
+- 针对不同程序的配置可以单独放在不同的 `.ini` 文件中；
+- `PROGRAM_NAME` 替换为改命名，`COMMAND` 替换为需要保持运行的命令，注意可执行文件的路径，其他配置这里仅做演示，可根据上表自行配置。
+
+```ini
+; PROGRAM_NAME.ini
+[program:PROGRAM_NAME]
+command=COMMAND
+autostart=true
+autorestart=true
+startretries=5
+user=kingcos
+
+[supervisord]
+```
+
+- 在 `.conf` 文件中可以在 `files` 加入上述配置好的 `.ini`；
+- `INI_NAME` 即上述文件名。
+
+```conf
+; superviord.conf
+[include]
+files=INI_NAME.ini
+
+[supervisorctl]
+```
+
+- 运行，注意配置文件路径。
+
+```
+# superviord -c ${SUPERVISOR_CONFIG_PATH}
+superviord -c superviord.conf
+```
 
 ## Test
+
+- 运行后可以使用 `ps -A | grep PROGRAM_NAME` 来获取启动的进程；
+- 之后可以使用 `kill` 命令杀掉相应进程，在 `ps -A` 查看是否重启。
+
+> 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
+
+## Extension
+
+- [Supervisor](https://supervisord.org)
+- macOS 下可使用 Launchctl 配置程序开机自启动（后续可能更新）

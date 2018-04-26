@@ -1,4 +1,4 @@
-# Tips - macOS 下管理多版本 JDK
+# Tips - 简单管理多版本 JDK
 
 | Platform | Notes |
 |:-----:|:-----:|
