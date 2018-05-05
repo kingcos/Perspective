@@ -22,9 +22,9 @@
 > Tips，即提示。笔者将三言两语简述解决方案，延伸部分供读者自行参考、查阅。
 
 - [简单管理多版本 JDK](https://github.com/kingcos/Perspective/issues/7)
-- [使用 Homebrew 安装 Jenkins](https://github.com/kingcos/Perspective/issues/8)
-- [使用 Homebrew 安装 MySQL](https://github.com/kingcos/Perspective/issues/9)
-- [Supervisor 的安装与基本使用](https://github.com/kingcos/Perspective/issues/10)
+- [使用 Homebrew 安装 MySQL](https://github.com/kingcos/Perspective/issues/8)
+- [Supervisor 的安装与基本使用](https://github.com/kingcos/Perspective/issues/9)
+- [使用 Homebrew 安装 Jenkins](https://github.com/kingcos/Perspective/issues/10)
 
 > 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
 
