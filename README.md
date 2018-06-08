@@ -10,6 +10,7 @@
 
 - [Swift 中的 @autoclosure](https://github.com/kingcos/Perspective/issues/5)
 - [Swift 中的 Selector](Posts/Focus/Swift_Selector)
+- [Swift Evolution (4.1)](Posts/Focus/Swift_Evolution)
 
 ## Practice
 
@@ -25,6 +26,12 @@
 - [使用 Homebrew 安装 MySQL](https://github.com/kingcos/Perspective/issues/8)
 - [Supervisor 的安装与基本使用](https://github.com/kingcos/Perspective/issues/9)
 - [使用 Homebrew 安装 Jenkins](https://github.com/kingcos/Perspective/issues/10)
+
+## Translation
+
+> Translation，即翻译。笔者将自己尽心翻译作品发布于此，限于笔者能力，望读者可以为其纠错，笔者将十分感激。
+
+- [起底 SourceKit](https://github.com/kingcos/Perspective/issues/12)
 
 > 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
 
