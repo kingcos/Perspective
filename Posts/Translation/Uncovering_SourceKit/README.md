@@ -86,8 +86,14 @@ $ xcrun swift-ide-test -print-usrs -source-filename=Musician.swift
 
 我们刚刚初探了使用 SourceKit 的可能。这些工具可以做出来处理跨语言代码覆盖，或者提供支持 Swift 和 Obj-C 同时编辑的编辑器。希望本文能启发你利用 SourceKit 开发一些什么，并在这过程中改善我们的工具。
 
+- 注：
+  1. Obj-C 在 Xcode 6（Beta 2）中完全没有使用 SourceKit，仍保留了 Xcode 传统的运行中 Clang 架构。我预计在 Xcode 6 GM 前能有所改变。
+  2. 为了 SourceKit 打印日志，使用以下命令启动 Xcode `export SOURCEKIT_LOGGING=3 && /Applications/Xcode6-Beta2.app/Contents/MacOS/Xcode`。
+  3. 猜测：我预计一旦编程语言拥有访问控制机制，私有 Swift 模块暴露公有接口将使用相似的语法。
+
 ---
 
-1. Obj-C 在 Xcode 6（Beta 2）中完全没有使用 SourceKit，仍保留了 Xcode 传统的运行中 Clang 架构。我预计在 Xcode 6 GM 前能有所改变。
-2. 为了 SourceKit 打印日志，使用以下命令启动 Xcode `export SOURCEKIT_LOGGING=3 && /Applications/Xcode6-Beta2.app/Contents/MacOS/Xcode`。
-3. 猜测：我预计一旦编程语言拥有访问控制机制，私有 Swift 模块暴露公有接口将使用相似的语法。
+## Reference
+
+- [apple/swift/tools/SourceKit/](https://github.com/apple/swift/tree/master/tools/SourceKit)
+- [SourceKit and You - by JP Simard](https://academy.realm.io/posts/appbuilders-jp-simard-sourcekit/)
