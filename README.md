@@ -10,7 +10,7 @@
 
 - [Swift 中的 @autoclosure](https://github.com/kingcos/Perspective/issues/5)
 - [Swift 中的 Selector](Posts/Focus/Swift_Selector)
-- [Swift Evolution (4.1)](Posts/Focus/Swift_Evolution)
+- [Swift Evolution (Latest Swift version: 4.1)](https://github.com/kingcos/Perspective/issues/11)
 
 ## Practice
 
