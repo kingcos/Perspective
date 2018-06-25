@@ -64,9 +64,15 @@
 > Tel: +81-78-303-2050 
 > Fax: +81-78-303-2055
 > 
+
 > Information Networking Institute
+> 
 > Admissions Committee 
+> 
 > Carnegie Mellon University 
+> 
 > 4616 Henry Street Pittsburgh, PA 15213-3890 
-> USA 
+> 
+> USA
+> 
 > 如果使用快递，请带上 INI 主号码：(412) 268-7195
