@@ -59,11 +59,14 @@
   - 申请单学位课程（Kobe MSIT-IS）的人必须将您的 INI 支票付款和补充文件邮寄到以下地址
 
 > Graduate School of Applied Informatics, University of Hyogo
-7-1-28 Minatojima-minami-machi, Chuo-ku 
-> Kobe, 650-0047 Japan 
-> Tel: +81-78-303-2050 
-> Fax: +81-78-303-2055
 > 
+> 7-1-28 Minatojima-minami-machi, Chuo-ku 
+> 
+> Kobe, 650-0047 Japan 
+> 
+> Tel: +81-78-303-2050 
+> 
+> Fax: +81-78-303-2055
 
 > Information Networking Institute
 > 
@@ -75,4 +78,4 @@
 > 
 > USA
 > 
-> 如果使用快递，请带上 INI 主号码：(412) 268-7195
+> *如果使用快递，请带上 INI 主号码：(412) 268-7195*
