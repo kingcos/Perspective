@@ -24,7 +24,7 @@
 
 > Promotion，即提升。
 
-- [CMU IMI Kobe](Posts/Promotion/CMU_IMI_Kobe/2-1_How_To_Apply)
+- [CMU IMI Kobe](Posts/Promotion/CMU_IMI_Kobe)
 
 ## Reading
 
