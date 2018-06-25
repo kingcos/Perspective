@@ -1,4 +1,4 @@
-//: Playground - noun: a place where people can play
+// Swift 4.1 - Xcode 9.3
 // Powered by [Kingcos](https://github.com/kingcos)
 
 import UIKit
