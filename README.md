@@ -1,5 +1,7 @@
 # Perspective
 
+- 「Perspective」repository is my light-weight blog. For English, please visit my Medium: [kingcos@medium](http://medium.com/@kingcos). You can also find me at Twitter: [mmdadao@Twitter](https://twitter.com/mmdadao/).
+
 > Perspective，即透视。
 
 ![Blog-Perspective Mind Map](Blog-Perspective.png)
@@ -47,6 +49,11 @@
 - [180625](/Posts/Thought/180625)
 
 > 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
+
+## Contact
+
+- E-mail: [2821836721v@gmail.com](mailto:2821836721v@gmail.com)
+- Twitter: [mmdadao](https://twitter.com/mmdadao/)
 
 ## LICENSE
 
