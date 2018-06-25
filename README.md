@@ -32,6 +32,7 @@
 - [使用 Homebrew 安装 MySQL](https://github.com/kingcos/Perspective/issues/8)
 - [Supervisor 的安装与基本使用](https://github.com/kingcos/Perspective/issues/9)
 - [使用 Homebrew 安装 Jenkins](https://github.com/kingcos/Perspective/issues/10)
+- [Xcode 10 beta 趟坑](https://github.com/kingcos/Perspective/issues/13)
 
 ## Translation
 
