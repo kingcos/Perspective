@@ -20,6 +20,12 @@
 
 - [在 Swift 中对集合类型元素的弱引用](https://github.com/kingcos/Perspective/issues/6)
 
+## Promotion
+
+> Promotion，即提升。
+
+- [CMU IMI Kobe](Posts/Promotion/CMU_IMI_Kobe)
+
 ## Reading
 
 > Reading，即阅读。
