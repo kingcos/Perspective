@@ -33,7 +33,7 @@
 - [Mac OS X and iOS Internals](/Posts/Studying/MacOSX_and_iOS_Internals)
 - WWDC
   - 2017
-    - [102 - Platform state of the union](/Posts/Studying/WWDC/2017/102)
+    - [102 - Platform State of the Union](/Posts/Studying/WWDC/2017/102)
     - [819 - Designing for a Global Audience](/Posts/Studying/WWDC/2017/819)
     - [822 - App Icon Design](/Posts/Studying/WWDC/2017/822)
     - [823 - Designing Glyphs](/Posts/Studying/WWDC/2017/823)

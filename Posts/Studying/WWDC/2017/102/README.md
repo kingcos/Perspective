@@ -1,4 +1,4 @@
-# Studying WWDC 2017 - 102 Platform state of the union
+# Studying WWDC 2017 - 102 Platform State of the Union
 
 | Date | Notes | Swift | Xcode |
 |:-----:|:-----:|:-----:|:-----:|
