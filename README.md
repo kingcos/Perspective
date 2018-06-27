@@ -2,7 +2,7 @@
 
 - 「Perspective」repository is my light-weight blog. For English, please visit my Medium: [kingcos@medium](http://medium.com/@kingcos). You can also find me at Twitter: [mmdadao@Twitter](https://twitter.com/mmdadao/).
 
-> Perspective，即透视。
+> Perspective，即透视。知道 CSAPP 这本书的同学应该对「Perspective」这个单词不陌生。笔者希望下面的文章能够清晰、透彻地讲清楚所要表述的内容，但个人也深知其不易，如有错误或纰漏，望您积极提出～
 
 ![Blog-Perspective Mind Map](Blog-Perspective.png)
 
@@ -26,11 +26,17 @@
 
 - [CMU IMI Kobe](Posts/Promotion/CMU_IMI_Kobe)
 
-## Reading
+## Studying
 
-> Reading，即阅读。
+> Studying，即钻研。笔者将分享个人的读书或浏览视频等所收获的心得、笔记。
 
-- [Mac OS X and iOS Internals](/Posts/Reading/MacOSX_and_iOS_Internals)
+- [Mac OS X and iOS Internals](/Posts/Studying/MacOSX_and_iOS_Internals)
+- [WWDC](/Posts/Studying/WWDC)
+  - [2017](/Posts/Studying/WWDC/2017)
+    - [102 - Platform state of the union](/Posts/Studying/WWDC/2017/102)
+    - [102 - Platform state of the union](/Posts/Studying/WWDC/2017/102)
+    - [102 - Platform state of the union](/Posts/Studying/WWDC/2017/102)
+    - [102 - Platform state of the union](/Posts/Studying/WWDC/2017/102)
 
 ## Tips
 
@@ -44,7 +50,7 @@
 
 ## Translation
 
-> Translation，即翻译。笔者将自己尽心翻译作品发布于此，限于笔者能力，望读者可以为其纠错，笔者将十分感激。
+> Translation，即翻译。笔者将自己尽心翻译作品发布于此，限于笔者能力，如有错误，望读者可以纠正，笔者将十分感激。
 
 - [起底 SourceKit](https://github.com/kingcos/Perspective/issues/12)
 
