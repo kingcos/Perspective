@@ -6,3 +6,4 @@
 ## Reference
 
 - [Information Networking Institute](https://www.cmu.edu/ini/academics/index.html)
+- [Dual-Degree Program INI](http://www.cmuj.jp)
