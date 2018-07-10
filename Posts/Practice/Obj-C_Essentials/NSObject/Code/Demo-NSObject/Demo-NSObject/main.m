@@ -7,15 +7,23 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <objc/runtime.h>
+#import <malloc/malloc.h>
+
+struct NSObject_IMPL {
+    Class isa;
+};
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         NSObject *object = [[NSObject alloc] init];
-        // Rewrite to C++ code
-        // clang -rewrite-objc main.m -o main.cpp
         
-        // Rewrite to C++ code for specified SDK & architecture
-        // xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main-ios-arm64.cpp
+        // 8 bits
+        NSLog(@"%zd", class_getInstanceSize([NSObject class]));
+        
+        // 16 bits
+        // (__bridge const void *): 将 Obj-C 指针桥接为 C++ 指针
+        NSLog(@"%zd", malloc_size((__bridge const void *)(object)));
     }
     return 0;
 }
