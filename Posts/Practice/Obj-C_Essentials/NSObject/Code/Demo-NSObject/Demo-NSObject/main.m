@@ -22,7 +22,7 @@ int main(int argc, const char * argv[]) {
         NSLog(@"%zd", class_getInstanceSize([NSObject class]));
         
         // 16 bits
-        // (__bridge const void *): 将 Obj-C 指针桥接为 C++ 指针
+        // __bridge: 将 Obj-C 指针桥接为 C++ 指针
         NSLog(@"%zd", malloc_size((__bridge const void *)(object)));
     }
     return 0;
