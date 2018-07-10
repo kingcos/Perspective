@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		84623C0320F28A1E00305B40 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 84623C0220F28A1E00305B40 /* main.m */; };
 		84E1817220F529F30035E373 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E1817120F529F30035E373 /* main.m */; };
+		84E1818020F5334A0035E373 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E1817F20F5334A0035E373 /* main.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,6 +31,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		84E1817B20F5334A0035E373 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +50,8 @@
 		84E1816F20F529F30035E373 /* NSObject-Subclass */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "NSObject-Subclass"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84E1817120F529F30035E373 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		84E1817620F52AD30035E373 /* main-ios-arm64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "main-ios-arm64.cpp"; sourceTree = "<group>"; };
+		84E1817D20F5334A0035E373 /* NSObject-Inheritance */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "NSObject-Inheritance"; sourceTree = BUILT_PRODUCTS_DIR; };
+		84E1817F20F5334A0035E373 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +69,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		84E1817A20F5334A0035E373 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -65,6 +84,7 @@
 			children = (
 				84623C0120F28A1E00305B40 /* Demo-NSObject */,
 				84E1817020F529F30035E373 /* NSObject-Subclass */,
+				84E1817E20F5334A0035E373 /* NSObject-Inheritance */,
 				84623C0020F28A1E00305B40 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -74,6 +94,7 @@
 			children = (
 				84623BFF20F28A1E00305B40 /* Demo-NSObject */,
 				84E1816F20F529F30035E373 /* NSObject-Subclass */,
+				84E1817D20F5334A0035E373 /* NSObject-Inheritance */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -113,6 +134,14 @@
 			path = cpp;
 			sourceTree = "<group>";
 		};
+		84E1817E20F5334A0035E373 /* NSObject-Inheritance */ = {
+			isa = PBXGroup;
+			children = (
+				84E1817F20F5334A0035E373 /* main.m */,
+			);
+			path = "NSObject-Inheritance";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -150,6 +179,23 @@
 			productReference = 84E1816F20F529F30035E373 /* NSObject-Subclass */;
 			productType = "com.apple.product-type.tool";
 		};
+		84E1817C20F5334A0035E373 /* NSObject-Inheritance */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 84E1818120F5334A0035E373 /* Build configuration list for PBXNativeTarget "NSObject-Inheritance" */;
+			buildPhases = (
+				84E1817920F5334A0035E373 /* Sources */,
+				84E1817A20F5334A0035E373 /* Frameworks */,
+				84E1817B20F5334A0035E373 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "NSObject-Inheritance";
+			productName = "NSObject-Inheritance";
+			productReference = 84E1817D20F5334A0035E373 /* NSObject-Inheritance */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -163,6 +209,9 @@
 						CreatedOnToolsVersion = 10.0;
 					};
 					84E1816E20F529F30035E373 = {
+						CreatedOnToolsVersion = 10.0;
+					};
+					84E1817C20F5334A0035E373 = {
 						CreatedOnToolsVersion = 10.0;
 					};
 				};
@@ -181,6 +230,7 @@
 			targets = (
 				84623BFE20F28A1E00305B40 /* Demo-NSObject */,
 				84E1816E20F529F30035E373 /* NSObject-Subclass */,
+				84E1817C20F5334A0035E373 /* NSObject-Inheritance */,
 			);
 		};
 /* End PBXProject section */
@@ -199,6 +249,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				84E1817220F529F30035E373 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		84E1817920F5334A0035E373 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84E1818020F5334A0035E373 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -352,6 +410,26 @@
 			};
 			name = Release;
 		};
+		84E1818220F5334A0035E373 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LEG7CXMPKJ;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		84E1818320F5334A0035E373 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LEG7CXMPKJ;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -378,6 +456,15 @@
 			buildConfigurations = (
 				84E1817320F529F30035E373 /* Debug */,
 				84E1817420F529F30035E373 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		84E1818120F5334A0035E373 /* Build configuration list for PBXNativeTarget "NSObject-Inheritance" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				84E1818220F5334A0035E373 /* Debug */,
+				84E1818320F5334A0035E373 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
