@@ -8,10 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
+@interface Student : NSObject {
+    @public
+    int _no;
+    int _age;
+}
+@end
+
+@implementation Student
+
+@end
+
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        // insert code here...
-        NSLog(@"Hello, World!");
+        Student *student = [[Student alloc] init];
     }
     return 0;
 }

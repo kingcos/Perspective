@@ -39,6 +39,7 @@
 		84623C0A20F28B9200305B40 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		84E1816F20F529F30035E373 /* NSObject-Subclass */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "NSObject-Subclass"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84E1817120F529F30035E373 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		84E1817620F52AD30035E373 /* main-ios-arm64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "main-ios-arm64.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,9 +99,18 @@
 		84E1817020F529F30035E373 /* NSObject-Subclass */ = {
 			isa = PBXGroup;
 			children = (
+				84E1817820F52ADA0035E373 /* cpp */,
 				84E1817120F529F30035E373 /* main.m */,
 			);
 			path = "NSObject-Subclass";
+			sourceTree = "<group>";
+		};
+		84E1817820F52ADA0035E373 /* cpp */ = {
+			isa = PBXGroup;
+			children = (
+				84E1817620F52AD30035E373 /* main-ios-arm64.cpp */,
+			);
+			path = cpp;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
