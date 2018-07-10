@@ -29,7 +29,7 @@ def erase_device(device):
                     print('Already erased ' + device + ' - UDID: ' + udid)
 
 if __name__ == '__main__':
-    iphone_64_devices = ['iPhone 5s', 'iPhone 6',  'iPhone 6 Plus',  'iPhone 6s',  'iPhone 6s Plus',  'iPhone 7',  'iPhone 7 Plus',  'iPhone 8',  'iPhone 8 Plus', 'iPhone X']
+    iphone_64_devices = ['iPhone 5s', 'iPhone 6', 'iPhone 6 Plus', 'iPhone 6s', 'iPhone 6s Plus', 'iPhone 7', 'iPhone 7 Plus', 'iPhone 8', 'iPhone 8 Plus', 'iPhone X']
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--device', help='Specify the simulator device, eg. iPhone X', choices=iphone_64_devices)
     args = parser.parse_args()
