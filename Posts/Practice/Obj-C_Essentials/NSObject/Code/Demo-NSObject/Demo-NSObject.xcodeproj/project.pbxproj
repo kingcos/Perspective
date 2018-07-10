@@ -8,10 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		84623C0320F28A1E00305B40 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 84623C0220F28A1E00305B40 /* main.m */; };
+		84E1817220F529F30035E373 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E1817120F529F30035E373 /* main.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		84623BFD20F28A1E00305B40 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		84E1816D20F529F30035E373 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -27,10 +37,19 @@
 		84623C0220F28A1E00305B40 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		84623C0920F28B9200305B40 /* main-ios-arm64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "main-ios-arm64.cpp"; sourceTree = "<group>"; };
 		84623C0A20F28B9200305B40 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		84E1816F20F529F30035E373 /* NSObject-Subclass */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "NSObject-Subclass"; sourceTree = BUILT_PRODUCTS_DIR; };
+		84E1817120F529F30035E373 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		84623BFC20F28A1E00305B40 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		84E1816C20F529F30035E373 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -44,6 +63,7 @@
 			isa = PBXGroup;
 			children = (
 				84623C0120F28A1E00305B40 /* Demo-NSObject */,
+				84E1817020F529F30035E373 /* NSObject-Subclass */,
 				84623C0020F28A1E00305B40 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -52,6 +72,7 @@
 			isa = PBXGroup;
 			children = (
 				84623BFF20F28A1E00305B40 /* Demo-NSObject */,
+				84E1816F20F529F30035E373 /* NSObject-Subclass */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -74,6 +95,14 @@
 			path = cpp;
 			sourceTree = "<group>";
 		};
+		84E1817020F529F30035E373 /* NSObject-Subclass */ = {
+			isa = PBXGroup;
+			children = (
+				84E1817120F529F30035E373 /* main.m */,
+			);
+			path = "NSObject-Subclass";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -94,6 +123,23 @@
 			productReference = 84623BFF20F28A1E00305B40 /* Demo-NSObject */;
 			productType = "com.apple.product-type.tool";
 		};
+		84E1816E20F529F30035E373 /* NSObject-Subclass */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 84E1817520F529F30035E373 /* Build configuration list for PBXNativeTarget "NSObject-Subclass" */;
+			buildPhases = (
+				84E1816B20F529F30035E373 /* Sources */,
+				84E1816C20F529F30035E373 /* Frameworks */,
+				84E1816D20F529F30035E373 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "NSObject-Subclass";
+			productName = "NSObject-Subclass";
+			productReference = 84E1816F20F529F30035E373 /* NSObject-Subclass */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -104,6 +150,9 @@
 				ORGANIZATIONNAME = kingcos;
 				TargetAttributes = {
 					84623BFE20F28A1E00305B40 = {
+						CreatedOnToolsVersion = 10.0;
+					};
+					84E1816E20F529F30035E373 = {
 						CreatedOnToolsVersion = 10.0;
 					};
 				};
@@ -121,6 +170,7 @@
 			projectRoot = "";
 			targets = (
 				84623BFE20F28A1E00305B40 /* Demo-NSObject */,
+				84E1816E20F529F30035E373 /* NSObject-Subclass */,
 			);
 		};
 /* End PBXProject section */
@@ -131,6 +181,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				84623C0320F28A1E00305B40 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		84E1816B20F529F30035E373 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84E1817220F529F30035E373 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,6 +322,26 @@
 			};
 			name = Release;
 		};
+		84E1817320F529F30035E373 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LEG7CXMPKJ;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		84E1817420F529F30035E373 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LEG7CXMPKJ;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -281,6 +359,15 @@
 			buildConfigurations = (
 				84623C0720F28A1E00305B40 /* Debug */,
 				84623C0820F28A1E00305B40 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		84E1817520F529F30035E373 /* Build configuration list for PBXNativeTarget "NSObject-Subclass" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				84E1817320F529F30035E373 /* Debug */,
+				84E1817420F529F30035E373 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
