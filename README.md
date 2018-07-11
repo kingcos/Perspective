@@ -1,6 +1,8 @@
 # Perspective
 
-> Perspective，即透视。
+- 「Perspective」repository is my light-weight blog. For English, please visit my Medium: [kingcos@medium](http://medium.com/@kingcos). You can also find me at Twitter: [mmdadao@Twitter](https://twitter.com/mmdadao/).
+
+> Perspective，即透视。知道 CSAPP 这本书的同学应该对「Perspective」这个单词不陌生。笔者希望下面的文章能够清晰、透彻地讲清楚所要表述的内容，但个人也深知其不易，如有错误或纰漏，望您积极提出～
 
 ![Blog-Perspective Mind Map](Blog-Perspective.png)
 
@@ -18,11 +20,23 @@
 
 - [在 Swift 中对集合类型元素的弱引用](https://github.com/kingcos/Perspective/issues/6)
 
-## Reading
+## Promotion
 
-> Reading，即阅读。
+> Promotion，即提升。
 
-- [Mac OS X and iOS Internals](/Posts/Reading/MacOSX_and_iOS_Internals)
+- [CMU INI Kobe](Posts/Promotion/CMU_INI_Kobe)
+
+## Studying
+
+> Studying，即钻研。笔者将分享个人的读书或浏览视频等所收获的心得、笔记。
+
+- [Mac OS X and iOS Internals](/Posts/Studying/MacOSX_and_iOS_Internals)
+- WWDC
+  - 2017
+    - [102 - Platform State of the Union](/Posts/Studying/WWDC/2017/102)
+    - [819 - Designing for a Global Audience](/Posts/Studying/WWDC/2017/819)
+    - [822 - App Icon Design](/Posts/Studying/WWDC/2017/822)
+    - [823 - Designing Glyphs](/Posts/Studying/WWDC/2017/823)
 
 ## Tips
 
@@ -33,10 +47,11 @@
 - [Supervisor 的安装与基本使用](https://github.com/kingcos/Perspective/issues/9)
 - [使用 Homebrew 安装 Jenkins](https://github.com/kingcos/Perspective/issues/10)
 - [Xcode 10 beta 趟坑](https://github.com/kingcos/Perspective/issues/13)
+- [iOS 开发问题解决集锦](https://github.com/kingcos/Perspective/issues/16)
 
 ## Translation
 
-> Translation，即翻译。笔者将自己尽心翻译作品发布于此，限于笔者能力，望读者可以为其纠错，笔者将十分感激。
+> Translation，即翻译。笔者将自己尽心翻译作品发布于此，限于笔者能力，如有错误，望读者可以纠正，笔者将十分感激。
 
 - [起底 SourceKit](https://github.com/kingcos/Perspective/issues/12)
 
@@ -47,6 +62,11 @@
 - [180625](/Posts/Thought/180625)
 
 > 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
+
+## Contact
+
+- E-mail: [2821836721v@gmail.com](mailto:2821836721v@gmail.com)
+- Twitter: [mmdadao](https://twitter.com/mmdadao/)
 
 ## LICENSE
 
