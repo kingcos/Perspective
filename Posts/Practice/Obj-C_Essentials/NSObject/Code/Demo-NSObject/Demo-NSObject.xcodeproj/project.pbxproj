@@ -52,6 +52,7 @@
 		84E1817620F52AD30035E373 /* main-ios-arm64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "main-ios-arm64.cpp"; sourceTree = "<group>"; };
 		84E1817D20F5334A0035E373 /* NSObject-Inheritance */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "NSObject-Inheritance"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84E1817F20F5334A0035E373 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		84E72F6720F64EB4000347BC /* main-ios-arm64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "main-ios-arm64.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,9 +138,18 @@
 		84E1817E20F5334A0035E373 /* NSObject-Inheritance */ = {
 			isa = PBXGroup;
 			children = (
+				84E72F6920F64EBB000347BC /* cpp */,
 				84E1817F20F5334A0035E373 /* main.m */,
 			);
 			path = "NSObject-Inheritance";
+			sourceTree = "<group>";
+		};
+		84E72F6920F64EBB000347BC /* cpp */ = {
+			isa = PBXGroup;
+			children = (
+				84E72F6720F64EB4000347BC /* main-ios-arm64.cpp */,
+			);
+			path = cpp;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
