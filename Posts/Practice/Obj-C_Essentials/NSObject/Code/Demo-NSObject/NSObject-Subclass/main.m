@@ -25,9 +25,11 @@ struct NSObject_IMPL {
     Class isa;
 };
 
+// Total: 16 bytes
 struct Student_IMPL {
-    // NSObject_IVARS == Class isa;
+    // NSObject_IVARS == Class isa => 8 bytes
     struct NSObject_IMPL NSObject_IVARS;
+    // int (64-bit system) => 4 bytes
     int _no;
     int _age;
 };
