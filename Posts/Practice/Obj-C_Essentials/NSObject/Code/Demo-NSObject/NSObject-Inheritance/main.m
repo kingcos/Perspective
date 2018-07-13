@@ -49,23 +49,23 @@ int main(int argc, const char * argv[]) {
         Person *person = [[Person alloc] init];
         Student *student = [[Student alloc] init];
         
-        // 16 bits（内存对齐后的大小）
+        // 16 bytes（内存对齐后的大小）
         NSLog(@"%zd", class_getInstanceSize([Person class]));
-        // 16 bits
+        // 16 bytes
         NSLog(@"%zd", malloc_size((__bridge const void *)(person)));
         
-        // 16 bits
+        // 16 bytes
         NSLog(@"%zd", class_getInstanceSize([Student class]));
-        // 16 bits
+        // 16 bytes
         NSLog(@"%zd", malloc_size((__bridge const void *)(student)));
         
         Man *man = [[Man alloc] init];
         // getter & setter 等方法并不存在对象中
         [man setHeight:185];
         
-        // 16 bits
+        // 16 bytes
         NSLog(@"%zd", class_getInstanceSize([Man class]));
-        // 16 bits
+        // 16 bytes
         NSLog(@"%zd", malloc_size((__bridge const void *)(man)));
     }
     return 0;

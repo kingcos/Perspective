@@ -106,8 +106,8 @@ struct __AtAutoreleasePool {
 };
 
 #define __OFFSETOFIVAR__(TYPE, MEMBER) ((long long) &((TYPE *)0)->MEMBER)
-static __NSConstantStringImpl __NSConstantStringImpl__var_folders_z2_b_cqpv0x6y5ft_nwgwmmr0lw0000gp_T_main_d16572_mi_0 __attribute__ ((section ("__DATA, __cfstring"))) = {__CFConstantStringClassReference,0x000007c8,"%zd",3};
-static __NSConstantStringImpl __NSConstantStringImpl__var_folders_z2_b_cqpv0x6y5ft_nwgwmmr0lw0000gp_T_main_d16572_mi_1 __attribute__ ((section ("__DATA, __cfstring"))) = {__CFConstantStringClassReference,0x000007c8,"%zd",3};
+static __NSConstantStringImpl __NSConstantStringImpl__var_folders_z2_b_cqpv0x6y5ft_nwgwmmr0lw0000gp_T_main_b4f75b_mi_0 __attribute__ ((section ("__DATA, __cfstring"))) = {__CFConstantStringClassReference,0x000007c8,"%zd",3};
+static __NSConstantStringImpl __NSConstantStringImpl__var_folders_z2_b_cqpv0x6y5ft_nwgwmmr0lw0000gp_T_main_b4f75b_mi_1 __attribute__ ((section ("__DATA, __cfstring"))) = {__CFConstantStringClassReference,0x000007c8,"%zd",3};
 
 
 
@@ -99092,11 +99092,11 @@ int main(int argc, const char * argv[]) {
         NSObject *object = ((NSObject *(*)(id, SEL))(void *)objc_msgSend)((id)((NSObject *(*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass("NSObject"), sel_registerName("alloc")), sel_registerName("init"));
 
 
-        NSLog((NSString *)&__NSConstantStringImpl__var_folders_z2_b_cqpv0x6y5ft_nwgwmmr0lw0000gp_T_main_d16572_mi_0, class_getInstanceSize(((Class (*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass("NSObject"), sel_registerName("class"))));
+        NSLog((NSString *)&__NSConstantStringImpl__var_folders_z2_b_cqpv0x6y5ft_nwgwmmr0lw0000gp_T_main_b4f75b_mi_0, class_getInstanceSize(((Class (*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass("NSObject"), sel_registerName("class"))));
 
 
 
-        NSLog((NSString *)&__NSConstantStringImpl__var_folders_z2_b_cqpv0x6y5ft_nwgwmmr0lw0000gp_T_main_d16572_mi_1, malloc_size((__bridge const void *)(object)));
+        NSLog((NSString *)&__NSConstantStringImpl__var_folders_z2_b_cqpv0x6y5ft_nwgwmmr0lw0000gp_T_main_b4f75b_mi_1, malloc_size((__bridge const void *)(object)));
     }
     return 0;
 }
