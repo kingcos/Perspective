@@ -106,6 +106,8 @@ struct __AtAutoreleasePool {
 };
 
 #define __OFFSETOFIVAR__(TYPE, MEMBER) ((long long) &((TYPE *)0)->MEMBER)
+static __NSConstantStringImpl __NSConstantStringImpl__var_folders_z2_b_cqpv0x6y5ft_nwgwmmr0lw0000gp_T_main_d16572_mi_0 __attribute__ ((section ("__DATA, __cfstring"))) = {__CFConstantStringClassReference,0x000007c8,"%zd",3};
+static __NSConstantStringImpl __NSConstantStringImpl__var_folders_z2_b_cqpv0x6y5ft_nwgwmmr0lw0000gp_T_main_d16572_mi_1 __attribute__ ((section ("__DATA, __cfstring"))) = {__CFConstantStringClassReference,0x000007c8,"%zd",3};
 
 
 
@@ -13568,7 +13570,7 @@ struct NSBundle_IMPL {
 	Class _principalClass;
 	id _initialPath;
 	id _resolvedPath;
-	id _reserved3;
+	Class _firstClass;
 	id _lock;
 };
 
@@ -37492,8 +37494,7 @@ OSStatus CMSEncoderGetHasDetachedContent(
 OSStatus CMSEncoderSetEncapsulatedContentType(
  CMSEncoderRef cmsEncoder,
  const CSSM_OID *eContentType)
-
-    __attribute__((availability(macosx,introduced=10.5)));
+    __attribute__((availability(macos,introduced=10.5,deprecated=10.7,replacement="CMSEncoderSetEncapsulatedContentTypeOID"))) __attribute__((availability(ios,unavailable)));
 OSStatus CMSEncoderSetEncapsulatedContentTypeOID(
  CMSEncoderRef cmsEncoder,
  CFTypeRef eContentTypeOID)
@@ -37615,8 +37616,7 @@ OSStatus CMSEncode(
  const void * content,
  size_t contentLen,
  CFDataRef * _Nonnull __attribute__((cf_returns_retained)) encodedContentOut)
-
-    __attribute__((availability(macosx,introduced=10.5)));
+    __attribute__((availability(macos,introduced=10.5,deprecated=10.7,replacement="CMSEncodeContent"))) __attribute__((availability(ios,unavailable)));
 OSStatus CMSEncodeContent(
  CFTypeRef _Nullable signers,
  CFTypeRef _Nullable recipients,
@@ -64339,9 +64339,9 @@ enum WSTypeID {
 };
 typedef enum WSTypeID WSTypeID;
 
-typedef void *(*WSClientContextRetainCallBackProcPtr)(void * info) __attribute__((availability(macosx,introduced=10.2,deprecated=10.8)));
-typedef void (*WSClientContextReleaseCallBackProcPtr)(void * info) __attribute__((availability(macosx,introduced=10.2,deprecated=10.8)));
-typedef CFStringRef (*WSClientContextCopyDescriptionCallBackProcPtr)(void * info) __attribute__((availability(macosx,introduced=10.2,deprecated=10.8)));
+typedef void *(*WSClientContextRetainCallBackProcPtr)(void * info) __attribute__((availability(macosx,introduced=10.2)));
+typedef void (*WSClientContextReleaseCallBackProcPtr)(void * info) __attribute__((availability(macosx,introduced=10.2)));
+typedef CFStringRef (*WSClientContextCopyDescriptionCallBackProcPtr)(void * info) __attribute__((availability(macosx,introduced=10.2)));
 struct WSClientContext {
 
 
@@ -64369,7 +64369,7 @@ struct WSClientContext {
 
   WSClientContextCopyDescriptionCallBackProcPtr copyDescription;
 };
-typedef struct WSClientContext WSClientContext __attribute__((availability(macosx,introduced=10.2,deprecated=10.8)));
+typedef struct WSClientContext WSClientContext __attribute__((availability(macosx,introduced=10.2)));
 extern CFStringRef kWSXMLRPCProtocol __attribute__((availability(macosx,introduced=10.2,deprecated=10.8)));
 extern CFStringRef kWSSOAP1999Protocol __attribute__((availability(macosx,introduced=10.2,deprecated=10.8)));
 extern CFStringRef kWSSOAP2001Protocol __attribute__((availability(macosx,introduced=10.2,deprecated=10.8)));
@@ -64570,14 +64570,14 @@ WSProtocolHandlerSetProperty(
   WSProtocolHandlerRef ref,
   CFStringRef propertyName,
   CFTypeRef propertyValue) __attribute__((availability(macosx,introduced=10.3,deprecated=10.8)));
-typedef CFStringRef(*WSProtocolHandlerSerializationProcPtr)(WSProtocolHandlerRef protocol, CFTypeRef obj, void *info)__attribute__((availability(macosx,introduced=10.3,deprecated=10.8)));
+typedef CFStringRef(*WSProtocolHandlerSerializationProcPtr)(WSProtocolHandlerRef protocol, CFTypeRef obj, void *info)__attribute__((availability(macosx,introduced=10.3)));
 extern void
 WSProtocolHandlerSetSerializationOverride(
   WSProtocolHandlerRef protocol,
   CFTypeID objType,
   WSProtocolHandlerSerializationProcPtr serializationProc,
   WSClientContext * context) __attribute__((availability(macosx,introduced=10.3,deprecated=10.8)));
-typedef CFTypeRef(*WSProtocolHandlerDeserializationProcPtr)(WSProtocolHandlerRef protocol, CFXMLTreeRef msgRoot, CFXMLTreeRef deserializeRoot, void *info)__attribute__((availability(macosx,introduced=10.3,deprecated=10.8)));
+typedef CFTypeRef(*WSProtocolHandlerDeserializationProcPtr)(WSProtocolHandlerRef protocol, CFXMLTreeRef msgRoot, CFXMLTreeRef deserializeRoot, void *info)__attribute__((availability(macosx,introduced=10.3)));
 extern void
 WSProtocolHandlerSetDeserializationOverride(
   WSProtocolHandlerRef protocol,
@@ -80243,6 +80243,9 @@ extern "C" CGImageRef _Nullable CGImageCreate(size_t width, size_t height,
 
 
 
+
+
+
 extern "C" CGImageRef _Nullable CGImageMaskCreate(size_t width, size_t height,
     size_t bitsPerComponent, size_t bitsPerPixel, size_t bytesPerRow,
     CGDataProviderRef _Nullable provider, const CGFloat * _Nullable decode,
@@ -91910,6 +91913,11 @@ extern "C" CGImageSourceStatus CGImageSourceGetStatus(CGImageSourceRef _Nonnull 
 
 
 extern "C" CGImageSourceStatus CGImageSourceGetStatusAtIndex(CGImageSourceRef _Nonnull isrc, size_t index) __attribute__((availability(macos,introduced=10.4))) __attribute__((availability(ios,introduced=4.0)));
+
+
+
+
+extern "C" size_t CGImageSourceGetPrimaryImageIndex(CGImageSourceRef _Nonnull isrc) __attribute__((availability(macos,introduced=10.14))) __attribute__((availability(ios,introduced=12.0)));
 extern "C" CFDictionaryRef _Nullable CGImageSourceCopyAuxiliaryDataInfoAtIndex(CGImageSourceRef _Nonnull isrc, size_t index, CFStringRef _Nonnull auxiliaryImageDataType ) __attribute__((availability(macos,introduced=10.13))) __attribute__((availability(ios,introduced=11.0)));
 
 typedef struct __attribute__((objc_bridge(id))) CGImageDestination * CGImageDestinationRef;
@@ -92106,6 +92114,9 @@ extern "C" const CFStringRef kCGImagePropertyColorModel __attribute__((availabil
 
 extern "C" const CFStringRef kCGImagePropertyProfileName __attribute__((availability(macos,introduced=10.4))) __attribute__((availability(ios,introduced=4.0)));
 
+
+
+extern "C" const CFStringRef kCGImagePropertyPrimaryImage __attribute__((availability(macos,introduced=10.13))) __attribute__((availability(ios,introduced=11.0)));
 
 
 
@@ -98240,11 +98251,852 @@ typedef void (*NSUserAutomatorTaskCompletionHandler)(id _Nullable result, NSErro
 
 
 
+typedef struct objc_method *Method;
+
+
+typedef struct objc_ivar *Ivar;
+
+
+typedef struct objc_category *Category;
+
+
+typedef struct objc_property *objc_property_t;
+
+struct objc_class {
+    Class _Nonnull isa __attribute__((deprecated));
+} __attribute__((unavailable));
+
+
+
+
+
+// @class Protocol;
+#ifndef _REWRITER_typedef_Protocol
+#define _REWRITER_typedef_Protocol
+typedef struct objc_object Protocol;
+typedef struct {} _objc_exc_Protocol;
+#endif
+
+
+
+
+
+
+struct objc_method_description {
+    SEL _Nullable name;
+    char * _Nullable types;
+};
+
+
+typedef struct {
+    const char * _Nonnull name;
+    const char * _Nonnull value;
+} objc_property_attribute_t;
+extern "C" __attribute__((visibility("default"))) id _Nullable object_copy(id _Nullable obj, size_t size)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)))
+                        ;
+extern "C" __attribute__((visibility("default"))) id _Nullable
+object_dispose(id _Nullable obj)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)))
+                        ;
+extern "C" __attribute__((visibility("default"))) Class _Nullable
+object_getClass(id _Nullable obj)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Class _Nullable
+object_setClass(id _Nullable obj, Class _Nonnull cls)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) BOOL
+object_isClass(id _Nullable obj)
+    __attribute__((availability(macosx,introduced=10.10))) __attribute__((availability(ios,introduced=8.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) id _Nullable
+object_getIvar(id _Nullable obj, Ivar _Nonnull ivar)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) void
+object_setIvar(id _Nullable obj, Ivar _Nonnull ivar, id _Nullable value)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) void
+object_setIvarWithStrongDefault(id _Nullable obj, Ivar _Nonnull ivar,
+                                id _Nullable value)
+    __attribute__((availability(macosx,introduced=10.12))) __attribute__((availability(ios,introduced=10.0))) __attribute__((availability(tvos,introduced=10.0))) __attribute__((availability(watchos,introduced=3.0)));
+extern "C" __attribute__((visibility("default"))) Ivar _Nullable
+object_setInstanceVariable(id _Nullable obj, const char * _Nonnull name,
+                           void * _Nullable value)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)))
+                        ;
+extern "C" __attribute__((visibility("default"))) Ivar _Nullable
+object_setInstanceVariableWithStrongDefault(id _Nullable obj,
+                                            const char * _Nonnull name,
+                                            void * _Nullable value)
+    __attribute__((availability(macosx,introduced=10.12))) __attribute__((availability(ios,introduced=10.0))) __attribute__((availability(tvos,introduced=10.0))) __attribute__((availability(watchos,introduced=3.0)))
+                        ;
+extern "C" __attribute__((visibility("default"))) Ivar _Nullable
+object_getInstanceVariable(id _Nullable obj, const char * _Nonnull name,
+                           void * _Nullable * _Nullable outValue)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)))
+                        ;
+extern "C" __attribute__((visibility("default"))) Class _Nullable
+objc_getClass(const char * _Nonnull name)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Class _Nullable
+objc_getMetaClass(const char * _Nonnull name)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Class _Nullable
+objc_lookUpClass(const char * _Nonnull name)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Class _Nonnull
+objc_getRequiredClass(const char * _Nonnull name)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) int
+objc_getClassList(Class _Nonnull * _Nullable buffer, int bufferCount)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Class _Nonnull * _Nullable
+objc_copyClassList(unsigned int * _Nullable outCount)
+    __attribute__((availability(macosx,introduced=10.7))) __attribute__((availability(ios,introduced=3.1))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) const char * _Nonnull
+class_getName(Class _Nullable cls)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) BOOL
+class_isMetaClass(Class _Nullable cls)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Class _Nullable
+class_getSuperclass(Class _Nullable cls)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Class _Nonnull
+class_setSuperclass(Class _Nonnull cls, Class _Nonnull newSuper)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(macosx,deprecated=10.5,message="not recommended")))
+    __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(ios,deprecated=2.0,message="not recommended")))
+    __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(tvos,deprecated=9.0,message="not recommended")))
+    __attribute__((availability(watchos,introduced=1.0))) __attribute__((availability(watchos,deprecated=1.0,message="not recommended")))
+    ;
+extern "C" __attribute__((visibility("default"))) int
+class_getVersion(Class _Nullable cls)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) void
+class_setVersion(Class _Nullable cls, int version)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) size_t
+class_getInstanceSize(Class _Nullable cls)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Ivar _Nullable
+class_getInstanceVariable(Class _Nullable cls, const char * _Nonnull name)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Ivar _Nullable
+class_getClassVariable(Class _Nullable cls, const char * _Nonnull name)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Ivar _Nonnull * _Nullable
+class_copyIvarList(Class _Nullable cls, unsigned int * _Nullable outCount)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Method _Nullable
+class_getInstanceMethod(Class _Nullable cls, SEL _Nonnull name)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Method _Nullable
+class_getClassMethod(Class _Nullable cls, SEL _Nonnull name)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) IMP _Nullable
+class_getMethodImplementation(Class _Nullable cls, SEL _Nonnull name)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) IMP _Nullable
+class_getMethodImplementation_stret(Class _Nullable cls, SEL _Nonnull name)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)))
+                          ;
+extern "C" __attribute__((visibility("default"))) BOOL
+class_respondsToSelector(Class _Nullable cls, SEL _Nonnull sel)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Method _Nonnull * _Nullable
+class_copyMethodList(Class _Nullable cls, unsigned int * _Nullable outCount)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) BOOL
+class_conformsToProtocol(Class _Nullable cls, Protocol * _Nullable protocol)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Protocol * __attribute__((objc_ownership(none))) _Nonnull * _Nullable
+class_copyProtocolList(Class _Nullable cls, unsigned int * _Nullable outCount)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) objc_property_t _Nullable
+class_getProperty(Class _Nullable cls, const char * _Nonnull name)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) objc_property_t _Nonnull * _Nullable
+class_copyPropertyList(Class _Nullable cls, unsigned int * _Nullable outCount)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) const uint8_t * _Nullable
+class_getIvarLayout(Class _Nullable cls)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) const uint8_t * _Nullable
+class_getWeakIvarLayout(Class _Nullable cls)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) BOOL
+class_addMethod(Class _Nullable cls, SEL _Nonnull name, IMP _Nonnull imp,
+                const char * _Nullable types)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) IMP _Nullable
+class_replaceMethod(Class _Nullable cls, SEL _Nonnull name, IMP _Nonnull imp,
+                    const char * _Nullable types)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) BOOL
+class_addIvar(Class _Nullable cls, const char * _Nonnull name, size_t size,
+              uint8_t alignment, const char * _Nullable types)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) BOOL
+class_addProtocol(Class _Nullable cls, Protocol * _Nonnull protocol)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) BOOL
+class_addProperty(Class _Nullable cls, const char * _Nonnull name,
+                  const objc_property_attribute_t * _Nullable attributes,
+                  unsigned int attributeCount)
+    __attribute__((availability(macosx,introduced=10.7))) __attribute__((availability(ios,introduced=4.3))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) void
+class_replaceProperty(Class _Nullable cls, const char * _Nonnull name,
+                      const objc_property_attribute_t * _Nullable attributes,
+                      unsigned int attributeCount)
+    __attribute__((availability(macosx,introduced=10.7))) __attribute__((availability(ios,introduced=4.3))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+
+
+
+
+
+
+
+extern "C" __attribute__((visibility("default"))) void
+class_setIvarLayout(Class _Nullable cls, const uint8_t * _Nullable layout)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+
+
+
+
+
+
+
+extern "C" __attribute__((visibility("default"))) void
+class_setWeakIvarLayout(Class _Nullable cls, const uint8_t * _Nullable layout)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Class _Nonnull
+objc_getFutureClass(const char * _Nonnull name)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)))
+                        ;
+extern "C" __attribute__((visibility("default"))) id _Nullable
+class_createInstance(Class _Nullable cls, size_t extraBytes)
+    __attribute__((ns_returns_retained))
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) id _Nullable
+objc_constructInstance(Class _Nullable cls, void * _Nullable bytes)
+    __attribute__((availability(macosx,introduced=10.6))) __attribute__((availability(ios,introduced=3.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)))
+                        ;
+extern "C" __attribute__((visibility("default"))) void * _Nullable objc_destructInstance(id _Nullable obj)
+    __attribute__((availability(macosx,introduced=10.6))) __attribute__((availability(ios,introduced=3.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)))
+                        ;
+extern "C" __attribute__((visibility("default"))) Class _Nullable
+objc_allocateClassPair(Class _Nullable superclass, const char * _Nonnull name,
+                       size_t extraBytes)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+
+
+
+
+
+
+extern "C" __attribute__((visibility("default"))) void
+objc_registerClassPair(Class _Nonnull cls)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+
+
+
+
+
+
+extern "C" __attribute__((visibility("default"))) Class _Nonnull
+objc_duplicateClass(Class _Nonnull original, const char * _Nonnull name,
+                    size_t extraBytes)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) void
+objc_disposeClassPair(Class _Nonnull cls)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) SEL _Nonnull
+method_getName(Method _Nonnull m)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) IMP _Nonnull
+method_getImplementation(Method _Nonnull m)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) const char * _Nullable
+method_getTypeEncoding(Method _Nonnull m)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) unsigned int
+method_getNumberOfArguments(Method _Nonnull m)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) char * _Nonnull
+method_copyReturnType(Method _Nonnull m)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) char * _Nullable
+method_copyArgumentType(Method _Nonnull m, unsigned int index)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) void
+method_getReturnType(Method _Nonnull m, char * _Nonnull dst, size_t dst_len)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) void
+method_getArgumentType(Method _Nonnull m, unsigned int index,
+                       char * _Nullable dst, size_t dst_len)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+
+extern "C" __attribute__((visibility("default"))) struct objc_method_description * _Nonnull
+method_getDescription(Method _Nonnull m)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) IMP _Nonnull
+method_setImplementation(Method _Nonnull m, IMP _Nonnull imp)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) void
+method_exchangeImplementations(Method _Nonnull m1, Method _Nonnull m2)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) const char * _Nullable
+ivar_getName(Ivar _Nonnull v)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) const char * _Nullable
+ivar_getTypeEncoding(Ivar _Nonnull v)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) ptrdiff_t
+ivar_getOffset(Ivar _Nonnull v)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) const char * _Nonnull
+property_getName(objc_property_t _Nonnull property)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) const char * _Nullable
+property_getAttributes(objc_property_t _Nonnull property)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) objc_property_attribute_t * _Nullable
+property_copyAttributeList(objc_property_t _Nonnull property,
+                           unsigned int * _Nullable outCount)
+    __attribute__((availability(macosx,introduced=10.7))) __attribute__((availability(ios,introduced=4.3))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) char * _Nullable
+property_copyAttributeValue(objc_property_t _Nonnull property,
+                            const char * _Nonnull attributeName)
+    __attribute__((availability(macosx,introduced=10.7))) __attribute__((availability(ios,introduced=4.3))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Protocol * _Nullable
+objc_getProtocol(const char * _Nonnull name)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Protocol * __attribute__((objc_ownership(none))) _Nonnull * _Nullable
+objc_copyProtocolList(unsigned int * _Nullable outCount)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) BOOL
+protocol_conformsToProtocol(Protocol * _Nullable proto,
+                            Protocol * _Nullable other)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) BOOL
+protocol_isEqual(Protocol * _Nullable proto, Protocol * _Nullable other)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) const char * _Nonnull
+protocol_getName(Protocol * _Nonnull proto)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) struct objc_method_description
+protocol_getMethodDescription(Protocol * _Nonnull proto, SEL _Nonnull aSel,
+                              BOOL isRequiredMethod, BOOL isInstanceMethod)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) struct objc_method_description * _Nullable
+protocol_copyMethodDescriptionList(Protocol * _Nonnull proto,
+                                   BOOL isRequiredMethod,
+                                   BOOL isInstanceMethod,
+                                   unsigned int * _Nullable outCount)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) objc_property_t _Nullable
+protocol_getProperty(Protocol * _Nonnull proto,
+                     const char * _Nonnull name,
+                     BOOL isRequiredProperty, BOOL isInstanceProperty)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) objc_property_t _Nonnull * _Nullable
+protocol_copyPropertyList(Protocol * _Nonnull proto,
+                          unsigned int * _Nullable outCount)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) objc_property_t _Nonnull * _Nullable
+protocol_copyPropertyList2(Protocol * _Nonnull proto,
+                           unsigned int * _Nullable outCount,
+                           BOOL isRequiredProperty, BOOL isInstanceProperty)
+    __attribute__((availability(macosx,introduced=10.12))) __attribute__((availability(ios,introduced=10.0))) __attribute__((availability(tvos,introduced=10.0))) __attribute__((availability(watchos,introduced=3.0)));
+extern "C" __attribute__((visibility("default"))) Protocol * __attribute__((objc_ownership(none))) _Nonnull * _Nullable
+protocol_copyProtocolList(Protocol * _Nonnull proto,
+                          unsigned int * _Nullable outCount)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) Protocol * _Nullable
+objc_allocateProtocol(const char * _Nonnull name)
+    __attribute__((availability(macosx,introduced=10.7))) __attribute__((availability(ios,introduced=4.3))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+
+
+
+
+
+
+
+extern "C" __attribute__((visibility("default"))) void
+objc_registerProtocol(Protocol * _Nonnull proto)
+    __attribute__((availability(macosx,introduced=10.7))) __attribute__((availability(ios,introduced=4.3))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) void
+protocol_addMethodDescription(Protocol * _Nonnull proto, SEL _Nonnull name,
+                              const char * _Nullable types,
+                              BOOL isRequiredMethod, BOOL isInstanceMethod)
+    __attribute__((availability(macosx,introduced=10.7))) __attribute__((availability(ios,introduced=4.3))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) void
+protocol_addProtocol(Protocol * _Nonnull proto, Protocol * _Nonnull addition)
+    __attribute__((availability(macosx,introduced=10.7))) __attribute__((availability(ios,introduced=4.3))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) void
+protocol_addProperty(Protocol * _Nonnull proto, const char * _Nonnull name,
+                     const objc_property_attribute_t * _Nullable attributes,
+                     unsigned int attributeCount,
+                     BOOL isRequiredProperty, BOOL isInstanceProperty)
+    __attribute__((availability(macosx,introduced=10.7))) __attribute__((availability(ios,introduced=4.3))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) const char * _Nonnull * _Nonnull
+objc_copyImageNames(unsigned int * _Nullable outCount)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) const char * _Nullable
+class_getImageName(Class _Nullable cls)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) const char * _Nonnull * _Nullable
+objc_copyClassNamesForImage(const char * _Nonnull image,
+                            unsigned int * _Nullable outCount)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) const char * _Nonnull
+sel_getName(SEL _Nonnull sel)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) SEL _Nonnull
+sel_registerName(const char * _Nonnull str)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) BOOL
+sel_isEqual(SEL _Nonnull lhs, SEL _Nonnull rhs)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) void
+objc_enumerationMutation(id _Nonnull obj)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+
+
+
+
+
+
+extern "C" __attribute__((visibility("default"))) void
+objc_setEnumerationMutationHandler(void (*_Nullable handler)(id _Nonnull ))
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) void
+objc_setForwardHandler(void * _Nonnull fwd, void * _Nonnull fwd_stret)
+    __attribute__((availability(macosx,introduced=10.5))) __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) IMP _Nonnull
+imp_implementationWithBlock(id _Nonnull block)
+    __attribute__((availability(macosx,introduced=10.7))) __attribute__((availability(ios,introduced=4.3))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) id _Nullable
+imp_getBlock(IMP _Nonnull anImp)
+    __attribute__((availability(macosx,introduced=10.7))) __attribute__((availability(ios,introduced=4.3))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) BOOL
+imp_removeBlock(IMP _Nonnull anImp)
+    __attribute__((availability(macosx,introduced=10.7))) __attribute__((availability(ios,introduced=4.3))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) id _Nullable
+objc_loadWeak(id _Nullable * _Nonnull location)
+    __attribute__((availability(macosx,introduced=10.7))) __attribute__((availability(ios,introduced=5.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) id _Nullable
+objc_storeWeak(id _Nullable * _Nonnull location, id _Nullable obj)
+    __attribute__((availability(macosx,introduced=10.7))) __attribute__((availability(ios,introduced=5.0))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+typedef uintptr_t objc_AssociationPolicy; enum {
+    OBJC_ASSOCIATION_ASSIGN = 0,
+    OBJC_ASSOCIATION_RETAIN_NONATOMIC = 1,
+
+    OBJC_ASSOCIATION_COPY_NONATOMIC = 3,
+
+    OBJC_ASSOCIATION_RETAIN = 01401,
+
+    OBJC_ASSOCIATION_COPY = 01403
+
+};
+extern "C" __attribute__((visibility("default"))) void
+objc_setAssociatedObject(id _Nonnull object, const void * _Nonnull key,
+                         id _Nullable value, objc_AssociationPolicy policy)
+    __attribute__((availability(macosx,introduced=10.6))) __attribute__((availability(ios,introduced=3.1))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) id _Nullable
+objc_getAssociatedObject(id _Nonnull object, const void * _Nonnull key)
+    __attribute__((availability(macosx,introduced=10.6))) __attribute__((availability(ios,introduced=3.1))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+extern "C" __attribute__((visibility("default"))) void
+objc_removeAssociatedObjects(id _Nonnull object)
+    __attribute__((availability(macosx,introduced=10.6))) __attribute__((availability(ios,introduced=3.1))) __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(watchos,introduced=1.0)));
+struct objc_method_list;
+
+
+
+
+
+
+extern "C" __attribute__((visibility("default"))) IMP _Nullable
+class_lookupMethod(Class _Nullable cls, SEL _Nonnull sel)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(macosx,deprecated=10.5,message="use class_getMethodImplementation instead")))
+    __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(ios,deprecated=2.0,message="use class_getMethodImplementation instead")))
+    __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(tvos,deprecated=9.0,message="use class_getMethodImplementation instead")))
+    __attribute__((availability(watchos,introduced=1.0))) __attribute__((availability(watchos,deprecated=1.0,message="use class_getMethodImplementation instead")))
+    ;
+extern "C" __attribute__((visibility("default"))) BOOL
+class_respondsToMethod(Class _Nullable cls, SEL _Nonnull sel)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(macosx,deprecated=10.5,message="use class_respondsToSelector instead")))
+    __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(ios,deprecated=2.0,message="use class_respondsToSelector instead")))
+    __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(tvos,deprecated=9.0,message="use class_respondsToSelector instead")))
+    __attribute__((availability(watchos,introduced=1.0))) __attribute__((availability(watchos,deprecated=1.0,message="use class_respondsToSelector instead")))
+    ;
+
+extern "C" __attribute__((visibility("default"))) void
+_objc_flush_caches(Class _Nullable cls)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(macosx,deprecated=10.5,message="not recommended")))
+    __attribute__((availability(ios,introduced=2.0))) __attribute__((availability(ios,deprecated=2.0,message="not recommended")))
+    __attribute__((availability(tvos,introduced=9.0))) __attribute__((availability(tvos,deprecated=9.0,message="not recommended")))
+    __attribute__((availability(watchos,introduced=1.0))) __attribute__((availability(watchos,deprecated=1.0,message="not recommended")))
+    ;
+
+extern "C" __attribute__((visibility("default"))) id _Nullable
+object_copyFromZone(id _Nullable anObject, size_t nBytes, void * _Nullable z)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(macosx,deprecated=10.5,message="use object_copy instead")))
+    __attribute__((availability(ios,unavailable))) __attribute__((availability(tvos,unavailable)))
+    __attribute__((availability(watchos,unavailable)))
+                        ;
+
+extern "C" __attribute__((visibility("default"))) id _Nullable
+object_realloc(id _Nullable anObject, size_t nBytes)
+    __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) id _Nullable
+object_reallocFromZone(id _Nullable anObject, size_t nBytes, void * _Nullable z)
+    __attribute__((unavailable));
+
+
+extern "C" __attribute__((visibility("default"))) void * _Nonnull
+objc_getClasses(void)
+    __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) void
+objc_addClass(Class _Nonnull myClass)
+    __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) void
+objc_setClassHandler(int (* _Nullable )(const char * _Nonnull))
+    __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) void
+objc_setMultithreaded(BOOL flag)
+    __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) id _Nullable
+class_createInstanceFromZone(Class _Nullable, size_t idxIvars,
+                             void * _Nullable z)
+    __attribute__((availability(macosx,introduced=10.0))) __attribute__((availability(macosx,deprecated=10.5,message="use class_createInstance instead")))
+    __attribute__((availability(ios,unavailable))) __attribute__((availability(tvos,unavailable)))
+    __attribute__((availability(watchos,unavailable)))
+                        ;
+
+extern "C" __attribute__((visibility("default"))) void
+class_addMethods(Class _Nullable, struct objc_method_list * _Nonnull)
+    __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) void
+class_removeMethods(Class _Nullable, struct objc_method_list * _Nonnull)
+    __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) void
+_objc_resolve_categories_for_class(Class _Nonnull cls)
+    __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) Class _Nonnull
+class_poseAs(Class _Nonnull imposter, Class _Nonnull original)
+    __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) unsigned int
+method_getSizeOfArguments(Method _Nonnull m)
+    __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) unsigned
+method_getArgumentInfo(struct objc_method * _Nonnull m, int arg,
+                       const char * _Nullable * _Nonnull type,
+                       int * _Nonnull offset)
+    __attribute__((unavailable))
+    __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) Class _Nullable
+objc_getOrigClass(const char * _Nonnull name)
+    __attribute__((unavailable));
+
+
+extern "C" __attribute__((visibility("default"))) struct objc_method_list * _Nullable
+class_nextMethodList(Class _Nullable, void * _Nullable * _Nullable)
+    __attribute__((unavailable));
+
+
+
+
+
+
+
+extern "C" __attribute__((visibility("default"))) id _Nullable
+(* _Nonnull _alloc)(Class _Nullable, size_t)
+    __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) id _Nullable
+(* _Nonnull _copy)(id _Nullable, size_t)
+     __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) id _Nullable
+(* _Nonnull _realloc)(id _Nullable, size_t)
+     __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) id _Nullable
+(* _Nonnull _dealloc)(id _Nullable)
+     __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) id _Nullable
+(* _Nonnull _zoneAlloc)(Class _Nullable, size_t, void * _Nullable)
+     __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) id _Nullable
+(* _Nonnull _zoneRealloc)(id _Nullable, size_t, void * _Nullable)
+     __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) id _Nullable
+(* _Nonnull _zoneCopy)(id _Nullable, size_t, void * _Nullable)
+     __attribute__((unavailable));
+
+extern "C" __attribute__((visibility("default"))) void
+(* _Nonnull _error)(id _Nullable, const char * _Nonnull, va_list)
+     __attribute__((unavailable));
+
+
+
+
+extern "C" {
+
+
+typedef struct _malloc_zone_t {
+
+
+    void *reserved1;
+    void *reserved2;
+    size_t (*size)(struct _malloc_zone_t *zone, const void *ptr);
+    void *(*malloc)(struct _malloc_zone_t *zone, size_t size);
+    void *(*calloc)(struct _malloc_zone_t *zone, size_t num_items, size_t size);
+    void *(*valloc)(struct _malloc_zone_t *zone, size_t size);
+    void (*free)(struct _malloc_zone_t *zone, void *ptr);
+    void *(*realloc)(struct _malloc_zone_t *zone, void *ptr, size_t size);
+    void (*destroy)(struct _malloc_zone_t *zone);
+    const char *zone_name;
+
+
+    unsigned (*batch_malloc)(struct _malloc_zone_t *zone, size_t size, void **results, unsigned num_requested);
+    void (*batch_free)(struct _malloc_zone_t *zone, void **to_be_freed, unsigned num_to_be_freed);
+
+    struct malloc_introspection_t *introspect;
+    unsigned version;
+
+
+    void *(*memalign)(struct _malloc_zone_t *zone, size_t alignment, size_t size);
+
+
+    void (*free_definite_size)(struct _malloc_zone_t *zone, void *ptr, size_t size);
+
+
+    size_t (*pressure_relief)(struct _malloc_zone_t *zone, size_t goal);
+
+
+
+
+
+
+    boolean_t (*claimed_address)(struct _malloc_zone_t *zone, void *ptr);
+} malloc_zone_t;
+
+
+
+extern malloc_zone_t *malloc_default_zone(void);
+
+
+extern malloc_zone_t *malloc_create_zone(vm_size_t start_size, unsigned flags);
+
+
+extern void malloc_destroy_zone(malloc_zone_t *zone);
+
+
+
+
+extern void *malloc_zone_malloc(malloc_zone_t *zone, size_t size) __attribute__((alloc_size(2)));
+
+
+extern void *malloc_zone_calloc(malloc_zone_t *zone, size_t num_items, size_t size) __attribute__((alloc_size(2,3)));
+
+
+extern void *malloc_zone_valloc(malloc_zone_t *zone, size_t size) __attribute__((alloc_size(2)));
+
+
+extern void malloc_zone_free(malloc_zone_t *zone, void *ptr);
+
+
+extern void *malloc_zone_realloc(malloc_zone_t *zone, void *ptr, size_t size) __attribute__((alloc_size(3)));
+
+
+extern malloc_zone_t *malloc_zone_from_ptr(const void *ptr);
+
+
+
+extern size_t malloc_size(const void *ptr);
+
+
+extern size_t malloc_good_size(size_t size);
+
+
+extern void *malloc_zone_memalign(malloc_zone_t *zone, size_t alignment, size_t size) __attribute__((alloc_size(3))) __attribute__((availability(macosx,introduced=10.6)));
+extern unsigned malloc_zone_batch_malloc(malloc_zone_t *zone, size_t size, void **results, unsigned num_requested);
+
+
+extern void malloc_zone_batch_free(malloc_zone_t *zone, void **to_be_freed, unsigned num);
+
+
+
+
+extern malloc_zone_t *malloc_default_purgeable_zone(void) __attribute__((availability(macosx,introduced=10.6)));
+
+
+extern void malloc_make_purgeable(void *ptr) __attribute__((availability(macosx,introduced=10.6)));
+
+
+extern int malloc_make_nonpurgeable(void *ptr) __attribute__((availability(macosx,introduced=10.6)));
+
+
+
+
+
+
+extern void malloc_zone_register(malloc_zone_t *zone);
+
+
+
+
+
+extern void malloc_zone_unregister(malloc_zone_t *zone);
+
+
+
+extern void malloc_set_zone_name(malloc_zone_t *zone, const char *name);
+
+
+extern const char *malloc_get_zone_name(malloc_zone_t *zone);
+
+
+size_t malloc_zone_pressure_relief(malloc_zone_t *zone, size_t goal) __attribute__((availability(macosx,introduced=10.7)));
+
+
+
+
+
+
+
+typedef struct {
+    vm_address_t address;
+    vm_size_t size;
+} vm_range_t;
+
+typedef struct malloc_statistics_t {
+    unsigned blocks_in_use;
+    size_t size_in_use;
+    size_t max_size_in_use;
+    size_t size_allocated;
+} malloc_statistics_t;
+
+typedef kern_return_t memory_reader_t(task_t remote_task, vm_address_t remote_address, vm_size_t size, void **local_memory);
+typedef void vm_range_recorder_t(task_t, void *, unsigned type, vm_range_t *, unsigned);
+
+
+typedef struct malloc_introspection_t {
+    kern_return_t (*enumerator)(task_t task, void *, unsigned type_mask, vm_address_t zone_address, memory_reader_t reader, vm_range_recorder_t recorder);
+    size_t (*good_size)(malloc_zone_t *zone, size_t size);
+    boolean_t (*check)(malloc_zone_t *zone);
+    void (*print)(malloc_zone_t *zone, boolean_t verbose);
+    void (*log)(malloc_zone_t *zone, void *address);
+    void (*force_lock)(malloc_zone_t *zone);
+    void (*force_unlock)(malloc_zone_t *zone);
+    void (*statistics)(malloc_zone_t *zone, malloc_statistics_t *stats);
+    boolean_t (*zone_locked)(malloc_zone_t *zone);
+
+
+    boolean_t (*enable_discharge_checking)(malloc_zone_t *zone);
+    void (*disable_discharge_checking)(malloc_zone_t *zone);
+    void (*discharge)(malloc_zone_t *zone, void *memory);
+
+    void (*enumerate_discharged_pointers)(malloc_zone_t *zone, void (^report_discharged)(void *memory, void *info));
+
+
+
+    void (*reinit_lock)(malloc_zone_t *zone);
+} malloc_introspection_t;
+
+extern void malloc_printf(const char *format, ...);
+
+
+
+
+
+
+
+extern kern_return_t malloc_get_all_zones(task_t task, memory_reader_t reader, vm_address_t **addresses, unsigned *count);
+
+
+
+
+
+extern void malloc_zone_print_ptr_info(void *ptr);
+
+
+extern boolean_t malloc_zone_check(malloc_zone_t *zone);
+
+
+extern void malloc_zone_print(malloc_zone_t *zone, boolean_t verbose);
+
+
+extern void malloc_zone_statistics(malloc_zone_t *zone, malloc_statistics_t *stats);
+
+
+extern void malloc_zone_log(malloc_zone_t *zone, void *address);
+
+
+
+
+
+struct mstats {
+    size_t bytes_total;
+    size_t chunks_used;
+    size_t bytes_used;
+    size_t chunks_free;
+    size_t bytes_free;
+};
+
+extern struct mstats mstats(void);
+
+extern boolean_t malloc_zone_enable_discharge_checking(malloc_zone_t *zone) __attribute__((availability(macosx,introduced=10.7)));
+
+
+extern void malloc_zone_disable_discharge_checking(malloc_zone_t *zone) __attribute__((availability(macosx,introduced=10.7)));
+
+
+extern void malloc_zone_discharge(malloc_zone_t *zone, void *memory) __attribute__((availability(macosx,introduced=10.7)));
+
+
+
+
+
+extern void malloc_zone_enumerate_discharged_pointers(malloc_zone_t *zone, void (*report_discharged)(void *memory, void *info)) __attribute__((availability(macosx,introduced=10.7)));
+
+
+
+
+
+
+
+}
+
+struct NSObject_IMPL {
+    Class isa;
+};
 
 int main(int argc, const char * argv[]) {
     /* @autoreleasepool */ { __AtAutoreleasePool __autoreleasepool; 
         NSObject *object = ((NSObject *(*)(id, SEL))(void *)objc_msgSend)((id)((NSObject *(*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass("NSObject"), sel_registerName("alloc")), sel_registerName("init"));
 
+
+        NSLog((NSString *)&__NSConstantStringImpl__var_folders_z2_b_cqpv0x6y5ft_nwgwmmr0lw0000gp_T_main_d16572_mi_0, class_getInstanceSize(((Class (*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass("NSObject"), sel_registerName("class"))));
+
+
+
+        NSLog((NSString *)&__NSConstantStringImpl__var_folders_z2_b_cqpv0x6y5ft_nwgwmmr0lw0000gp_T_main_d16572_mi_1, malloc_size((__bridge const void *)(object)));
     }
     return 0;
 }
