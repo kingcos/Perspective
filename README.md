@@ -13,12 +13,16 @@
 - [Swift 中的 @autoclosure](https://github.com/kingcos/Perspective/issues/5)
 - [Swift 中的 Selector](Posts/Focus/Swift_Selector)
 - [Swift Evolution (Latest Swift version: 4.1)](https://github.com/kingcos/Perspective/issues/11)
+- [探究 UIViewController 生命周期](https://github.com/kingcos/Perspective/tree/writing/Posts/Focus/UIViewController_Life_Cycle)
+- [浅谈 iOS 应用启动过程](https://github.com/kingcos/Perspective/tree/writing/Posts/Focus/iOS_App_Start_up)
+- [浅谈 Swift 中的属性（Property）](https://github.com/kingcos/Perspective/tree/writing/Posts/Focus/Swift_Properties)
 
 ## Practice
 
 > Practice，即实践。笔者将会把网上各处的知识点进行实际的代码总结、扩展。文章将着重 Demo，非核心相关的内容将以链接形式放置在文末供读者参考、延伸。
 
 - [在 Swift 中对集合类型元素的弱引用](https://github.com/kingcos/Perspective/issues/6)
+- [从 0 开始使用 Docker 快速搭建 Hadoop 集群环境](https://github.com/kingcos/Perspective/tree/writing/Posts/Practice/Docker_for_Hadoop)
 
 ## Promotion
 
