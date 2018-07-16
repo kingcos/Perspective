@@ -28,8 +28,6 @@
 
 > Promotion，即提升。
 
-- [CMU INI Kobe](Posts/Promotion/CMU_INI_Kobe)
-
 ## Studying
 
 > Studying，即钻研。笔者将分享个人的读书或浏览视频等所收获的心得、笔记。
