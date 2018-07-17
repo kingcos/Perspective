@@ -1,6 +1,6 @@
 # Perspective
 
-> 「Perspective」repository is my light-weight blog. For English, please visit my Medium: [kingcos@medium](http://medium.com/@kingcos). You can also find me at Twitter: [mmdadao@Twitter](https://twitter.com/mmdadao/).
+> For English, please visit: [kingcos@medium](http://medium.com/@kingcos).
 > 
 > Perspective，即透视。知道 CSAPP 这本书的同学应该对「Perspective」这个单词不陌生。笔者希望下面的文章能够清晰、透彻地讲清楚所要表述的内容，但个人也深知其不易，如有错误或纰漏，望您积极提出～
 
