@@ -113,9 +113,6 @@ superviord -c superviord.conf
 - 运行后可以使用 `ps -A | grep PROGRAM_NAME` 来获取启动的进程；
 - 之后可以使用 `kill` 命令杀掉相应进程，在 `ps -A` 查看是否重启。
 
-> 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
-
 ## Extension
 
 - [Supervisor](https://supervisord.org)
-- macOS 下可使用 Launchctl 配置程序开机自启动（后续可能更新）

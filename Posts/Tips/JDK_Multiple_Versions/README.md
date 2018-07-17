@@ -29,8 +29,6 @@ alias java8='export JAVA_HOME=$JAVA_8_HOME'
 
 ![Terminal](2.png)
 
-> 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
-
 ## Extension
 
 - [jenv](https://github.com/gcuisinier/jenv)

@@ -257,8 +257,6 @@ fileprivate extension Selector {
 }
 ```
 
-> 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
-
 ## Reference
 
 - [Using Swift with Cocoa and Objective-C (Swift 3.0.1)](https://developer.apple.com/library/content/documentation/Swift/Conceptual/BuildingCocoaApps/InteractingWithObjective-CAPIs.html#//apple_ref/doc/uid/TP40014216-CH4-XID_26)

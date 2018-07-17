@@ -40,6 +40,4 @@ nohup java -jar /usr/local/Cellar/jenkins/2.114/libexec/jenkins.war >temp.txt &
 
 ## Extension
 
-- [macOS 下管理多个 Java 版本](../Java_Multiple_Versions)
-
-> 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
+- [简单管理多版本 JDK](https://github.com/kingcos/Perspective/issues/7)

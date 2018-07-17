@@ -163,8 +163,6 @@ NSHashTable *set = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemor
 [set addObject:@12];
 ```
 
-> 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
-
 ## Reference
 
 - [Weakly Arrays - objc.io](https://www.objc.io/blog/2017/12/28/weak-arrays/)
