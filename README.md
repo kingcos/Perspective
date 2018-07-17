@@ -1,7 +1,7 @@
 # Perspective
 
-- 「Perspective」repository is my light-weight blog. For English, please visit my Medium: [kingcos@medium](http://medium.com/@kingcos). You can also find me at Twitter: [mmdadao@Twitter](https://twitter.com/mmdadao/).
-
+> For English, please visit: [kingcos@medium](http://medium.com/@kingcos).
+> 
 > Perspective，即透视。知道 CSAPP 这本书的同学应该对「Perspective」这个单词不陌生。笔者希望下面的文章能够清晰、透彻地讲清楚所要表述的内容，但个人也深知其不易，如有错误或纰漏，望您积极提出～
 
 ![Blog-Perspective Mind Map](Blog-Perspective.png)
@@ -13,18 +13,20 @@
 - [Swift 中的 @autoclosure](https://github.com/kingcos/Perspective/issues/5)
 - [Swift 中的 Selector](Posts/Focus/Swift_Selector)
 - [Swift Evolution (Latest Swift version: 4.1)](https://github.com/kingcos/Perspective/issues/11)
+- [探究 UIViewController 生命周期](https://github.com/kingcos/Perspective/tree/writing/Posts/Focus/UIViewController_Life_Cycle)
+- [浅谈 iOS 应用启动过程](https://github.com/kingcos/Perspective/tree/writing/Posts/Focus/iOS_App_Start_up)
+- [浅谈 Swift 中的属性（Property）](https://github.com/kingcos/Perspective/tree/writing/Posts/Focus/Swift_Properties)
 
 ## Practice
 
 > Practice，即实践。笔者将会把网上各处的知识点进行实际的代码总结、扩展。文章将着重 Demo，非核心相关的内容将以链接形式放置在文末供读者参考、延伸。
 
 - [在 Swift 中对集合类型元素的弱引用](https://github.com/kingcos/Perspective/issues/6)
+- [从 0 开始使用 Docker 快速搭建 Hadoop 集群环境](https://github.com/kingcos/Perspective/tree/writing/Posts/Practice/Docker_for_Hadoop)
 
 ## Promotion
 
 > Promotion，即提升。
-
-- [CMU INI Kobe](Posts/Promotion/CMU_INI_Kobe)
 
 ## Studying
 
