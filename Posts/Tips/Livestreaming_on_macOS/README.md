@@ -1,8 +1,8 @@
-# Tips - 在 macOS 上直播
+# Tips - 在 macOS 上进行直播推流
 
-| Platform | Notes |
-|:-----:|:-----:|
-| macOS 10.14 beta 4 | JDK 8 & 9 |
+| Platform |
+|:-----:|
+| macOS 10.14 beta 4 |
 
 > 由于更换了电脑，上次好不容易折腾的配置也都无从参考，这次尽力把整个配置过程，以及音频输入输出的部分完善。直播推流使用了 OBS Studio，直播平台为 Bilibili。
 

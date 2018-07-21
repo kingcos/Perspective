@@ -51,6 +51,7 @@
 - [使用 Homebrew 安装 Jenkins](https://github.com/kingcos/Perspective/issues/10)
 - [Xcode 10 beta 趟坑](https://github.com/kingcos/Perspective/issues/13)
 - [iOS 开发问题解决集锦](https://github.com/kingcos/Perspective/issues/16)
+- [在 macOS 上进行直播推流](https://github.com/kingcos/Perspective/issues/19)
 
 ## Translation
 
