@@ -33,6 +33,8 @@ brew cask install obs
 - 关闭 Preference 回到主界面为默认的场景添加来源，常用的是显示捕获（即完全把自己能看到推流出去）以及窗口捕获（即只把选中的窗口推流出去）
 - 点击「开始推流」即可开始直播
 
+![OBS](5.png)
+
 ### Audio
 
 - 下载并安装 Soundflower

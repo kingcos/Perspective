@@ -54,7 +54,7 @@ shairplay -a HomePod
 
 - 安装 Supervisor（可参考前文）
 - 配置
-    - 注意第一个 `command` 需要将切换到 ShairPlay 源代码的路径
+    - 注意第一个 `command` 需要切换到 ShairPlay 源代码的路径
 
 ```ini
 ; shareplay.ini
