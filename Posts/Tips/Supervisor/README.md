@@ -1,8 +1,9 @@
 # Tips - Supervisor 的安装与基本使用
 
-| Platform | Notes |
+| Platform | Supervisor |
 |:-----:|:-----:|
-| macOS 10.13.4 | Supervisor 3.3.4 |
+| macOS 10.13.4 | 3.3.4 | 
+| Raspbian 4.14 | 3.3.1 |
 
 ## Info
 
@@ -12,17 +13,27 @@ Supervisor 是 Linux/UNIX 下的一个由 Python 编写的进程管理工具，�
 
 ### Installation
 
+#### macOS
+
 - 使用 HomeBrew 安装
 
-```shell
+```
 brew install supervisor
+```
+
+#### Raspbian (Linux)
+
+```
+sudo apt-get install supervisor
 ```
 
 ### Usage
 
-- 安装完成后，可以在「/etc/supervisord.conf」中看到该默认示例，但并非所有配置项均必须定义，可根据自己需要进行配置。
+- 安装完成后，可以在查看该默认配置，但并非所有配置项均必须定义，可根据自己需要进行配置
+- macOS
 
-```
+```conf
+; macOS - /etc/supervisord.conf
 [supervisord]
 http_port=/var/tmp/supervisor.sock ; (default is to run a UNIX domain socket server)
 ;http_port=127.0.0.1:9001  ; (alternately, ip_address:port specifies AF_INET)
@@ -75,8 +86,43 @@ serverurl=unix:///var/tmp/supervisor.sock ; use a unix:// URL  for a unix socket
 ;logfile_backups=10          ; # of logfile backups (default 10)
 ```
 
-- 针对不同程序的配置可以单独放在不同的 `.ini` 文件中；
-- `PROGRAM_NAME` 替换为改命名，`COMMAND` 替换为需要保持运行的命令，注意可执行文件的路径，其他配置这里仅做演示，可根据上表自行配置。
+- Raspbian
+
+```conf
+; Raspbian - /etc/supervisor/supervisord.conf
+
+; supervisor config file
+
+[unix_http_server]
+file=/var/run/supervisor.sock   ; (the path to the socket file)
+chmod=0700                       ; sockef file mode (default 0700)
+
+[supervisord]
+logfile=/var/log/supervisor/supervisord.log ; (main log file;default $CWD/supervisord.log)
+pidfile=/var/run/supervisord.pid ; (supervisord pidfile;default supervisord.pid)
+childlogdir=/var/log/supervisor            ; ('AUTO' child log dir, default $TEMP)
+
+; the below section must remain in the config file for RPC
+; (supervisorctl/web interface) to work, additional interfaces may be
+; added by defining them in separate rpcinterface: sections
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[supervisorctl]
+serverurl=unix:///var/run/supervisor.sock ; use a unix:// URL  for a unix socket
+
+; The [include] section can just contain the "files" setting.  This
+; setting can list multiple files (separated by whitespace or
+; newlines).  It can also contain wildcards.  The filenames are
+; interpreted as relative to this file.  Included files *cannot*
+; include files themselves.
+
+[include]
+files = /etc/supervisor/conf.d/*.conf
+```
+
+- 针对不同程序的配置可以单独放在不同的 `.ini` 文件中
+- `PROGRAM_NAME` 替换为该文件命名，`COMMAND` 替换为需要保持运行的命令，注意可执行文件的路径，其他配置这里仅做演示，可根据上表自行配置
 
 ```ini
 ; PROGRAM_NAME.ini
@@ -90,8 +136,8 @@ user=kingcos
 [supervisord]
 ```
 
-- 在 `.conf` 文件中可以在 `files` 加入上述配置好的 `.ini`；
-- `INI_NAME` 即上述文件名。
+- 在 `.conf` 文件中可以在 `files` 加入上述配置好的 `.ini`
+- `INI_NAME` 即上述文件名
 
 ```conf
 ; superviord.conf
@@ -101,18 +147,23 @@ files=INI_NAME.ini
 [supervisorctl]
 ```
 
-- 运行，注意配置文件路径。
+- 运行，注意配置文件路径
 
 ```
 # superviord -c ${SUPERVISOR_CONFIG_PATH}
 superviord -c superviord.conf
 ```
 
-## Test
+### Test
 
-- 运行后可以使用 `ps -A | grep PROGRAM_NAME` 来获取启动的进程；
-- 之后可以使用 `kill` 命令杀掉相应进程，在 `ps -A` 查看是否重启。
+- 运行后可以使用 `ps -A | grep PROGRAM_NAME` 来获取启动的进程
+- 之后可以使用 `kill` 命令杀掉相应进程，在 `ps -A` 查看是否重启
+
+## Reference
+
+- [Supervisor](https://supervisord.org)
 
 ## Extension
 
-- [Supervisor](https://supervisord.org)
+- Linux - systemd
+- macOS - Launchd
