@@ -89,7 +89,7 @@ sudo supervisord -c /etc/supervisor/conf.d/supervisord.conf
 
 ![AirPlay on iPhone](2.jpg)
 
-## Referecne
+## Reference
 
 - [juhovh/shairplay](https://github.com/juhovh/shairplay)
 - [Supervisor 的安装与基本使用](https://github.com/kingcos/Perspective/issues/9)
