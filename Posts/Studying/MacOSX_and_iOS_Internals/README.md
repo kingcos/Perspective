@@ -1,8 +1,8 @@
-# Reading - Mac OS X and iOS Internals
+# Studying - Mac OS X and iOS Internals
 
 ## Info
 
-书名 | 作者 | 出版时间 | 阅读状态
+名称 | 作者 | 版本 | 状态
 --- | --- | --- | ---
 Mac OS X and iOS Internals | Jonathon Levin | 2013 | 0/828
 
