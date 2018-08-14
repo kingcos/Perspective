@@ -94,7 +94,7 @@ user=kingcos
 - `INI_NAME` 即上述文件名。
 
 ```conf
-; superviord.conf
+; supervisord.conf
 [include]
 files=INI_NAME.ini
 
@@ -104,15 +104,14 @@ files=INI_NAME.ini
 - 运行，注意配置文件路径。
 
 ```
-# superviord -c ${SUPERVISOR_CONFIG_PATH}
-superviord -c superviord.conf
+# supervisord -c ${SUPERVISOR_CONFIG_PATH}
+supervisord -c supervisord.conf
 ```
 
 ## Test
 
 - 运行后可以使用 `ps -A | grep PROGRAM_NAME` 来获取启动的进程；
 - 之后可以使用 `kill` 命令杀掉相应进程，在 `ps -A` 查看是否重启。
-
 > 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
 
 ## Extension
