@@ -10,12 +10,12 @@
 
 > Focus，即专注。笔者希望可以尽力将一些不是那么透彻的点透过 Demo 和源代码而看到其本质。由于国内软件开发仍很大程度依赖国外的语言、知识，部分术语会在文中首次提及时标注英文，这样的目的也是为了尽可能减少歧义。
 
-- [浅谈 Swift 中的属性（Property）](https://github.com/kingcos/Perspective/tree/writing/Posts/Focus/Swift_Properties)
-- [探究 UIViewController 生命周期](https://github.com/kingcos/Perspective/tree/writing/Posts/Focus/UIViewController_Life_Cycle)
-- [浅谈 iOS 应用启动过程](https://github.com/kingcos/Perspective/tree/writing/Posts/Focus/iOS_App_Start_up)
-- [Swift 中的 Selector](Posts/Focus/Swift_Selector)
+- [浅谈 Swift 中的属性（Property）](https://github.com/kingcos/Perspective/issues/21)
+- [探究 UIViewController 生命周期](https://github.com/kingcos/Perspective/issues/22)
+- [浅谈 iOS 应用启动过程](https://github.com/kingcos/Perspective/issues/23)
+- [Swift 中的 Selector](https://github.com/kingcos/Perspective/issues/24)
 - [Swift 中的 @autoclosure](https://github.com/kingcos/Perspective/issues/5)
-- [Swift Evolution (Latest Swift version: 4.1)](https://github.com/kingcos/Perspective/issues/11)
+- [Swift Evolution (4.2)](https://github.com/kingcos/Perspective/issues/11)
 
 ## Practice
 
