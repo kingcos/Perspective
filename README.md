@@ -21,7 +21,7 @@
 
 > Practice，即实践。笔者将会把网上各处的知识点进行实际的代码总结、扩展。文章将着重 Demo，非核心相关的内容将以链接形式放置在文末供读者参考、延伸。
 
-- [从 0 开始使用 Docker 快速搭建 Hadoop 集群环境](https://github.com/kingcos/Perspective/tree/writing/Posts/Practice/Docker_for_Hadoop)
+- [从 0 开始使用 Docker 快速搭建 Hadoop 集群环境](https://github.com/kingcos/Perspective/issues/25)
 - [在 Swift 中对集合类型元素的弱引用](https://github.com/kingcos/Perspective/issues/6)
 - [iOS 项目持续集成实践（一）](https://github.com/kingcos/Perspective/issues/15)
 
@@ -37,10 +37,10 @@
 - [Mac OS X and iOS Internals](/Posts/Studying/MacOSX_and_iOS_Internals)
 - WWDC
   - 2017
-    - [102 - Platform State of the Union](/Posts/Studying/WWDC/2017/102)
-    - [819 - Designing for a Global Audience](/Posts/Studying/WWDC/2017/819)
-    - [822 - App Icon Design](/Posts/Studying/WWDC/2017/822)
-    - [823 - Designing Glyphs](/Posts/Studying/WWDC/2017/823)
+    - [102 - Platform State of the Union](https://github.com/kingcos/Perspective/issues/26)
+    - [819 - Designing for a Global Audience](https://github.com/kingcos/Perspective/issues/27)
+    - [822 - App Icon Design](https://github.com/kingcos/Perspective/issues/28)
+    - [823 - Designing Glyphs](https://github.com/kingcos/Perspective/issues/29)
 
 ## Tips
 
