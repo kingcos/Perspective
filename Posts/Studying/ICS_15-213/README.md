@@ -8,7 +8,8 @@ Introduction to Computer Systems | CMU | Fall 2017 | 1/33
 
 ## List
 
-- [Overview](Overview)
+- [Overview](01-overview)
+- [Bits, Bytes, & Integers I](02-bits_bytes_integer_i)
 
 ## Reference
 
