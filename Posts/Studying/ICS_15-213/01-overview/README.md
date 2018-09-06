@@ -59,6 +59,16 @@ int main(int argc, char *argv[]) {
   - 告知编译器不做任何优化
   - 每次都从内存读取修饰的变量（不重复使用寄存器中的缓存）
 
+## GDB
+
+### Linux/Git Bootcamp
+
+> Use a Single Editor Well
+> 
+> The editor should be an extension of your hand; make sure your editor is configurable, extensible, and programmable.
+> 
+> —— [The Pragmatic Programmer](https://pragprog.com/the-pragmatic-programmer/extracts/tips)
+
 ## Words List
 
 monolithic
@@ -127,3 +137,8 @@ shaky
 - [`atoi`](http://www.cplusplus.com/reference/cstdlib/atoi/)
 - [`volatile`](http://tigcc.ticalc.org/doc/keywords.html#volatile)
 - [C 语言再学习 -- 关键字 volatile](https://blog.csdn.net/qq_29350001/article/details/54024070)
+- [GDB](http://www.sourceware.org/gdb/)
+- [The Pragmatic Programmer](https://pragprog.com/the-pragmatic-programmer/extracts/tips)
+- [Resources to learn Git](http://try.github.io)
+- [Become
+a git guru.](https://www.atlassian.com/git/tutorials)
