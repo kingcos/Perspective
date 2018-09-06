@@ -35,6 +35,7 @@
 
 - [ICS 15-213](/Posts/Studying/ICS_15-213)
 - [Mac OS X and iOS Internals](/Posts/Studying/MacOSX_and_iOS_Internals)
+- [Programming from the Ground Up](/Posts/Studying/Programming_from_the_Ground_Up)
 - WWDC
   - 2017
     - [102 - Platform State of the Union](https://github.com/kingcos/Perspective/issues/26)
