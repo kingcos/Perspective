@@ -131,7 +131,6 @@ reveal
 boot camp
 mandatory
 shaky
-
 curriculum
 integrity
 infrastructure
@@ -165,12 +164,36 @@ coping
 portion
 incorporate
 parallel
+capstone
 imperative
 verbal
+semester
 ignorance
+asap
+sophisticated
+expelled
+desperate
 panic
 frustration
 frustrate
+guilt
+penalize
+disciplinary
+burden
+betrayal
+scenario
+constitute
+sustained
+logistics
+appointment
+rack
+crunch
+catastrophic
+defusing
+multiplexing
+rationale
+writeup
+faculty
 
 ## Reference
 
