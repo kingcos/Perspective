@@ -132,6 +132,46 @@ boot camp
 mandatory
 shaky
 
+curriculum
+integrity
+infrastructure
+eliminate
+tune
+asymptotic
+presence
+arithmetic
+finiteness
+ring
+commutativity 交换性
+associativity 结合性
+distributivity 分配性
+monotonicity 单调性
+value of signs 奇偶性？
+flaw
+exploit
+unbounded
+dominated
+pernicious
+substance
+segmentation
+nasty
+asymptotic
+bottleneck
+modularity
+hierarchical
+critical
+autonomous
+coping
+portion
+incorporate
+parallel
+imperative
+verbal
+ignorance
+panic
+frustration
+frustrate
+
 ## Reference
 
 - [`atoi`](http://www.cplusplus.com/reference/cstdlib/atoi/)
