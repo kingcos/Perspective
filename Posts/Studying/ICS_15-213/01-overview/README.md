@@ -14,6 +14,7 @@ int sq(int x) {
     return x*x;
 }
 
+// argc：命令行参数个数；argv[]：命令行参数数组
 int main(int argc, char *argv[]) {
     int i;
     for (i = 1; i < argc; i++) {
@@ -50,6 +51,13 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 ```
+
+- `atoi`
+  - 转换字符串为整型
+  - `int atoi (const char * str);`
+- `volatile`
+  - 告知编译器不做任何优化
+  - 每次都从内存读取修饰的变量（不重复使用寄存器中的缓存）
 
 ## Words List
 
@@ -113,3 +121,9 @@ reveal
 boot camp
 mandatory
 shaky
+
+## Reference
+
+- [`atoi`](http://www.cplusplus.com/reference/cstdlib/atoi/)
+- [`volatile`](http://tigcc.ticalc.org/doc/keywords.html#volatile)
+- [C 语言再学习 -- 关键字 volatile](https://blog.csdn.net/qq_29350001/article/details/54024070)
