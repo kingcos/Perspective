@@ -2,7 +2,7 @@
 
 | Date | Notes | Hadoop | Other |
 |:-----:|:-----:|:-----:|:-----:|
-| 2017-03-27 | 首次提交 | 2.7.2 | Docker CE, Intellij IDEA 2016.3 |
+| 2017-03-27 | 首次提交 | 2.7.2 | Docker CE, IntelliJ IDEA 2016.3 |
 
 ## Preface
 
@@ -177,9 +177,9 @@ cd hadoop-cluster-docker
 
 - 暂无。
 
-## Intellij IDEA
+## IntelliJ IDEA
 
-> 我们的 Hadoop 集群已经在容器里安装完成，而且已经可以运行。相比自己一个个建立虚拟机，这样的确十分方便、快捷。为了便于开发调试，接下来就需要在 Intellij IDEA 下配置开发环境，包管理工具选择 Gradle。Maven 配合 Eclipse 的配置网上已经有很多了，需要的同学可以自行搜索。
+> 我们的 Hadoop 集群已经在容器里安装完成，而且已经可以运行。相比自己一个个建立虚拟机，这样的确十分方便、快捷。为了便于开发调试，接下来就需要在 IntelliJ IDEA 下配置开发环境，包管理工具选择 Gradle。Maven 配合 Eclipse 的配置网上已经有很多了，需要的同学可以自行搜索。
 
 ### Docker 开启 9000 端口映射
 
@@ -235,7 +235,7 @@ vi core-site.xml
 
 ### 构建依赖
 
-- 使用 Intellij IDEA 新建一个 Gradle 项目，在 Build.gradle 中加入以下依赖（对应容器 Hadoop 版本）。
+- 使用 IntelliJ IDEA 新建一个 Gradle 项目，在 Build.gradle 中加入以下依赖（对应容器 Hadoop 版本）。
 
 ```groovy
 compile group: 'org.apache.hadoop', name: 'hadoop-common', version: '2.7.2'
