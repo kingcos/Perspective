@@ -55,6 +55,7 @@
 - [iOS 开发问题解决集锦](https://github.com/kingcos/Perspective/issues/16)
 - [在 macOS 上进行直播推流](https://github.com/kingcos/Perspective/issues/19)
 - [将树莓派作为 AirPlay 音频服务器](https://github.com/kingcos/Perspective/issues/20)
+- [使用 usbmuxd 连接 iPhone](https://github.com/kingcos/Perspective/issues/54)
 
 ## Translation
 
