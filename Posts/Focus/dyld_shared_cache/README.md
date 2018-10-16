@@ -18,7 +18,7 @@ iOS & macOS 作为操作系统，其中内置了许多系统库（Library）。`
 
 ![iFunBox](2.png)
 
-而如果没有越狱设备，则可以巧妙地使用 Shortcuts（捷径）App 来获取，你可以使用我已经编辑好的 Shortcuts：[]()，运行后，将其 AirDrop 到 Mac 端，解压即可。
+而如果没有越狱设备，则可以巧妙地使用 Shortcuts（捷径）App 来获取，你可以直接使用我已经编辑好的 [Shortcuts](https://www.icloud.com/shortcuts/f016822e33d647b79892cb0de3ab42ca)，运行后，将其 AirDrop 到 Mac 端，解压即可。
 
 ![Shortcuts](3.jpeg)
 
