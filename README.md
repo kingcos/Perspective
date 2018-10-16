@@ -16,7 +16,7 @@
 - [Swift 中的 Selector](https://github.com/kingcos/Perspective/issues/24)
 - [Swift 中的 @autoclosure](https://github.com/kingcos/Perspective/issues/5)
 - [Swift Evolution (4.2)](https://github.com/kingcos/Perspective/issues/11)
-- [S谈谈 iOS 中的 `dyld_shared_cache`](https://github.com/kingcos/Perspective/issues/55)
+- [谈谈 iOS 中的 `dyld_shared_cache`](https://github.com/kingcos/Perspective/issues/55)
 
 ## Practice
 
