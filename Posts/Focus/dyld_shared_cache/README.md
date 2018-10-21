@@ -6,7 +6,9 @@
 
 ## What
 
-iOS & macOS 作为操作系统，其中内置了许多系统库（Library）。`dyld_shared_cache`，即动态库共享缓存。自 iOS 3.1 后，所有系统动态库被集合成一个 `dyld_shared_cache` 文件，以提升性能。
+iOS & macOS 作为操作系统，其中内置了许多系统库（Library）。`dyld_shared_cache`，即动态库共享缓存。自 iOS 3.1 后，所有系统动态库被集合成一个 `dyld_shared_cache` 文件，以提升性能。当然，macOS 也有 `dyld_shared_cache`，比较特别的是可以通过 `update_dyld_shared_cache` 更新。
+
+![`man update_dyld_shared_cache`](1.png)
 
 ## How
 
