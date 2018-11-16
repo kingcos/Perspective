@@ -1,4 +1,4 @@
-# Practice -从 0 开始使用 Docker 快速搭建 Hadoop 集群环境
+# Practice - 从 0 开始使用 Docker 快速搭建 Hadoop 集群环境
 
 | Date | Notes | Hadoop | Other |
 |:-----:|:-----:|:-----:|:-----:|
