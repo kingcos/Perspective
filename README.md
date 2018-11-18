@@ -64,6 +64,7 @@
 
 - [[译]起底 SourceKit](https://github.com/kingcos/Perspective/issues/12)
 - [[译]关于 App 启动顺序](https://github.com/kingcos/Perspective/issues/58)
+- [[译]为 App 执行一次性设置](https://github.com/kingcos/Perspective/issues/59)
 
 ## Thought
 
