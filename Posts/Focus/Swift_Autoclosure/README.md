@@ -346,8 +346,6 @@ public func _sanityCheck(
 
 - COMPILER_INTRINSIC 代表其为编译器的内置函数。
 
-> 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
-
 ## Reference
 
 - [apple/swift](https://github.com/apple/swift)

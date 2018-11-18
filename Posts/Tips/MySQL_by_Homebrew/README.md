@@ -52,5 +52,3 @@ brew services stop mysql
 
 mysql.server stop
 ```
-
-> 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)

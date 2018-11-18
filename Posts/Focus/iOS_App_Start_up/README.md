@@ -160,7 +160,6 @@ var preferredContentSizeCategory: UIContentSizeCategory { get } // 大字体或�
 var applicationState: UIApplicationState { get } // 前台，后台，已激活
 ```
 
-
 ## Reference
 
 - [一个纯手工的 Single View Application](https://boxueio.com/series/ios-101/ebook/89)
