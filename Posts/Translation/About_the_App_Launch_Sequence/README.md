@@ -15,24 +15,27 @@ Apple Inc. | [About the App Launch Sequence](https://developer.apple.com/documen
 ![图例 1 App 启动和初始化序列](https://docs-assets.developer.apple.com/published/52c7b459e7/76e68c08-6b09-4bac-8a00-44df7a097a43.png)
 
 1. 由用户显式或系统隐式启动 App。
-2. Xcode 提供的 `main` 函数调用 UIKit 的 [`UIApplicationMain(_:_:_:_:)`](
-https://developer.apple.com/documentation/uikit/1622933-uiapplicationmain) 方法。
-3. [`UIApplicationMain(_:_:_:_:)`](
-https://developer.apple.com/documentation/uikit/1622933-uiapplicationmain) 方法创建 [`UIApplication`](
-https://developer.apple.com/documentation/uikit/uiapplication) 对象和 App 代理。
+2. Xcode 提供的 `main` 函数调用 UIKit 的 [`UIApplicationMain(_:_:_:_:)`](https://developer.apple.com/documentation/uikit/1622933-uiapplicationmain) 函数。
+3. [`UIApplicationMain(_:_:_:_:)`](https://developer.apple.com/documentation/uikit/1622933-uiapplicationmain) 函数创建 [`UIApplication`](https://developer.apple.com/documentation/uikit/uiapplication) 对象和 App 代理。
 4. UIKit 从主 storyboard 或 nib 文件加载 App 的默认界面。
 5. UIKit 调用 App 代理的 [`application(_:willFinishLaunchingWithOptions:)`](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623032-application) 方法。
 6. UIKit 执行状态恢复（state restoration），即调用 App 代理和视图控制器中的额外的方法。
-7. UIKit 调用 App 代理的 [`application(_:didFinishLaunchingWithOptions:)`](
-https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1622921-application) 方法。
+7. UIKit 调用 App 代理的 [`application(_:didFinishLaunchingWithOptions:)`](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1622921-application) 方法。
 
 当初始化完成，系统将 App 转到激活（前台）状态或后台状态。当 App 转到激活状态，其窗口出现在屏幕上，并开始响应用户交互。当 App 转到后台状态，其窗口保持隐藏，并在被暂停前运行极短的时间。
 
-不管 App 启动到前台还是后台，大部分启动时间初始化的代码应当是相同的。举个例子，我们应当依旧初始化 App 的数据结构，并设置 App 用户界面。但是，如果有只在前台或后台运行的自定义的任务，检查 [`UIApplication`]() 对象的 [`applicationState`](https://developer.apple.com/documentation/uikit/uiapplication/1623003-applicationstate) 属性即可。当 App 运行到前台时，UIKit 设置该属性为 [`UIApplication.State.inactive`](
-https://developer.apple.com/documentation/uikit/uiapplication/state/inactive)，当 App 运行到后台时，UIKit 设置该属性为  [`UIApplication.State.background`](https://developer.apple.com/documentation/uikit/uiapplication/state/background)。
+不管 App 启动到前台还是后台，大部分启动时间初始化的代码应当是相同的。举个例子，我们应当依旧初始化 App 的数据结构，并设置 App 用户界面。但是，如果有只在前台或后台运行的自定义的任务，检查 [`UIApplication`](https://developer.apple.com/documentation/uikit/uiapplication) 对象的 [`applicationState`](https://developer.apple.com/documentation/uikit/uiapplication/1623003-applicationstate) 属性即可。当 App 运行到前台时，UIKit 设置该属性为 [`UIApplication.State.inactive`](https://developer.apple.com/documentation/uikit/uiapplication/state/inactive)，当 App 运行到后台时，UIKit 设置该属性为  [`UIApplication.State.background`](https://developer.apple.com/documentation/uikit/uiapplication/state/background)。
 
 ## 参阅
 
 ### 启动时间
 
-- [为你的 App 执行一次性设置（Performing One-Time Setup for Your App）](https://developer.apple.com/documentation/uikit/core_app/managing_your_app_s_life_cycle/responding_to_the_launch_of_your_app/performing_one-time_setup_for_your_app)
+- [为 App 执行一次性设置（Performing One-Time Setup for Your App）](https://developer.apple.com/documentation/uikit/core_app/managing_your_app_s_life_cycle/responding_to_the_launch_of_your_app/performing_one-time_setup_for_your_app)
+
+---
+
+> 以下内容为译者添加：
+
+## 参考
+
+- [[译]为 App 执行一次性设置](https://github.com/kingcos/Perspective/issues/59)
