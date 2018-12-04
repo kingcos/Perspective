@@ -80,7 +80,7 @@
 ## Contact
 
 - E-mail: [2821836721v@gmail.com](mailto:2821836721v@gmail.com)
-- Twitter: [mmdadao](https://twitter.com/mmdadao/)
+- Twitter: [@kingcos_v](https://twitter.com/kingcos_v/)
 
 ## LICENSE
 
