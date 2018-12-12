@@ -2,7 +2,8 @@
 
 | Date | Notes | Source Code |
 |:-----:|:-----:|:-----:|
-| 2018-10-14 | 首次提交 | [dyld-551.4](https://opensource.apple.com/tarballs/dyld/dyld-551.4.tar.gz) |
+| 2018-10-14 | 首次提交 | [dyld-551.4](https://opensource.apple.com/source/dyld/dyld-551.4/) |
+| 2018-12-12 | 补充 `dyld_shared_cache` 路径来源 | [system_cmds-805.220.1](https://opensource.apple.com/source/system_cmds/system_cmds-805.220.1/)
 
 ## What
 
@@ -12,6 +13,14 @@ iOS & macOS 作为操作系统，其中内置了许多系统库（Library）。`
 
 ## How
 
+为了研究 `dyld_shared_cache`，首先要找到其存在的路径。可以在 Apple 开源的 system_cmds 中 `dyld_shared_cache.c` 文件中发现，其分别存放在 macOS 和 iOS 中的路径。
+
+![system_cmds](6.png)
+
+macOS 上的 `dyld_shared_cache` 和 iOS 不太相同，每种架构额外对应了一种 `.map` 文件。因为本文着重在于 iOS，读者想要了解 macOS 相关可以在 system_cmds 中自行检索。
+
+![dyld_shared_cache on macOS](7.png)
+
 `dyld_shared_cache` 存在于 iOS 设备的 `/System/Library/Caches/com.apple.dyld/` 目录。文件名即为 `dyld_shared_cache_arm*` 加上对应的架构编号。
 
 ### 从设备提取 `dyld_shared_cache`
@@ -20,9 +29,9 @@ iOS & macOS 作为操作系统，其中内置了许多系统库（Library）。`
 
 ![iFunBox](2.png)
 
-而如果没有越狱设备，则可以巧妙地使用 Shortcuts（捷径）App 来获取，你可以直接使用我已经编辑好的 [Shortcuts](https://www.icloud.com/shortcuts/baa4c53d6cd046f087b5270d715a0b45)，运行后，将其 AirDrop 到 Mac 端，解压即可。
+而如果没有越狱设备，则可以巧妙地使用 Shortcuts（捷径）App 来获取，你可以直接使用我已经编辑好的 [Shortcut](https://www.icloud.com/shortcuts/baa4c53d6cd046f087b5270d715a0b45)，运行后，将其 AirDrop 到 Mac 端，解压即可。
 
-![Shortcuts](3.jpeg)
+![Shortcut](3.jpeg)
 
 ### 提取 `dyld_shared_cache`
 
@@ -45,5 +54,6 @@ iOS & macOS 作为操作系统，其中内置了许多系统库（Library）。`
 ## Reference
 
 - [dyld - Apple Open Source](https://opensource.apple.com/tarballs/dyld/)
+- [system_cmds - Apple Open Source](https://opensource.apple.com/tarballs/system_cmds/)
 - [`dyld_shared_cache` - iPhoneDevWiki](http://iphonedevwiki.net/index.php/Dyld_shared_cache)
 - [Extracting libraries from `dyld_shared_cache` - zhuowei](https://worthdoingbadly.com/dscextract/)
