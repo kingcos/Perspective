@@ -72,6 +72,8 @@
 > Thought，即思考。这里只是个人的胡言乱语。
 
 - [180625](/Posts/Thought/180625)
+- [180706](/Posts/Thought/180706)
+- [180715](/Posts/Thought/180715)
 - [180727](/Posts/Thought/180727)
 - [180805](/Posts/Thought/180805)
 - [181210](/Posts/Thought/181210)
