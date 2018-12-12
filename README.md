@@ -69,18 +69,14 @@
 
 ## Thought
 
-> Thought，即思考。这里只是个人的胡言乱语。
-
-- [180625](/Posts/Thought/180625)
-- [180727](/Posts/Thought/180727)
-- [180805](/Posts/Thought/180805)
-
-> 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
+> Thought，即思考。这里只是个人的胡言乱语[。](/Posts/Thought)
 
 ## Contact
 
 - E-mail: [2821836721v@gmail.com](mailto:2821836721v@gmail.com)
 - Twitter: [@kingcos_v](https://twitter.com/kingcos_v/)
+
+> 也欢迎您关注我的微博 [@萌面大道V](http://weibo.com/375975847)
 
 ## LICENSE
 
