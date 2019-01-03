@@ -50,7 +50,7 @@
 
 2018 年总归要过去，虽然在 2018 年的尾巴上又重新加回了一位好友，也简单地聊了几句，但深感有些事情却再也不会回去了。
 
-<center>***Yesterday is history, tomorrow is a mystery, today is God's gift, that's why we call it the present. - Joan Rivers***</center>
+<center><i><b>Yesterday is history, tomorrow is a mystery, today is God's gift, that's why we call it the present. - Joan Rivers</b></i></center>
 
 *V.*
 
