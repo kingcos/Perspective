@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Matrix: CustomStringConvertible {
+struct Matrix: CustomStringConvertible {
     private var values: [[Double]]
     
     var size: Int {
@@ -39,5 +39,48 @@ class Matrix: CustomStringConvertible {
     func columnVector(_ column: Int) -> Vector {
         assert(column <= shape().columns, "Column is out of range.")
         return Vector(values.compactMap { $0[column] })
+    }
+}
+
+extension Matrix {
+    static func zero(_ shape: (rows: Int, columns: Int)) -> Matrix {
+        return Matrix([[Double]](repeating: [Double](repeating: 0.0, count: shape.columns),
+                                 count: shape.rows))
+    }
+    
+    static func + (left: Matrix, right: Matrix) -> Matrix {
+        var left = left
+        assert(left.shape() == right.shape(),
+               "Error in adding. Length of matrixes must be same.")
+        
+        right.values.enumerated().forEach { t in
+            t.element.enumerated().forEach {
+                left.values[t.offset][$0.offset] += $0.element
+            }
+        }
+        
+        return left
+    }
+    
+    static func - (left: Matrix, right: Matrix) -> Matrix {
+        var left = left
+        assert(left.shape() == right.shape(),
+               "Error in subtracting. Length of matrixes must be same.")
+        
+        right.values.enumerated().forEach { t in
+            t.element.enumerated().forEach {
+                left.values[t.offset][$0.offset] -= $0.element
+            }
+        }
+        
+        return left
+    }
+    
+    static func * (left: Double, right: Matrix) -> Matrix {
+        return Matrix(right.values.map { t in t.map { $0 * left } })
+    }
+    
+    static func * (left: Matrix, right: Double) -> Matrix {
+        return right * left
     }
 }
