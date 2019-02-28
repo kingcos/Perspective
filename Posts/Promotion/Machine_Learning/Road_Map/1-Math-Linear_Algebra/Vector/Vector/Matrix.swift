@@ -84,3 +84,33 @@ extension Matrix {
         return right * left
     }
 }
+
+extension Matrix {
+    func rows() -> [Vector] {
+        return values.map { Vector($0) }
+    }
+    
+    func columns() -> [Vector] {
+        var columns = [Vector]()
+        for i in 0..<shape().columns {
+            columns.append(Vector(values.enumerated().map { $0.element[i] }))
+        }
+        return columns
+    }
+    
+    static func dot(_ left: Matrix, _ right: Vector) -> Vector {
+        assert(left.shape().columns == right.len,
+               "Error in Matrix-Matrix Multiplication.")
+        return Vector(left.rows().map { Vector.dot($0, right) })
+    }
+    
+    static func dot(_ left: Matrix, _ right: Matrix) -> Matrix {
+        assert(left.shape().columns == right.shape().rows,
+               "Error in Matrix-Matrix Multiplication.")
+        return Matrix(left.rows().map { leftRow in
+            right.columns().map { rightColumn in
+                Vector.dot(leftRow, rightColumn)
+            }
+        })
+    }
+}
