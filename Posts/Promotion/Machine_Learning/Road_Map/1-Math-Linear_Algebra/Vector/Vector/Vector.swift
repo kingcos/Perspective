@@ -93,7 +93,7 @@ extension Vector {
 }
 
 extension Vector {
-    static func | (left: Vector, right: Vector) -> Double {
+    static func dot(_ left: Vector, _ right: Vector) -> Double {
         var left = left
         assert(left.len == right.len,
                "Error in dot product. Length of vectors must be same.")
