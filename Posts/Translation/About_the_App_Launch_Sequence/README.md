@@ -12,7 +12,7 @@ Apple Inc. | [About the App Launch Sequence](https://developer.apple.com/documen
 
 一个 App 的启动需要经过许多复杂的步骤，其中大部分由 UIKit 自动处理。在启动过程中，UIKit 会调用 App 代理中的方法，因此我们可以执行自定义的任务。图中的步骤展示了从 App 启动的时间开始直到被认为初始化完成的过程。
 
-![图例 1 App 启动和初始化序列](https://docs-assets.developer.apple.com/published/52c7b459e7/76e68c08-6b09-4bac-8a00-44df7a097a43.png)
+![图例 1 App 启动和初始化序列](1.png)
 
 1. 由用户显式或系统隐式启动 App。
 2. Xcode 提供的 `main` 函数调用 UIKit 的 [`UIApplicationMain(_:_:_:_:)`](https://developer.apple.com/documentation/uikit/1622933-uiapplicationmain) 函数。

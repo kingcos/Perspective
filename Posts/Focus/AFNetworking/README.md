@@ -8,9 +8,20 @@
 
 ![](afnetworking-logo.png)
 
+## What
+
+> AFNetworking is a delightful networking library for iOS, macOS, watchOS, and tvOS. It's built on top of the [Foundation URL Loading System](https://developer.apple.com/documentation/foundation/url_loading_system), extending the powerful high-level networking abstractions built into Cocoa. It has a modular architecture with well-designed, feature-rich APIs that are a joy to use.
+> 
+> Perhaps the most important feature of all, however, is the amazing community of developers who use and contribute to AFNetworking every day. AFNetworking powers some of the most popular and critically-acclaimed apps on the iPhone, iPad, and Mac.
+> 
+> Choose AFNetworking for your next project, or migrate over your existing projects—you'll be happy you did!
+
+AFNetworking 是由 Objective-C 编写的适用于 iOS/macOS/watchOS/tvOS 全平台的网络库。但凡接触过 Obj-C iOS 开发的老同学都应该对 AFNetworking 这个名字感觉不陌生。但我们还是从其 GitHub Repo 的 README 开始说起。
+
+
 ## 总体概览
 
-但凡接触过 Obj-C iOS 开发的老同学都应该对 AFNetworking 这个名字不陌生。AFNetworking 是由 Objective-C 编写的适用于 iOS/macOS/watchOS/tvOS 全平台的网络库。根据其开源在 GitHub 上最新的 3.2.1 版本 Tag，可以直接下载到该版本的源代码。AFNetworking 支持 CocoaPods 集成，所以只需要查看 Podspec 文件就可以得知真正的库文件，总共只有 14 个文件。文件结构如下：
+根据其开源在 GitHub 上最新的 3.2.1 版本 Tag，可以直接下载到该版本的源代码。AFNetworking 支持 CocoaPods 集成，所以只需要查看 Podspec 文件就可以得知真正的库文件，总共只有 14 个文件。文件结构如下：
 
 ```
 ➜  AFNetworking tree
@@ -79,7 +90,7 @@ Podspec 不仅指定了源文件的路径，也可以较为容易地了解整体
 
 ![](1.png)
 
-需要注意的是，其中 UIKit 层主要是针对系统 UIKit 中部分 UI 控件以分类（Category）形式提供支持，不涉及 AFNetworking 核心功能，官方也没有将其直接放在 AFNetworking 文件夹下，而是放在了 UIKit+AFNetworking 文件夹下，共有 18 个文件。
+需要注意的是，其中 UIKit 层主要是针对系统 UIKit 中部分 UI 控件以分类（Category）形式提供支持，不涉及 AFNetworking 核心功能，官方也没有将其直接放在 AFNetworking 文件夹下，而是放在了 UIKit+AFNetworking 文件夹下，共有 20 个文件。
 
 ```
 ➜  UIKit+AFNetworking tree

@@ -6,7 +6,7 @@ JP Simard | 20140706 | [https://www.jpsim.com/uncovering-sourcekit/](https://www
 
 > 为了支持一门[奇特的新编程语言](http://developer.apple.com/swift)（译者注：即 Swift），漂亮的[实时 IDE](https://developer.apple.com/library/prerelease/ios/recipes/xcode_help-source_editor/ExploringandEvaluatingSwiftCodeinaPlayground/ExploringandEvaluatingSwiftCodeinaPlayground.html) 特性，以及令人印象深刻的[跨语言协同性](https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/BuildingCocoaApps/InteractingWithObjective-CAPIs.html)（译者注：即 Swift 与 Obj-C），Apple 不得不开发一些新的底层工具。这里我们将专注于 SourceKit，Xcode 背后的功臣。
 
-![SourceKitSidekick 暂时披着披肩](https://www.jpsim.com/images/posts/sidekick.jpg)
+![SourceKitSidekick 暂时披着披肩](1.jpeg)
 
 ## 什么是 SourceKit？
 
@@ -16,13 +16,13 @@ SourceKit 是一套工具集，使得大多数 Swift 源代码层面的操作特
 
 传统上，Xcode 在运行时跑着其编译器（[Clang](http://clang.llvm.org/)），即意味着编译器将可能在任何时候崩溃，IDE 同样。
 
-![Xcode 架构示意图](https://www.jpsim.com/images/posts/house_of_cards.jpg)
+![Xcode 架构示意图](2.jpeg)
 
 更有甚者，Xcode 容易唤起编译器进行成千上万次解析、高亮、以及排版源代码，所有这一切都在用户键入「⌘ + B」之前。这是因为不像大多数编辑器（Vim/Sublime/...），Xcode 并不使用正则表达式解析源代码，而是使用 Clang 强大的（也更加复杂的）解析器（parser）和标记器（tokenizer）。
 
 庆幸的是，Xcode 6 中的 Swift 移除了该特性<sup>1</sup>，合并所有源代码操作特性至一个独立的进程，并和 Xcode 通过 [XPC](https://developer.apple.com/library/mac/documentation/macosx/conceptual/bpsystemstartup/chapters/CreatingXPCServices.html) 交流：`sourcekitd`。无论 Xcode 6 何时加载任何 Swift 代码，该 XPC 守护进程将被启动。
 
-![如果每次出现如图情况时 Xcode 都会崩溃，生活将变得痛苦不堪](https://www.jpsim.com/images/posts/sourcekit_terminated.jpg)
+![如果每次出现如图情况时 Xcode 都会崩溃，生活将变得痛苦不堪](3.jpeg)
 
 ## Xcode 如何使用 SourceKit
 
@@ -32,7 +32,7 @@ SourceKit 是一套工具集，使得大多数 Swift 源代码层面的操作特
 
 SourceKit 借助 Clang 中称作 USR（Unified Symbol Resolution，即统一符号解析）的特性，为源代码令牌（token，例如类，属性，方法等）对应一个唯一标识符。这使得你可以使用 「⌘ + 点击」Xcode 编辑器中任何一处令牌，即可以导航至其定义处。USR 现在甚至更加强大了，可以跨语言（Swift/Obj-C）统一一个代表。
 
-![运作中的 USR](https://www.jpsim.com/images/posts/usr.jpg)
+![运作中的 USR](4.jpeg)
 
 为了从一个 Swift 文件（以及其位置）中打印 USR，你可以运行以下命令： 
 
@@ -54,11 +54,11 @@ $ xcrun swift-ide-test -print-usrs -source-filename=Musician.swift
 
 在 Swift 中使用「⌘ + 点击」一个定义在 Obj-C 中令牌，Xcode 将会触发生成一个类 Swift 头文件。称其为类 Swift 是因为该生成的文件并非有效的 Swift<sup>3</sup>，但至少显示了等效于 Obj-C 令牌的 Swift 语法。
 
-![左：原始 Obj-C 头文件，右：SourceKit 生成的类 Swift 版本](https://www.jpsim.com/images/posts/generated_swift_header.jpg)
+![左：原始 Obj-C 头文件，右：SourceKit 生成的类 Swift 版本](5.jpeg)
 
 ## 在命令行使用 SourceKit
 
-![](https://www.jpsim.com/images/posts/sourcekit_playground.jpg)
+![](6.jpeg)
 
 主要有 3 个命令行工具允许和 SourceKit 交互：`sourcekitd-test`，`swift-ide-test`，以及 `swift`。
 
@@ -72,7 +72,7 @@ $ xcrun swift-ide-test -print-usrs -source-filename=Musician.swift
 
 ### Jazzy♪♫
 
-![](https://www.jpsim.com/images/posts/jazzy.jpg)
+![](7.jpeg)
 
 [jazzy](https://github.com/realm/jazzy) 是一个命令行工具，可以为你的 Swift 或 Obj-C 项目生成文档。其利用 SourceKit 以获得从 Obj-C 定义令牌（例如类，属性，方法等）的 Swift 语法。
 
@@ -80,7 +80,7 @@ $ xcrun swift-ide-test -print-usrs -source-filename=Musician.swift
 
 [SwiftEdit](https://github.com/jpsim/SwiftEdit) 是一款支持 Swift 文件语法高亮的概念型编辑器。
 
-![](https://www.jpsim.com/images/posts/SwiftEdit.png)
+![](8.png)
 
 ## SourceKit 与你
 
