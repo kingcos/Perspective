@@ -6,7 +6,8 @@ Apple Inc. | [About the App Launch Sequence](https://developer.apple.com/documen
 
 学习在启动时的代码执行顺序。
 
-- **框架：**UIKit 
+- **框架**
+  - UIKit 
 
 ---
 

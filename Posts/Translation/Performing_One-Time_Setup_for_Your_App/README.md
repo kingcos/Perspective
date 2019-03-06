@@ -6,7 +6,8 @@ Apple Inc. | [Performing One-Time Setup for Your App](https://developer.apple.co
 
 确保 App 环境被正确配置。
 
-- **框架：**UIKit 
+- **框架**
+  - UIKit
 
 ---
 
