@@ -6,6 +6,8 @@ Apple Inc. | [Performing One-Time Setup for Your App](https://developer.apple.co
 
 确保 App 环境被正确配置。
 
+- **框架：**UIKit 
+
 ---
 
 ## 概览
@@ -44,8 +46,7 @@ let cachesURL = FileManager.default.urls(for:
 ### 启动时间
 
 - [关于 App 启动顺序（About the App Launch Sequence）](https://developer.apple.com/documentation/uikit/core_app/managing_your_app_s_life_cycle/responding_to_the_launch_of_your_app/about_the_app_launch_sequence)
-
-> 学习在启动时的代码执行顺序。
+  - 学习在启动时的代码执行顺序。
 
 ---
 

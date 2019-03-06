@@ -2,9 +2,11 @@
 
 作者 | 原文链接
 --- | ---
-Apple Inc. | [About the App Launch Sequence](https://developer.apple.com/documentation/uikit/core_app/managing_your_app_s_life_cycle/responding_to_the_launch_of_your_app/about_the_app_launch_sequence#overview)
+Apple Inc. | [About the App Launch Sequence](https://developer.apple.com/documentation/uikit/core_app/managing_your_app_s_life_cycle/responding_to_the_launch_of_your_app/about_the_app_launch_sequence)
 
 学习在启动时的代码执行顺序。
+
+- **框架：**UIKit 
 
 ---
 
@@ -31,6 +33,7 @@ Apple Inc. | [About the App Launch Sequence](https://developer.apple.com/documen
 ### 启动时间
 
 - [为 App 执行一次性设置（Performing One-Time Setup for Your App）](https://developer.apple.com/documentation/uikit/core_app/managing_your_app_s_life_cycle/responding_to_the_launch_of_your_app/performing_one-time_setup_for_your_app)
+  - 确保 App 环境被正确配置。
 
 ---
 
