@@ -61,7 +61,7 @@ sem_t * semaphore;
 void * run_for_semaphore_demo_1(void * arg) {
     // 等待信号
     if (sem_wait(semaphore) != 0) {
-        perror("sem_post error.");
+        perror("sem_wait error.");
         exit(1);
     }
     
