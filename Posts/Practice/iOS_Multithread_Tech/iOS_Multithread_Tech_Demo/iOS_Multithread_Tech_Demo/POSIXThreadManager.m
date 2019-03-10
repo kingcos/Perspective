@@ -22,6 +22,37 @@ void * run_for_pthread_join_demo(void * arg) {
     pthread_exit(arg);
 }
 
+// 起始数
+const int START_NUMBER = 0;
+// 结束数
+const int END_NUMBER = 10;
+// 线程数
+const int THREAD_NUMBER = 5;
+// 平均每个线程的任务数
+const int COUNT_PER_THREAD = (END_NUMBER - START_NUMBER) / THREAD_NUMBER;
+
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+// 当前数，初始为起始数
+int current_count = START_NUMBER;
+
+void * run_for_thread_conflict_demo(void * arg) {
+    for (int i = 0; i < COUNT_PER_THREAD; i++) {
+        // 人为休息线程 1 秒
+        sleep(1);
+        
+        // 加锁
+        pthread_mutex_lock(&mutex);
+        
+        current_count += 1;
+        printf("Now - %d\n", current_count);
+        
+        // 解锁
+        pthread_mutex_unlock(&mutex);
+    }
+    return NULL;
+}
+
 @implementation POSIXThreadManager
 
 + (void)pthread_create_demo {
@@ -101,6 +132,30 @@ void * run_for_pthread_join_demo(void * arg) {
     
     // 主线程退出码为 3
     exit(3);
+}
+
++ (void)thread_conflict_demo {
+    // 线程数组
+    pthread_t thread[THREAD_NUMBER];
+    void * result;
+    
+    printf("Start number: %d\nEnd number: %d\nThread number: %d\n", START_NUMBER, END_NUMBER, THREAD_NUMBER);
+    
+    for (int i = 0; i < THREAD_NUMBER; i++) {
+        // 循环创建线程
+        if (pthread_create(&thread[i], NULL, run_for_thread_conflict_demo, NULL) != 0) {
+            printf("pthread_create thread_%d error.", i);
+            exit(1);
+        }
+    }
+    
+    for (int i = 0; i < THREAD_NUMBER; i++) {
+        // 循环 Join 线程，防止主线程提前结束
+        pthread_join(thread[i], &result);
+    }
+    
+    // 打印最终的数
+    printf("Result count - %d\n", current_count);
 }
 
 @end

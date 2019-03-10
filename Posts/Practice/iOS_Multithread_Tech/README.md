@@ -214,13 +214,121 @@ Program ended with exit code: 3 // 主线程结束程序
 
 ### 互斥锁
 
-多线程的并行计算加快了速度，但这使得多个线程的管理变得复杂。其中一个问题便是，如果两个线程同时对同一个资源操作，情况将变得不可控。举个例子：
+多线程的并行计算加快了速度，但这使得多个线程的管理变得复杂。其中一个问题便是，如果两个线程同时对同一个资源操作，情况将变得不可控。举个例子，从 0 开始数数，数到 10 为止，如果有 5 个线程，则平均每个线程只需要数 2 个即可完成。
 
+```objc
+#import "POSIXThreadManager.h"
 
+#import "pthread.h"
 
+// 起始数
+const int START_NUMBER = 0;
+// 结束数
+const int END_NUMBER = 10;
+// 线程数
+const int THREAD_NUMBER = 5;
+// 平均每个线程的任务数
+const int COUNT_PER_THREAD = (END_NUMBER - START_NUMBER) / THREAD_NUMBER;
 
+// 当前数，初始为起始数
+int current_count = START_NUMBER;
 
+void * run_for_thread_conflict_demo(void * arg) {
+    for (int i = 0; i < COUNT_PER_THREAD; i++) {
+        // 人为休息线程 1 秒
+        sleep(1);
+        current_count += 1;
+    }
+    return NULL;
+}
 
+@implementation POSIXThreadManager
+
++ (void)thread_conflict_demo {
+    // 线程数组
+    pthread_t thread[THREAD_NUMBER];
+    void * result;
+    
+    printf("Start number: %d\nEnd number: %d\nThread number: %d\n", START_NUMBER, END_NUMBER, THREAD_NUMBER);
+    
+    for (int i = 0; i < THREAD_NUMBER; i++) {
+        // 循环创建线程
+        if (pthread_create(&thread[i], NULL, run_for_thread_conflict_demo, NULL) != 0) {
+            printf("pthread_create thread_%d error.", i);
+            exit(1);
+        }
+    }
+    
+    for (int i = 0; i < THREAD_NUMBER; i++) {
+        // 循环 Join 线程，防止主线程提前结束
+        pthread_join(thread[i], &result);
+    }
+    
+    // 打印最终的数
+    printf("Result count - %d\n", current_count);
+}
+
+@end
+
+// OUTPUT:
+// Start number: 0
+// End number: 10
+// Thread number: 5
+// Now - 1
+// Now - 5
+// Now - 4
+// Now - 2
+// Now - 3
+// Now - 6
+// Now - 6
+// Now - 7
+// Now - 8
+// Now - 9
+// Result count - 9
+// Program ended with exit code: 0
+```
+
+结果怎么会是 9，是不是谁少数了 2 个呢？数一下输出语句可以发现并没有少数，而却有两个 `6`。其实问题就在于 `sleep(1);`，在一个线程休息的时候可能被另外一个线程抢先访问了同样的资源，而导致出错重复数数，虽然次数都是一定的，但最终的结果却少了。当然，因为这个示例程序是个很简单的 Demo，我们加入了人为的休息 `sleep()` 函数，然而其实每条程序语句的执行都是需要时间的，仍然有可能和其他线程同时访问一块资源。解决这一问题的方法就是加锁（Lock）。计算机科学中的锁默认为互斥锁（Mutex），即在不希望被同时多个线程访问的代码前加锁，执行完后再解锁。
+
+```objc
+// 创建互斥锁
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+void * run_for_thread_conflict_demo(void * arg) {
+    for (int i = 0; i < COUNT_PER_THREAD; i++) {
+        // 人为休息线程 1 秒
+        sleep(1);
+        
+        // 加锁
+        pthread_mutex_lock(&mutex);
+        
+        current_count += 1;
+        printf("Now - %d\n", current_count);
+        
+        // 解锁
+        pthread_mutex_unlock(&mutex);
+    }
+    return NULL;
+}
+
+// Start number: 0
+// End number: 10
+// Thread number: 5
+// Now - 1
+// Now - 2
+// Now - 3
+// Now - 4
+// Now - 5
+// Now - 6
+// Now - 7
+// Now - 8
+// Now - 9
+// Now - 10
+// Result count - 10
+// Program ended with exit code: 0
+```
+
+### 信号量（Semaphore）
 
 
 ## Reference

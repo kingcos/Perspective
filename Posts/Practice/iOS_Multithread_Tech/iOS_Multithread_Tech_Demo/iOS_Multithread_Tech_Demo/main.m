@@ -14,6 +14,7 @@ int main(int argc, const char * argv[]) {
     @autoreleasepool {
 //        [POSIXThreadManager pthread_create_demo];
 //        [POSIXThreadManager pthread_join_demo];
+//        [POSIXThreadManager thread_conflict_demo];
     }
     return 0;
 }
