@@ -28,6 +28,7 @@
 		31E9E9602232400D002FD06C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		31E9E96722329428002FD06C /* POSIXThreadManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = POSIXThreadManager.h; sourceTree = "<group>"; };
 		31E9E96822329428002FD06C /* POSIXThreadManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = POSIXThreadManager.m; sourceTree = "<group>"; };
+		840EE4312232BEA300C02AAB /* iOS_Multithread_Tech_Demo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iOS_Multithread_Tech_Demo-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +64,7 @@
 				31E9E9602232400D002FD06C /* main.m */,
 				31E9E96722329428002FD06C /* POSIXThreadManager.h */,
 				31E9E96822329428002FD06C /* POSIXThreadManager.m */,
+				840EE4312232BEA300C02AAB /* iOS_Multithread_Tech_Demo-Bridging-Header.h */,
 			);
 			path = iOS_Multithread_Tech_Demo;
 			sourceTree = "<group>";
@@ -98,6 +100,7 @@
 				TargetAttributes = {
 					31E9E95C2232400D002FD06C = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1010;
 					};
 				};
 			};
@@ -245,16 +248,33 @@
 		31E9E9652232400D002FD06C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "iOS_Multithread_Tech_Demo/iOS_Multithread_Tech_Demo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
 		31E9E9662232400D002FD06C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "iOS_Multithread_Tech_Demo/iOS_Multithread_Tech_Demo-Bridging-Header.h";
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};

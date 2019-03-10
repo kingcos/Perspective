@@ -12,6 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface POSIXThreadManager : NSObject
 
++ (void)pthread_create_demo;
++ (void)pthread_join_demo;
+
 @end
 
 NS_ASSUME_NONNULL_END
