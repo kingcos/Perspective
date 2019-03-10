@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)pthread_create_demo;
 + (void)pthread_join_demo;
 + (void)thread_conflict_demo;
++ (void)semaphore_demo;
 
 @end
 

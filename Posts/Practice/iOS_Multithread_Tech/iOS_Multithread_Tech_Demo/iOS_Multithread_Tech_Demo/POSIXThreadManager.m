@@ -8,7 +8,8 @@
 
 #import "POSIXThreadManager.h"
 
-#import "pthread.h"
+#import <pthread.h>
+#import <sys/semaphore.h>
 
 void * run_for_pthread_create_demo(void * arg) {
     // 打印参数 & 当前线程 __opaque 属性的地址
@@ -18,7 +19,7 @@ void * run_for_pthread_create_demo(void * arg) {
 
 void * run_for_pthread_join_demo(void * arg) {
     // 返回参数
-    //    return arg;
+    // return arg;
     pthread_exit(arg);
 }
 
@@ -31,6 +32,7 @@ const int THREAD_NUMBER = 5;
 // 平均每个线程的任务数
 const int COUNT_PER_THREAD = (END_NUMBER - START_NUMBER) / THREAD_NUMBER;
 
+// 创建互斥锁
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // 当前数，初始为起始数
@@ -51,6 +53,34 @@ void * run_for_thread_conflict_demo(void * arg) {
         pthread_mutex_unlock(&mutex);
     }
     return NULL;
+}
+
+// 声明信号量
+sem_t * semaphore;
+
+void * run_for_semaphore_demo_1(void * arg) {
+    // 等待信号
+    if (sem_wait(semaphore) != 0) {
+        perror("sem_post error.");
+        exit(1);
+    }
+    
+    printf("Running - %s.\n", arg);
+    
+    pthread_exit(NULL);
+}
+
+void * run_for_semaphore_demo_2(void * arg) {
+    printf("Running - %s.\n", arg);
+    
+    sleep(1);
+    // 发送信号
+    if (sem_post(semaphore) != 0) {
+        perror("sem_post error.");
+        exit(1);
+    }
+    
+    pthread_exit(NULL);
 }
 
 @implementation POSIXThreadManager
@@ -156,6 +186,28 @@ void * run_for_thread_conflict_demo(void * arg) {
     
     // 打印最终的数
     printf("Result count - %d\n", current_count);
+}
+
++ (void)semaphore_demo {
+    // sem_init 初始化匿名信号量在 macOS 中已被废弃
+    // semaphore = sem_init(&semaphore, 0, 0);
+    semaphore = sem_open("sem", 0, 0);
+    
+    pthread_t thread_1, thread_2;
+    void * result;
+    
+    if (pthread_create(&thread_1, NULL, run_for_semaphore_demo_1, "Thread 1") != 0) {
+        perror("pthread_create thread_1 error.");
+        exit(1);
+    }
+    
+    if (pthread_create(&thread_2, NULL, run_for_semaphore_demo_2, "Thread 2") != 0) {
+        perror("pthread_create thread_2 error.");
+        exit(1);
+    }
+    
+    pthread_join(thread_1, &result);
+    pthread_join(thread_2, &result);
 }
 
 @end

@@ -17,9 +17,9 @@
 >
 > 译：
 > 
-> POSIX（Portable Operating System Interface of UNIX，可移植操作系统接口）线程，即 pthreads，是一种不依赖于编程语言的执行模型和并行（Parallel）执行模型。其允许一个程序控制多个时间重叠的不同工作流。每个工作流即为一个线程，通过调用 POSIX 线程 API 创建并控制这些流。
+> POSIX（Portable Operating System Interface of UNIX，可移植操作系统接口）线程，即 pthreads，是一种不依赖于语言的执行模型，也称作并行（Parallel）执行模型。其允许一个程序控制多个时间重叠的不同工作流。每个工作流即为一个线程，通过调用 POSIX 线程 API 创建并控制这些流。
 
-如上所述，pthreads，即 POSIX Threads（后简称 pthreads）是一套跨平台的多线程 API。由 C 语言编写，在 Obj-C 中，`#import "pthread.h"` 即可引入 pthreads 相关的 API。但也由于是纯 C 的 API，使用起来不够友好，也需要手动管理线程的整个生命周期。
+如上所述，pthreads，即 POSIX Threads（后简称 pthreads）是一套跨平台的多线程 API。由 C 语言编写，在 Obj-C 中，`#import <pthread.h>` 即可引入 pthreads 相关的 API。但也由于是纯 C 的 API，使用起来不够友好，也需要手动管理线程的整个生命周期。
 
 ### `pthread_create`
 
@@ -65,7 +65,7 @@ struct _opaque_pthread_attr_t {
 ```objc
 #import "POSIXThreadManager.h"
 
-#import "pthread.h"
+#import <pthread.h>
 
 void * run_for_pthread_create_demo(void * arg) {
     // 打印参数 & 当前线程 __opaque 属性的地址
@@ -144,7 +144,7 @@ Program ended with exit code: 3 // 主线程结束程序
 ```objc
 #import "POSIXThreadManager.h"
 
-#import "pthread.h"
+#import <pthread.h>
 
 void * run_for_pthread_join_demo(void * arg) {
     // 返回参数
@@ -212,14 +212,14 @@ thread_2 // 主线程拿到了子线程调用函数的返回值并输出
 Program ended with exit code: 3 // 主线程结束程序
 ```
 
-### 互斥锁
+### 互斥锁（Mutex）
 
 多线程的并行计算加快了速度，但这使得多个线程的管理变得复杂。其中一个问题便是，如果两个线程同时对同一个资源操作，情况将变得不可控。举个例子，从 0 开始数数，数到 10 为止，如果有 5 个线程，则平均每个线程只需要数 2 个即可完成。
 
 ```objc
 #import "POSIXThreadManager.h"
 
-#import "pthread.h"
+#import <pthread.h>
 
 // 起始数
 const int START_NUMBER = 0;
@@ -288,7 +288,7 @@ void * run_for_thread_conflict_demo(void * arg) {
 // Program ended with exit code: 0
 ```
 
-结果怎么会是 9，是不是谁少数了 2 个呢？数一下输出语句可以发现并没有少数，而却有两个 `6`。其实问题就在于 `sleep(1);`，在一个线程休息的时候可能被另外一个线程抢先访问了同样的资源，而导致出错重复数数，虽然次数都是一定的，但最终的结果却少了。当然，因为这个示例程序是个很简单的 Demo，我们加入了人为的休息 `sleep()` 函数，然而其实每条程序语句的执行都是需要时间的，仍然有可能和其他线程同时访问一块资源。解决这一问题的方法就是加锁（Lock）。计算机科学中的锁默认为互斥锁（Mutex），即在不希望被同时多个线程访问的代码前加锁，执行完后再解锁。
+结果怎么会是 9，是不是谁少数了 1 个呢？数一下输出语句可以发现并没有少数，而却有两个 `6`。其实问题就在于 `sleep(1);`，在一个线程休息的时候可能被另外一个线程抢先访问了同样的资源，而导致出错重复数数，虽然次数都是一定的，但最终的结果却少了。当然，因为这个示例程序是个很简单的 Demo，我们加入了人为的休息 `sleep()` 函数，然而其实每条程序语句的执行都是需要时间的，仍然有可能和其他线程同时访问一块资源。解决这一问题的方法就是加锁（Lock）。计算机科学中的锁不止互斥锁一种，限于主题，我将之后一篇文章中专门讲述锁相关的概念。最基本的锁就是互斥锁，即在不希望被同时多个线程访问的代码前加锁，执行完后再解锁，他们的执行是互斥的。
 
 ```objc
 // 创建互斥锁
@@ -330,6 +330,79 @@ void * run_for_thread_conflict_demo(void * arg) {
 
 ### 信号量（Semaphore）
 
+信号量的概念很难从字面直接理解，常用的比喻是信号灯：一段马路（即资源）对车辆（即线程）的承载量是有限的，当承载量达到限度时，红灯会亮起阻止进入；当承载量未达到时，绿灯会亮起允许进入。关于互斥锁和信号量的区别，简而言之，互斥锁通常处理多个线程对一个资源的争夺，意味着总是按顺序获取和释放。而信号量则应当用在一个任务到另一个任务的信号，其中的任务要么发送信号要么等待信号。我在 [WWDCHelper](https://github.com/kingcos/WWDCHelper) 中也用到了信号量，函数返回的数据需要等待下载任务完成后才可以得到，所以当下载任务完成后发送信号，等待的信号收到后便继续前行。我们也尝试体验一下信号量。
+
+```objc
+#import "POSIXThreadManager.h"
+
+#import <pthread.h>
+#import <sys/semaphore.h>
+
+// 声明信号量
+sem_t * semaphore;
+
+void * run_for_semaphore_demo_1(void * arg) {
+    // 等待信号
+    if (sem_wait(semaphore) != 0) {
+        perror("sem_post error.");
+        exit(1);
+    }
+    
+    printf("Running - %s.\n", arg);
+    
+    pthread_exit(NULL);
+}
+
+void * run_for_semaphore_demo_2(void * arg) {
+    printf("Running - %s.\n", arg);
+    
+    sleep(1);
+    // 发送信号
+    if (sem_post(semaphore) != 0) {
+        perror("sem_post error.");
+        exit(1);
+    }
+    
+    pthread_exit(NULL);
+}
+
+@implementation POSIXThreadManager
+
++ (void)semaphore_demo {
+    // sem_init 初始化匿名信号量在 macOS 中已被废弃
+    // semaphore = sem_init(&semaphore, 0, 0);
+    semaphore = sem_open("sem", 0, 0);
+    
+    pthread_t thread_1, thread_2;
+    void * result;
+    
+    if (pthread_create(&thread_1, NULL, run_for_semaphore_demo_1, "Thread 1") != 0) {
+        perror("pthread_create thread_1 error.");
+        exit(1);
+    }
+    
+    if (pthread_create(&thread_2, NULL, run_for_semaphore_demo_2, "Thread 2") != 0) {
+        perror("pthread_create thread_2 error.");
+        exit(1);
+    }
+    
+    pthread_join(thread_1, &result);
+    pthread_join(thread_2, &result);
+}
+
+@end
+```
+
+
+
+
+
+
+
+
+
+
+
 
 ## Reference
 
@@ -338,6 +411,8 @@ void * run_for_thread_conflict_demo(void * arg) {
 - [NMSU - The Pthreads Library](https://www.cs.nmsu.edu/~jcook/Tools/pthreads/library.html)
 - [Translation - [译]在 Objective-C API 中指定可空性](https://github.com/kingcos/Perspective/issues/71)
 - [Wikipedia - restrict](https://en.wikipedia.org/wiki/Restrict)
-- []()
-- []()
-- []()
+- [StackOverflow - What is a semaphore?](https://stackoverflow.com/questions/34519/what-is-a-semaphore)
+- [Michael Barr - Mutexes and Semaphores Demystified](https://barrgroup.com/Embedded-Systems/How-To/RTOS-Mutex-Semaphore)
+- [Stanford - Thread and Semaphore Examples](https://see.stanford.edu/materials/icsppcs107/23-Concurrency-Examples.pdf)
+- [WWDCHelper](https://github.com/kingcos/WWDCHelper)
+- [StackOverflow - sem_init on OS X](https://stackoverflow.com/questions/1413785/sem-init-on-os-x)
