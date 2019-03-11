@@ -395,7 +395,7 @@ void * run_for_semaphore_demo_2(void * arg) {
 
 ## One more thing...
 
-上面我们在 Objective-C 中简单尝试了 pthreads 几个 API，那么它们能用 Swift 实现吗？答案是肯定的，但因为 Swift 没有指针的概念，存在了许多 `Unsafe` 开头的指针类型，告知我们其中可能存在隐患。
+上面我们在 Obj-C 中简单尝试了 pthreads 几个 API，那么它们能用 Swift 实现吗？答案是肯定的，但因为 Swift 没有指针的概念，存在了许多 `Unsafe` 开头的指针类型，告知我们其中可能存在隐患。
 
 ```swift
 import Foundation
