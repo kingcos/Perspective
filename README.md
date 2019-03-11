@@ -25,6 +25,8 @@
 - [从 0 开始使用 Docker 快速搭建 Hadoop 集群环境](https://github.com/kingcos/Perspective/issues/25)
 - [在 Swift 中对集合类型元素的弱引用](https://github.com/kingcos/Perspective/issues/6)
 - [iOS 项目持续集成实践（一）](https://github.com/kingcos/Perspective/issues/15)
+- iOS 多线程技术实践
+  - [pthreads]()
 
 ## Promotion
 

@@ -1,14 +1,12 @@
-# Practice - iOS 多线程技术
+# Practice - iOS 多线程技术实践之 pthreads
 
 | Date | Notes | Swift | Xcode |
 |:-----:|:-----:|:-----:|:-----:|
-| 2019-03-08 |
+| 2019-03-08 | 首次提交 | 4.2 | 10.1 |
+
+> 在 iOS 中的多线程（Multithreading）技术通常有以下几种实现方式：pthreads、`NSThread`、GCD、`NSOperation`。首先，我们来一起看一看 pthreads。
 
 ## Preface
-
-在 iOS 中的多线程（Multithreading）技术通常有以下几种方式，`pthread`、`NSThread`、GCD、`NSOperation`。
-
-## pthreads (POSIX Threads)
 
 > POSIX Threads, usually referred to as pthreads, is an execution model that exists independently from a language, as well as a parallel execution model. It allows a program to control multiple different flows of work that overlap in time. Each flow of work is referred to as a thread, and creation and control over these flows is achieved by making calls to the POSIX Threads API.
 >
@@ -20,7 +18,7 @@
 
 如上所述，pthreads，即 POSIX Threads（后简称 pthreads）是一套跨平台的多线程 API。由 C 语言编写，在 Obj-C 中，`#import <pthread.h>` 即可引入 pthreads 相关的 API。但也由于是纯 C 的 API，使用起来不够友好，也需要手动管理线程的整个生命周期。
 
-### `pthread_create`
+## `pthread_create`
 
 pthreads 使用 `int pthread_create(pthread_t _Nullable * _Nonnull __restrict, const pthread_attr_t * _Nullable __restrict, void * _Nullable (* _Nonnull)(void * _Nullable), void * _Nullable __restrict);` 来创建线程。`_Nullable` 和 `_Nonnull ` 是 Obj-C 桥接 Swift 可选（Optional）类型的标志；`__restrict` 是 C99 标准引入的关键字，类似于 `restrict`，可以用在指针声明处，用于告诉编译器只有该指针本身才能修改指向的内容，便于编译器优化。去掉这些不影响函数本身的标志，补全参数名，即 `int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg);`。下面将简单分析下该函数的四个参数。
 
@@ -136,7 +134,7 @@ thread_1 (0x700005914010) is running. // thread_1 输出
 Program ended with exit code: 3 // 主线程结束程序
 ```
 
-### `pthread_join `
+## `pthread_join `
 
 那如何保证主线程在子线程还没有结束的时候，不执行完呢？首先可以想到的就是让主线程休息一会儿。在 `exit(3);` 之前加一句 `sleep(1);` 让主线程休眠一秒钟，这样子线程的程序就有足够的时间执行完。但这样真的好吗？如果子线程的执行时间小于一秒，那么我们的时间就浪费了；而当大于一秒时，这个方法就没用了。这时候就需要另外一个函数，`int pthread_join(pthread_t , void * _Nullable * _Nullable)`，即 `int pthread_join(pthread_t thread, void **retval);`，其作用是阻塞当前线程运行，直到参数线程 `thread` 终止，参数 `retval` 保存了线程函数的返回值。与 `pthread_create` 一样，当返回 `0` 时，参与成功，否则将返回错误码。
 
@@ -211,7 +209,7 @@ thread_2 // 主线程拿到了子线程调用函数的返回值并输出
 Program ended with exit code: 3 // 主线程结束程序
 ```
 
-### 互斥锁（Mutex）
+## 互斥锁（Mutex）
 
 多线程的并行计算加快了速度，但这使得多个线程的管理变得复杂。其中一个问题便是，如果两个线程同时对同一个资源操作，情况将变得不可控。举个例子，从 0 开始数数，数到 10 为止，如果有 5 个线程，则平均每个线程只需要数 2 个即可完成。
 
@@ -328,7 +326,7 @@ void * run_for_thread_conflict_demo(void * arg) {
 // Program ended with exit code: 0
 ```
 
-### 信号量（Semaphore）
+## 信号量（Semaphore）
 
 信号量的概念很难从字面直接理解，常用的比喻是信号灯：一段马路（即资源）对车辆（即线程）的承载量是有限的，当承载量达到限度时，红灯会亮起阻止进入；当承载量未达到时，绿灯会亮起允许进入。关于互斥锁和信号量的区别，简而言之，互斥锁通常处理多个线程对一个资源的争夺，意味着总是按顺序获取和释放。而信号量则应当用在一个任务到另一个任务的信号，其中的任务要么发送信号要么等待信号。我在 [WWDCHelper](https://github.com/kingcos/WWDCHelper) 中也用到了信号量，函数返回的数据需要等待下载任务完成后才可以得到，所以当下载任务完成后发送信号，等待的信号收到后便继续前行。
 
@@ -395,7 +393,7 @@ void * run_for_semaphore_demo_2(void * arg) {
 @end
 ```
 
-### One more thing...
+## One more thing...
 
 上面我们在 Objective-C 中简单尝试了 pthreads 几个 API，那么它们能用 Swift 实现吗？答案是肯定的，但因为 Swift 没有指针的概念，存在了许多 `Unsafe` 开头的指针类型，告知我们其中可能存在隐患。
 
@@ -572,17 +570,6 @@ private func encode<T>(_ t: T) -> UnsafeMutableRawPointer {
     return Unmanaged.passRetained(Box(t)).toOpaque()
 }
 ```
-
-## `NSThread`
-
-
-
-
-
-
-
-
-
 
 ## Reference
 
