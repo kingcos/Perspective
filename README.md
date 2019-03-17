@@ -59,7 +59,7 @@
 - [在 macOS 上进行直播推流](https://github.com/kingcos/Perspective/issues/19)
 - [将树莓派作为 AirPlay 音频服务器](https://github.com/kingcos/Perspective/issues/20)
 - [使用 usbmuxd 连接 iPhone](https://github.com/kingcos/Perspective/issues/54)
-- [Swift 源代码中的 GYB](https://github.com/kingcos/Perspective/issues/60)
+- [Swift 源代码中的 GYB](https://github.com/kingcos/Perspective/issues/62)
 - [将 Obj-C 代码翻译为 C++ 代码](https://github.com/kingcos/Perspective/issues/72)
 
 ## Translation
