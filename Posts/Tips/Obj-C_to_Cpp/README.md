@@ -18,6 +18,6 @@ Xcode 中，C/C++/Obj-C/C++ 的编译器是 `clang`。其加上 `-rewrite-objc` 
 
 `-rewrite-objc` 虽然是翻译为 C++ 代码，但其实大部分代码都属于 C 语言。那么翻译后的代码和源 Obj-C 代码有什么关系呢？这个问题我也十分疑惑，所以在 StackOverflow 发起了提问。但根据目前我所了解的而言，翻译后的代码仅仅是为其他编译器可以编译。在使用 Xcode 构建 iOS/macOS 项目时并不会将 Obj-C 先翻译再链接运行。而之所以可以被翻译，主要依赖于 Obj-C 的类其实就是 C 语言中的结构体，Obj-C 中的消息发送可以被翻译为 `obj_msgSend()` 方法调用。
 
-## Extension
+## Reference
 
 - [StackOverflow - -rewrite-objc and Objective-C in clang](https://stackoverflow.com/questions/44561285/rewrite-objc-and-objective-c-in-clang)
