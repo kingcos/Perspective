@@ -14,10 +14,13 @@ Thread model: posix
 InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
 ```
 
-Xcode 中，C/C++/Obj-C/C++ 的编译器是 `clang`。其加上 `-rewrite-objc` 参数可以将 Obj-C 代码翻译为 C++ 代码，即 `clang -rewrite-objc main.m -o main.cpp`。也可以结合 `xcrun` 设置编译所基于的 SDK，以及其本身支持的 `-arch` 指定编译架构参数，`-framework` 指定需要依赖的框架，即 `xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main-arm64.cpp -framework UIKit`。
+Xcode 中，C/C++/Obj-C/C++ 的编译器是 clang。其加上 `-rewrite-objc` 参数可以将 Obj-C 代码翻译为 C++ 代码，即 `clang -rewrite-objc main.m -o main.cpp`。也可以结合 `xcrun` 设置编译所基于的 SDK，以及通过 `-arch` 指定编译架构参数，通过 `-framework` 指定需要依赖的框架，即 `xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main-arm64.cpp -framework UIKit`。
 
-`-rewrite-objc` 虽然是翻译为 C++ 代码，但其实大部分代码都属于 C 语言。那么翻译后的代码和源 Obj-C 代码有什么关系呢？这个问题我也十分疑惑，所以在 StackOverflow 发起了提问。但根据目前我所了解的而言，翻译后的代码仅仅是为其他编译器可以编译。在使用 Xcode 构建 iOS/macOS 项目时并不会将 Obj-C 先翻译再链接运行。而之所以可以被翻译，主要依赖于 Obj-C 的类其实就是 C 语言中的结构体，Obj-C 中的消息发送可以被翻译为 `obj_msgSend()` 方法调用。
+![clang --help | grep -rewrite-objc](1.png)
+
+虽然 clang 可以将 Obj-C 代码翻译为 C++，但其实大部分代码都属于 C 语言，比如 Obj-C 的类，其本质是 C 语言中的结构体。而翻译存在的目的是因为 Windows 上的 Visual Studio 中并没有 Obj-C 的编译器，所以 clang 将 Obj-C 转为 C/C++，便于其他 C/C++ 编译器进行编译。在使用 Xcode 构建 Obj-C 项目时并不会将 Obj-C 进行翻译，clang 可以直接编译纯 Obj-C 代码。
 
 ## Reference
 
 - [StackOverflow - -rewrite-objc and Objective-C in clang](https://stackoverflow.com/questions/44561285/rewrite-objc-and-objective-c-in-clang)
+- [StackOverflow - What's the relationship between Objective-C source code and after clang -rewrite-objc C++ code?](https://stackoverflow.com/questions/55198496/whats-the-relationship-between-objective-c-source-code-and-after-clang-rewrite)
