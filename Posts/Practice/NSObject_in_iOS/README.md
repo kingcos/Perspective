@@ -277,12 +277,124 @@ extern size_t malloc_size(const void *ptr);
     /* Returns size of given ptr */
 ```
 
-## 自定义类实例对象的大小
+## 自定义类
 
+定义一个 `Computer` Obj-C 类，继承自 `NSObject`，拥有两个成员变量。
 
+```objc
+@interface Computer : NSObject {
+    @public
+    int _memorySize;
+    int _diskSize;
+}
+@end
 
+@implementation Computer
+@end
+```
 
+使用 clang 将其翻译为 C/C++ 代码，Obj-C 的类就变成了 C 语言中的结构体：
 
+```cpp
+struct NSObject_IMPL {
+    Class isa;
+};
+
+struct Computer_IMPL {
+    struct NSObject_IMPL NSObject_IVARS;
+    int _memorySize;
+    int _diskSize;
+};
+```
+
+简单实践一下：
+
+```objc
+Computer *cpt = [[Computer alloc] init];
+cpt->_memorySize = 16;
+cpt->_diskSize = 512;
+
+// 将 cpt 指向 Computer Obj-C 类的指针转换为指向 Computer_IMPL 结构体的指针
+struct Computer_IMPL *cptStruct = (__bridge struct Computer_IMPL *)(cpt);
+NSLog(@"cptStruct->_memorySize: %d, cptStruct->_diskSize: %d", cptStruct->_memorySize, cptStruct->_diskSize);
+// cptStruct->_memorySize: 16, cptStruct->_diskSize: 512
+```
+
+## 自定义类的实例对象大小
+
+```objc
+@interface Computer : NSObject {
+    @public
+    int _memorySize;
+    int _diskSize;
+}
+@end
+
+@implementation Computer
+@end
+
+// ---
+@interface Mac : Computer {
+    @public
+    bool _hasScreen;
+}
+@end
+
+@implementation Mac
+@end
+
+// ---
+@interface MacPro : Mac {
+    @public
+    double _cpuPerformance;
+}
+@end
+
+@implementation MacPro
+@end
+```
+
+定义以上几个类，`Computer` 继承自 `NSObject`，`Mac` 继承自 `Computer`，`MacPro` 继承自 `Mac`，尝试输出它们的实例以及实际分配的大小。
+
+```objc
+NSObject *myObj = [[NSObject alloc] init];
+NSObject *myCpt = [[Computer alloc] init];
+NSObject *myMac = [[Mac      alloc] init];
+NSObject *myPro = [[MacPro   alloc] init];
+    
+NSLog(@"NSObject - Instance Size - %zd", class_getInstanceSize([NSObject class]));
+NSLog(@"NSObject - Malloc Size   - %zd", malloc_size((__bridge const void *)(myObj)));
+
+NSLog(@"Computer - Instance Size - %zd", class_getInstanceSize([Computer class]));
+NSLog(@"Computer - Malloc Size   - %zd", malloc_size((__bridge const void *)(myCpt)));
+
+NSLog(@"Mac      - Instance Size - %zd", class_getInstanceSize([Mac class]));
+NSLog(@"Mac      - Malloc Size   - %zd", malloc_size((__bridge const void *)(myMac)));
+
+NSLog(@"MacPro   - Instance Size - %zd", class_getInstanceSize([MacPro class]));
+NSLog(@"MacPro   - Malloc Size   - %zd", malloc_size((__bridge const void *)(myPro)));
+
+NSLog(@"bool   size - %zd", sizeof(bool));
+NSLog(@"int    size - %zd", sizeof(int));
+NSLog(@"double size - %zd", sizeof(double));
+
+// NSObject - Instance Size - 8
+// NSObject - Malloc Size   - 16
+// Computer - Instance Size - 16
+// Computer - Malloc Size   - 16
+// Mac      - Instance Size - 24
+// Mac      - Malloc Size   - 32
+// MacPro   - Instance Size - 32
+// MacPro   - Malloc Size   - 32
+// bool   size - 1
+// int    size - 4
+// double size - 8
+// Program ended with exit code: 0
+```
+
+比较让人困惑的是 `myMac` 的实例大小与实际分配大小。`Mac` 除了自己的一个成员变量，还有两个继承自父类 `Computer` 的成员变量，以及一个继承自基类 `NSObject` 的 `isa`。在 64 位操作系统上，共计占用 8+4+4+1=17 字节，经过字长对齐后即 24 字节，与 `class_getInstanceSize` 返回的结果一致。但为什么最终 `malloc_size` 却是 32 字节呢？
+
+因为在分配内存时，除了字长对齐，还存在另外的内存对齐。其将按照 16 的倍数进行对齐。
 
 ```
 // nano_zone_common.h
@@ -322,4 +434,3 @@ extern size_t malloc_size(const void *ptr);
 - [将 Obj-C 代码翻译为 C++ 代码](https://github.com/kingcos/Perspective/issues/72)
 - [StackOverflow - Where is __LP64__ defined for default builds of C++ applications on OSX 10.6?](https://stackoverflow.com/questions/6721037/where-is-lp64-defined-for-default-builds-of-c-applications-on-osx-10-6)
 - [Wikipedia - sizeof](https://en.wikipedia.org/wiki/Sizeof)
-- [StackOverflow - How to use “zd” specifier with `printf()`?](https://stackoverflow.com/questions/32916575/how-to-use-zd-specifier-with-printf)
