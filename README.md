@@ -39,12 +39,12 @@
 - [ICS 15-213](/Posts/Studying/ICS_15-213)
 - [Mac OS X and iOS Internals](/Posts/Studying/MacOSX_and_iOS_Internals)
 - [Programming from the Ground Up](/Posts/Studying/Programming_from_the_Ground_Up)
-- WWDC
-  - 2017
-    - [102 - Platform State of the Union](https://github.com/kingcos/Perspective/issues/26)
-    - [819 - Designing for a Global Audience](https://github.com/kingcos/Perspective/issues/27)
-    - [822 - App Icon Design](https://github.com/kingcos/Perspective/issues/28)
-    - [823 - Designing Glyphs](https://github.com/kingcos/Perspective/issues/29)
+- [Effective Objective-C 2.0](/Posts/Studying/Effective_Objective-C_2.0)
+- WWDC 17
+  - [102 - Platform State of the Union](https://github.com/kingcos/Perspective/issues/26)
+  - [819 - Designing for a Global Audience](https://github.com/kingcos/Perspective/issues/27)
+  - [822 - App Icon Design](https://github.com/kingcos/Perspective/issues/28)
+  - [823 - Designing Glyphs](https://github.com/kingcos/Perspective/issues/29)
 
 ## Tips
 
