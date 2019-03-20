@@ -73,7 +73,7 @@ int main(int argc, const char * argv[]) {
 >
 > 方法重写 - 维基百科
 
-```obj
+```objc
 @interface Mac : Computer
 @end
 
