@@ -340,6 +340,8 @@ class_rw_t *rwt = cptVClass->data();
 
 元类对象和类对象一样，都是 `Class` 类型。但元类对象只可以通过 Runtime 的 `object_getClass` API 传入类对象，获取到元类对象。需要注意的是 `[[Computer class] class]` 或 `[[cpt class] class]` 都只能返回类对象。
 
+对于 `object_getClass`，如果参数是实例对象，返回类对象；如果参数是类对象，返回元类对象；如果参数是元类对象，返回 NSObject（基类）的元类对象。`class_isMetaClass` 可以用来检查 `Class` 是否为元类对象。
+
 ```objc
 VClass cptMetaVClass = (__bridge VClass)object_getClass([Computer class]);
 class_rw_t *rwt = cptMetaVClass->data();
@@ -353,13 +355,73 @@ class_rw_t *rwt = cptMetaVClass->data();
 // }
 ```
 
-元类对象中除了存储 `isa` 和 `superclass` 指针，还存储了类方法。其存放位置和类对象存放实例方法的存放位置一致。
+元类对象中除了存储 `isa` 和 `superclass` 指针，还存储了类方法。其存放位置和类对象存放实例方法的存放位置（方法列表）一致。
 
 ## isa
 
 ![](2.png)
 
 `isa` 是所有类型的对象中都存在的一个成员，其定义在基类 `NSObject` 内部。实例对象中的 `isa` 指向类对象，类对象中的 `isa` 指向元类对象，元类对象中的 `isa` 指向根元类对象（包括根元类对象也指向自己）。
+
+### ISA_MASK
+
+```objc
+// isa.h
+# if __arm64__
+#   define ISA_MASK        0x0000000ffffffff8ULL
+# elif __x86_64__
+#   define ISA_MASK        0x00007ffffffffff8ULL
+# end
+
+// objc-object.h
+inline Class 
+objc_object::ISA() 
+{
+    assert(!isTaggedPointer()); 
+#if SUPPORT_INDEXED_ISA
+    if (isa.nonpointer) {
+        uintptr_t slot = isa.indexcls;
+        return classForIndex((unsigned)slot);
+    }
+    return (Class)isa.bits;
+#else
+    return (Class)(isa.bits & ISA_MASK);
+#endif
+}
+```
+
+64 位系统之后，`isa` 需要与 `ISA_MASK` 按位与（`&`）运算后才能得到真实的地址：
+
+```objc
+// 实例对象
+Computer *cpt = [[Computer alloc] init];    
+// 类对象
+VClass cptClass = (__bridge VClass)object_getClass(cpt);
+// 元类对象
+VClass cptMetaClass = (__bridge VClass)object_getClass([Computer class]);
+
+// LLDB:
+// (lldb) p/x cpt->isa
+// (Class) $0 = 0x001d800100001289 Computer
+// (lldb) p/x cptClass
+// (VClass) $1 = 0x0000000100001288
+// (lldb) p/x 0x001d800100001289 & 0x00007ffffffffff8ULL
+// (unsigned long long) $2 = 0x0000000100001288
+// 
+// (lldb) p/x cptClass->isa
+// (void *) $3 = 0x001d800100001261
+// (lldb) p/x cptMetaClass
+// (VClass) $4 = 0x0000000100001260
+// (lldb) p/x 0x001d800100001261 & 0x00007ffffffffff8ULL
+// (unsigned long long) $5 = 0x0000000100001260
+// 
+// (lldb) p/x cptMetaClass->isa
+// (void *) $6 = 0x001dffffaa5660f1
+// (lldb) p/x (__bridge VClass)object_getClass(cptMetaClass)
+// (VClass) $7 = 0x00007fffaa5660f0
+// (lldb) p/x 0x001dffffaa5660f1 & 0x00007ffffffffff8ULL
+// (unsigned long long) $8 = 0x00007fffaa5660f0
+```
 
 ## superclass
 
@@ -370,26 +432,60 @@ class_rw_t *rwt = cptMetaVClass->data();
 ## isa & superclass
 
 - `isa` 将实例对象与类对象、元类对象连接起来；`superclass` 将子类、父类、基类连接起来
-- 当向一个实例发送实例方法的消息时（也可称调用实例方法，但因为 Obj-C 是消息结构的语言，方法调用并不严谨），该实例对象会通过 `isa` 找到其类对象，因为实例方法存储在类对象中；如果该类的类对象中并没有存储该实例方法，其类对象将使用 `superclass` 找到其父类的类对象，并在其中查找实例方法；直到在 `NSObject` 基类的类对象也无法找到时，`superclass` 将指向 `nil` 停止查找，爆出错误：。
-- 当向一个类（的类对象）发送类方法的消息时，不会经过实例对象；类对象会通过其 `isa` 指针找到其元类对象，因为类方法存储在元类对象中；如果该类的元类对象中并没有存储该类方法，其元类对象将使用 `superclass` 找到其父类的元类对象，并在其中查找类方法；直到查找到 `NSObject` 基类的元类对象还没有类方法时，`NSObject` 元类对象的 `superclass` 将指回 `NSObject` 类对象中，在其存储的实例方法列表中查找，若还是没有找到，`NSObject` 类对象的 `superclass` 将指向 `nil` 停止查找，爆出错误：
+- 当向一个实例发送实例方法的消息时（也可称调用实例方法，但因为 Obj-C 是消息结构的语言，方法调用并不严谨），该实例对象会通过 `isa` 找到其类对象，因为实例方法存储在类对象中；如果该类的类对象中并没有存储该实例方法，其类对象将使用 `superclass` 找到其父类的类对象，并在其中查找实例方法；直到在 `NSObject` 基类的类对象也无法找到时，`superclass` 将指向 `nil` 停止查找，抛出异常：`unrecognized selector sent to instance`。
+
+```objc
+@interface Computer : NSObject
+- (void)run;
+@end
+
+@implementation Computer
+@end
+
+@interface Mac : Computer
+@end
+
+@implementation Mac
+// - (void)run {
+//     NSLog(@"RUN");
+// }
+@end
+
+// '-[Mac run]: unrecognized selector sent to instance 0x10330f6c0'
+[[[Mac alloc] init] run];
+```
+
+- 当向一个类（的类对象）发送类方法的消息时，不会经过实例对象；类对象会通过其 `isa` 指针找到其元类对象，因为类方法存储在元类对象中；如果该类的元类对象中并没有存储该类方法，其元类对象将使用 `superclass` 找到其父类的元类对象，并在其中查找类方法；直到查找到 `NSObject` 基类的元类对象还没有类方法时，`NSObject` 元类对象的 `superclass` 将指回 `NSObject` 类对象中，在其存储的实例方法列表中查找，若还是没有找到，`NSObject` 类对象的 `superclass` 将指向 `nil` 停止查找，抛出异常：`unrecognized selector sent to instance`。
+
+```objc
+@interface NSObject (Extension)
+@end
+
+@implementation NSObject (Extension)
+- (void)run {
+    NSLog(@"RUN");
+}
+@end
+
+@interface Computer : NSObject
++ (void)run;
+@end
+
+@implementation Computer
+@end
+
+@interface Mac : Computer
+@end
+
+@implementation Mac
+@end
+
+// OUTPUT:
+// RUN
+```
+
 - 通过上一点，其实我们可以知道在 Obj-C 中，方法是通过消息传递的，而传递的其实就是方法名。Obj-C 的方法名中并不包含是否为实例方法或类方法的标示，甚至没有参数和返回值的标示，这也是严谨意义上 Obj-C 不支持重载（Overload）的原因（但支持参数个数不同的重载）。
 
----
+## Reference
 
-
-`objc_getClass`
-
-参数是类名（字符串），返回类对象
-
-`object_getClass`
-
-如果参数是实例对象，返回类对象；如果参数是类对象，返回元类对象；如果参数是元类对象，返回 NSObject（基类）的元类对象。
-
-
-isa -> superclass -> super -> ... -> superclass == nil ? nil : method
-
-Intsance Method: isa from instance
-Class Method: isa from class
-
-ISA_MASK
-
+- [Tips - Obj-C 中的重载与重写](https://github.com/kingcos/Perspective/issues/73)
