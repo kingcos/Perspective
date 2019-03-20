@@ -6,7 +6,7 @@
 
 ## 对象的分类
 
-Obj-C 中的对象，主要有三种，实例（Instance）对象、类（Class）对象，以及元类（Meta-class）对象。类对象和元类对象的类型均为 `Class`，即 `typedef struct objc_class *Class;`，所以它们的结构其实是一致的，只是存放的内容不同。
+Obj-C 中的对象，主要有三种，实例对象（Instance Object）、类对象（Class Object）、以及元类对象（Meta-class Object）。类对象和元类对象的类型均为 `Class`，即 `typedef struct objc_class *Class;`，所以它们的结构其实是一致的，只是存放的内容不同。
 
 ![](1.png)
 
@@ -64,7 +64,7 @@ cpt.model = @"MacBook Pro 13'";
 // cpt->isa;
 ```
 
-我们可以手动创建一个 `Computer` 类型的实例对象（Instance Object），`cpt` 指向的实例对象存放了继承自 `NSObject` 基类的 `isa` 指针成员变量，但是当我们尝试直接读取时会无法编译通过，因为该 API 已经被标记为过时了，编译器提醒可以使用 `object_getClass()` 取而代之；另外，它还存放了成员变量以及属性的具体值。
+我们可以手动创建一个 `Computer` 类型的实例对象，`cpt` 指向的实例对象中存放了继承自 `NSObject` 基类的 `isa` 指针成员变量，但是当我们尝试直接读取时会无法编译通过，因为该 API 已经被标记为过时了，编译器提醒可以使用 `object_getClass()` 取而代之；另外，它还存放了其它成员变量以及属性的具体值。
 
 ```objc
 // NSObject.h
@@ -78,7 +78,7 @@ cpt.model = @"MacBook Pro 13'";
 
 ## 类对象
 
-与实例对象不同，类对象（Class Object）和元类对象（Meta-class Object）并不需要我们手动创建。类对象中存放了 `isa` 指针，`superclass` 指针以及为所有该类实例对象公用的信息。它并不存放成员变量以及属性的具体值，但存放了诸如名称、类型信息；它还存放了该类的对象方法、遵守的协议信息等，因为这些公共信息对于一个类只保存一份即可。
+与实例对象不同，类对象和元类对象并不需要我们手动创建。类对象中存放了 `isa` 指针、`superclass` 指针、以及为所有该类实例对象公用的信息。它并不存放成员变量以及属性的具体值，但存放了诸如名称、类型等信息；它还存放了该类的对象方法、遵守的协议信息等，因为这些公共信息对于一个类只保存一份即可。
 
 ```objc
 // 获取类对象的方法：
@@ -95,7 +95,7 @@ Class cptClass3 = object_getClass(cpt);
 // (Class) $1 = 0x00000001000013d0 Computer
 ```
 
-类对象可以通过实例对象通过 `[obj class]`、`[Computer class]` 或 Runtime API `object_getClass` 获取。类对象的类型都是 `Class`，但 Xcode 并没有直接暴露该类型。
+类对象可以通过实例对象通过 `[obj class]`、`[Computer class]` 或 Runtime API `object_getClass` 获取。类对象的类型都是 `Class`，但在 Xcode 中并没有直接暴露该类型。
 
 ```objc
 // Object.mm
@@ -169,9 +169,9 @@ struct class_ro_t {
 };
 ```
 
-在 objc4 源码中，我们可以找到 `Class` 的定义，它是一个指向 `objc_class` 结构体的指针。`objc_class` 继承的父类 `objc_object` 只有一个成员变量，即 `isa`，自身拥有 `superclass`、`bits` 等数据，`bits` 的 `data()` 存放了 `class_rw_t` 的指针，即一些可读可写的数据；`class_rw_t`，里面又包含了 `methods` 方法列表、`properties` 属性列表、`protocols` 列表、以及一个常量 `class_ro_t` 类型只读数据的指针等数据；`class_ro_t` 里面存放了 `instanceSize` 实例大小、`ivars` 成员变量等数据。
+但在 objc4 源码中，我们可以找到 `Class` 的定义，它是一个指向 `objc_class` 结构体的指针。`objc_class` 继承的父类 `objc_object` 只有一个成员变量，即 `isa`。`objc_class` 自身还拥有 `superclass`、`bits` 等成员变量，`bits` 中的 `data()` 存放了指向 `class_rw_t` 的指针，即一些可读可写的数据（表）；`class_rw_t`，里面又包含了 `methods` 方法列表、`properties` 属性列表、`protocols` 列表、以及一个指向 `class_ro_t` 类型的指针（该指针为 `const` 不可变更指向地址），存放只读的数据（表）；`class_ro_t` 结构体里存放了 `instanceSize` 实例大小、`ivars` 成员变量等数据。
 
-Obj-C 中，将类对象作为了一个透明类型，对我们并不可见，但因为代码已经开源，所以我们尝试下将 `Computer` 类对象的结构展示出来。
+Obj-C 中，将类对象作为了一个透明类型，让我们无需关心其内部实现细节，但因为代码已经开源，所以我们尝试下将 `Computer` 类对象的结构展示出来。
 
 ```objc
 #ifndef objc_header_h
@@ -338,7 +338,7 @@ class_rw_t *rwt = cptVClass->data();
 
 ## 元类对象
 
-元类对象和类对象一样，都是 `Class` 类型。但元类对象只可以通过 Runtime 的 `object_getClass` 传入类对象，获取到元类对象。需要注意的是 `[[Computer class] class]` 或 `[[cpt class] class]` 只能返回类对象。
+元类对象和类对象一样，都是 `Class` 类型。但元类对象只可以通过 Runtime 的 `object_getClass` API 传入类对象，获取到元类对象。需要注意的是 `[[Computer class] class]` 或 `[[cpt class] class]` 都只能返回类对象。
 
 ```objc
 VClass cptMetaVClass = (__bridge VClass)object_getClass([Computer class]);
@@ -353,7 +353,7 @@ class_rw_t *rwt = cptMetaVClass->data();
 // }
 ```
 
-元类对象除了存储 `isa` 和 `superclass` 指针，还存储了类方法。其存放位置和类对象存放实例方法的存放位置一致。
+元类对象中除了存储 `isa` 和 `superclass` 指针，还存储了类方法。其存放位置和类对象存放实例方法的存放位置一致。
 
 ## isa
 
@@ -369,7 +369,10 @@ class_rw_t *rwt = cptMetaVClass->data();
 
 ## isa & superclass
 
-- 当调用实例的对象方法时，该对象会通过 `isa` // 待补充
+- `isa` 将实例对象与类对象、元类对象连接起来；`superclass` 将子类、父类、基类连接起来
+- 当向一个实例发送实例方法的消息时（也可称调用实例方法，但因为 Obj-C 是消息结构的语言，方法调用并不严谨），该实例对象会通过 `isa` 找到其类对象，因为实例方法存储在类对象中；如果该类的类对象中并没有存储该实例方法，其类对象将使用 `superclass` 找到其父类的类对象，并在其中查找实例方法；直到在 `NSObject` 基类的类对象也无法找到时，`superclass` 将指向 `nil` 停止查找，爆出错误：。
+- 当向一个类（的类对象）发送类方法的消息时，不会经过实例对象；类对象会通过其 `isa` 指针找到其元类对象，因为类方法存储在元类对象中；如果该类的元类对象中并没有存储该类方法，其元类对象将使用 `superclass` 找到其父类的元类对象，并在其中查找类方法；直到查找到 `NSObject` 基类的元类对象还没有类方法时，`NSObject` 元类对象的 `superclass` 将指回 `NSObject` 类对象中，在其存储的实例方法列表中查找，若还是没有找到，`NSObject` 类对象的 `superclass` 将指向 `nil` 停止查找，爆出错误：
+- 通过上一点，其实我们可以知道在 Obj-C 中，方法是通过消息传递的，而传递的其实就是方法名。Obj-C 的方法名中并不包含是否为实例方法或类方法的标示，甚至没有参数和返回值的标示，这也是严谨意义上 Obj-C 不支持重载（Overload）的原因（但支持参数个数不同的重载）。
 
 ---
 
