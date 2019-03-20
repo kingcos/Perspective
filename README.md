@@ -61,6 +61,7 @@
 - [使用 usbmuxd 连接 iPhone](https://github.com/kingcos/Perspective/issues/54)
 - [Swift 源代码中的 GYB](https://github.com/kingcos/Perspective/issues/62)
 - [将 Obj-C 代码翻译为 C++ 代码](https://github.com/kingcos/Perspective/issues/72)
+- [Obj-C 中的重载与重写](https://github.com/kingcos/Perspective/issues/73)
 
 ## Translation
 
