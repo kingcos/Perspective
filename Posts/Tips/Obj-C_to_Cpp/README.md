@@ -2,7 +2,7 @@
 
 | Platform | Notes |
 |:-----:|:-----:|
-| macOS 10.13.4 | clang |
+| macOS 10.14.2 | clang |
 
 ## Solution
 
