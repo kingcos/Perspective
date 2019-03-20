@@ -1,4 +1,4 @@
-# Focus - iOS 中的 isa
+# Focus - Obj-C 中的对象
 
 | Date | Notes | Source Code |
 |:-----:|:-----:|:-----:|
