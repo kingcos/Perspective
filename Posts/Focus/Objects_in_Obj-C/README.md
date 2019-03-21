@@ -432,7 +432,7 @@ VClass cptMetaClass = (__bridge VClass)object_getClass([Computer class]);
 ## isa & superclass
 
 - `isa` 将实例对象与类对象、元类对象连接起来；`superclass` 将子类、父类、基类连接起来
-- 当向一个实例发送实例方法的消息时（也可称调用实例方法，但因为 Obj-C 是消息结构的语言，方法调用并不严谨），该实例对象会通过 `isa` 找到其类对象，因为实例方法存储在类对象中；如果该类的类对象中并没有存储该实例方法，其类对象将使用 `superclass` 找到其父类的类对象，并在其中查找实例方法；直到在 `NSObject` 基类的类对象也无法找到时，`superclass` 将指向 `nil` 停止查找，抛出异常：`unrecognized selector sent to instance`。
+- 当向一个实例发送实例方法的消息时（也可称调用实例方法，但因为 Obj-C 是消息结构的语言，方法调用并不严谨），该实例对象会通过 `isa` 找到其类对象，因为实例方法存储在类对象中；如果该类的类对象中并没有存储该实例方法，其类对象将使用 `superclass` 找到其父类的类对象，并在其中查找实例方法；直到在 `NSObject` 基类的类对象也无法找到时，`superclass` 将指向 `nil` 停止查找，抛出异常：`unrecognized selector sent to instance`（当然，我们这里为了仅讨论对消息传递忽略了消息转发）。
 
 ```objc
 @interface Computer : NSObject
