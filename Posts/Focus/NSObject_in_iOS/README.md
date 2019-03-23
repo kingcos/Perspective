@@ -173,6 +173,16 @@ class_rw_t *data() {
     return bits.data();
 }
 
+// objc-runtime-new.h
+class_rw_t* data() {
+    // ➡️ bits 按位与 FAST_DATA_MASK
+    return (class_rw_t *)(bits & FAST_DATA_MASK);
+}
+
+// objc-runtime-new.h
+// data pointer
+#define FAST_DATA_MASK          0x00007ffffffffff8UL
+
 // ➡️ 类中的只读数据
 const class_ro_t *ro;
 
