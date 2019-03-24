@@ -1,12 +1,12 @@
 # Practice - iOS 中的 KVO 
 
-| Date | Notes | Source Code |
+| Date | Notes | iOS |
 |:-----:|:-----:|:-----:|
-| 2019-03-13 | 首次提交 |  |
+| 2019-03-13 | 首次提交 | 12+ |
 
 ## Preface
 
-KVO 即 Key-Value Observing，译作键值监听，通常用于监听对象的某个属性值的变化。下面将由浅入深，谈谈 iOS 中的 KVO。
+KVO 即 Key-Value Observing，译作键值监听，通常用于监听对象的某个属性值的变化。也是设计模式中观察者模式的实践，下面将由浅入深，谈谈 iOS 中的 KVO。
 
 ## How
 
@@ -323,7 +323,7 @@ self.number += 1;
 // Crash: Thread 1: EXC_BAD_ACCESS
 ```
 
-我们尝试下在监听者销毁后，对被监听者的值做出改变。这时程序将崩溃，为野指针错误。这说明在系统得知被观察者改变后，尝试去寻找监听者，但此时监听者已经被销毁，其保存的内存地址已经不再是监听者了，所以发生此错误。为了比较移除监听者的作用，首先我们在未移除的代码中 `self.number += 1;` 一行打个断点，查看 Debug Memory Graph：
+我们尝试下在监听者销毁后，对被监听者的值做出改变。这时程序将崩溃，为野指针错误。这说明在系统得知被监听者改变后，尝试去寻找监听者，但此时监听者已经被销毁，其保存的内存地址已经不再是监听者了，所以发生此错误。为了比较移除监听者的作用，首先我们在未移除的代码中 `self.number += 1;` 一行打个断点，查看 Debug Memory Graph：
 
 ![](1.png)
 
@@ -341,7 +341,7 @@ self.number += 1;
 // )
 ```
 
-第一个 KVO 应该是系统在底层加入的，观察者是 `0x7fb98f4024e0`，查一下发现是 `UIScreen`，这里略过。
+第一个 KVO 应该是系统在底层加入的，监听者是 `0x7fb98f4024e0`，查一下发现是 `UIScreen`，这里略过。
 
 ![](2.png)
 
@@ -355,6 +355,9 @@ self.number += 1;
 
 #### 被监听者销毁前移除监听者
 
+由于 Apple 并没有将 KVO 开源，对于「移除监听者」我查阅了不少资料，并进行了实践。似乎在之前的系统版本中（具体不明），当未在被监听者销毁前移除监听者时，程序也将发生崩溃。但在最新的系统中，相同的测试代码却未发生崩溃。且在 Debug Memory Graph 可以看出，即使没有移除监听者，`NSKeyValueObservationInfo` 却也在被监听者销毁后销毁了。
+
+对于此，我也在 StackOverflow 中进行了提问，希望有明白这里细节的同学多多指点。如果有了答案，我在这里也将会进行补充。
 
 #### context
 
@@ -382,20 +385,34 @@ self.number += 1;
 // ---
 ```
 
-我们尝试添加两次 KVO，并在点击方法中移除而不指定 `context`，监听者收到通知会打印相应的 `context` 名。从输出可以看出 `removeObserver:forKeyPath:` 并没有移除所有的监听者。根据官方的注释：建议使用 `removeObserver:forKeyPath:context:` 取代 `removeObserver:forKeyPath:`，因为后者并未指定 `context` 将会自动猜测 `context` 指针，从而可能导致意想不到的错误。
+`context` 是 `removeObserver:forKeyPath:context:` 的参数，与添加监听者类似，用作区分通知。当我们尝试添加两次 KVO，并在点击方法中移除而不指定 `context`，监听者收到通知会打印相应的 `context` 名。从输出可以看出 `removeObserver:forKeyPath:` 并没有移除所有的监听者。根据官方的注释：建议使用 `removeObserver:forKeyPath:context:` 取代 `removeObserver:forKeyPath:`，因为后者并未指定 `context` 将会自动猜测 `context` 指针，从而可能导致意想不到的错误。
 
-#### 多次移除
+#### 非被监听者移除监听者
 
-```
+```objc
 // 'NSRangeException', reason: 'Cannot remove an observer <ViewController 0x7fa953c18bd0> for the key path "buttonClickTimes" from <Computer 0x6000007731e0> because it is not registered as an observer.'
 ```
 
+当我们在被监听者上移除监听者，被监听者将自动恢复为非被监听者，但当此时再次尝试移除监听者时，程序将发生崩溃。所以建议和 `try/catch` 一同使用，防止多次移除引起崩溃。
 
+```objc
+@try {
+    [self.cpt removeObserver:self forKeyPath:@"buttonClickTimes"];
+} @catch (NSException *exception) {
+    NSLog(@"%@", [exception description]);
+}
+
+// OUTPUT:
+// Cannot remove an observer <ViewController 0x7f9b60d012a0> for the key path "buttonClickTimes" from <Computer 0x600002975960> because it is not registered as an observer.
+```
 
 ## Why
 
 
-## Design Pattern
+
+
+
+
 
 
 ## Reference
@@ -403,3 +420,4 @@ self.number += 1;
 - [Key-Value Observing Programming Guide - Apple Inc.](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/KeyValueObserving/KeyValueObserving.html)
 - [Best practices for context parameter in addObserver (KVO) - StackOverflow](https://stackoverflow.com/questions/12719864/best-practices-for-context-parameter-in-addobserver-kvo)
 - [Do I have to removeObserver in KVO manually - StackOverflow](https://stackoverflow.com/questions/19514450/do-i-have-to-removeobserver-in-kvo-manually)
+- [如何优雅地使用 KVO - Draveness](https://draveness.me/kvocontroller)
