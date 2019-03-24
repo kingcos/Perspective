@@ -103,7 +103,7 @@ KVO 即 Key-Value Observing，译作键值监听，通常用于监听对象的�
 
 #### keyPath
 
-`keyPath` 即键路径。如上我们要监听 `cpt` 的 `buttonClickTimes` 属性，那么其绝对键路径就是 `cpt.buttonClickTimes`。而这里的 `keyPath` 其实是相对于被监听者的相对键路径，所以 `buttonClickTimes` 即可。在单一键路径时，也可以使用 `NSStringFromSelector(@selector(buttonClickTimes))` 获取 getter 的方法名作为键路径，更加安全。
+`keyPath` 即键路径。如上我们要监听 `cpt` 的 `buttonClickTimes` 属性，那么其绝对键路径就是 `cpt.buttonClickTimes`。而这里的 `keyPath` 其实是相对于被监听者的相对键路径，所以使用 `buttonClickTimes` 即可。在单一键路径时，也可以使用 `NSStringFromSelector(@selector(buttonClickTimes))` 获取 getter 的方法名作为键路径，更加安全。
 
 如果是嵌套多个对象，则使用多个 `.` 即可，比如下例中要监听 `cpt` 的 `screen. refreshedTimes` 可以拥有两种方式进行监听：
 
@@ -307,8 +307,6 @@ typedef NS_ENUM(NSUInteger, NSKeyValueChange) {
 
 ### 移除监听者
 
-当不再需要监听或当监听者销毁前，需要先移除监听者。前者比较容易理解，但为什么监听者销毁前也需要移除呢？我在 StackOverflow 上找到一个类似的问题，高赞回答的作者表示在 Symbolic Exception 中设定 `NSKVODeallocateBreak` 即可捕获其异常，但在我的尝试中并不能捕获到；他又提到不能被销毁的不是监听者也不是被监听者，而是实现 KVO 运行时自动创建的 `NSKeyValueObservationInfo` 对象不能被销毁，我尝试使用 Debug Memory Graph，但也没找到和手动移除的区别。我也在 Draveness 的博客上找到与 KVO 相关的文章，但其中 Crash 的例子也没有再次复现。KVO 的内部实现难道更新了吗？于是对于这个问题，我也在 StackOverflow 上重新进行了提问。
-
 KVO 给开发者带来个很强的自由性，但移除监听者中却有不少「坑」在这里的。
 
 #### 监听者销毁前移除监听者
@@ -385,7 +383,7 @@ self.number += 1;
 // ---
 ```
 
-`context` 是 `removeObserver:forKeyPath:context:` 的参数，与添加监听者类似，用作区分通知。当我们尝试添加两次 KVO，并在点击方法中移除而不指定 `context`，监听者收到通知会打印相应的 `context` 名。从输出可以看出 `removeObserver:forKeyPath:` 并没有移除所有的监听者。根据官方的注释：建议使用 `removeObserver:forKeyPath:context:` 取代 `removeObserver:forKeyPath:`，因为后者并未指定 `context` 将会自动猜测 `context` 指针，从而可能导致意想不到的错误。
+`context` 是 `removeObserver:forKeyPath:context:` 的参数，与添加监听者类似，用作区分通知。当我们尝试添加两次 KVO，并在点击方法中移除而不指定 `context`，监听者收到通知会打印相应的 `context` 名。从输出可以看出 `removeObserver:forKeyPath:` 并没有移除所有的监听者。根据官方的注释：建议使用 `removeObserver:forKeyPath:context:` 取代 `removeObserver:forKeyPath:`，因为后者并未指定 `context`，将会自动猜测 `context` 指针，从而可能导致不可预知的错误。
 
 #### 非被监听者移除监听者
 
@@ -439,12 +437,14 @@ self.number += 1;
               context:ButtonClickTimesKVOContext];
 // LLDB:
 // 注意我们这里使用了 object_getClass 来获取其类对象
-// 因为如官方文档所写 class 中会隐藏一些细节，比如底层不太希望我们知道的类
 // (lldb) po object_getClass(self.cpt)
 // NSKVONotifying_Computer
+// // 因为如官方文档所写 class 中会隐藏一些细节
+// (lldb) po [self.cpt class]
+// Computer
 ```
 
-通过官方这一段简短的解释，其实就能找到突破口了，即 `isa`。仍然拿最初的 Demo 举例，在添加监听者之前，`cpt` 实例对象的 `isa` 指向了 `Computer` 类对象，而当添加完监听者之后，`isa` 指向了 `NSKVONotifying_Computer` 类对象，即官方文档中提到的的「中间类」。`NSKVONotifying_Computer` 并不是我们手动建立的，所以它是由在运行时动态生成的，尝试打印其方法列表：
+通过官方这一段简短的解释，其实就能找到突破口了，即 `isa`。仍然拿最初的 Demo 举例，在添加监听者之前，`cpt` 实例对象的 `isa` 指向了 `Computer` 类对象，而当添加完监听者之后，`isa` 指向了 `NSKVONotifying_Computer` 类对象，即官方文档中提到的的「中间类」。`NSKVONotifying_Computer` 并不是我们手动建立的，它是由在运行时动态生成的，尝试打印其方法列表：
 
 ```objc
 - (void)printMethodList:(Class)someClass {
@@ -479,7 +479,7 @@ self.number += 1;
 
 ### dealloc
 
-`dealloc` 也比较容易理解，我们虽然无法得知其中的具体实现，但 `dealloc` 通常是做一些在对象销毁前的准备工作。`NSKVONotifying_Computer` 实现该方法也是为了在销毁前将其动态创建类和对象进行资源回收等。
+`dealloc` 也比较容易理解，我们虽然无法得知其中的具体实现，但 `dealloc` 通常是做一些在对象销毁前的准备工作。`NSKVONotifying_Computer` 实现该方法也是为了在销毁前将其动态创建类和对象等资源进行回收等。
 
 ### _isKVOA
 
@@ -527,7 +527,7 @@ self.number += 1;
 }
 ```
 
-所以综上，KVO 其实是在运行时为被监听者动态创建一个新类，并将其需要监听的属性的 setter 进行封装，并改变值后对监听者的方法进行回调。所以 KVO 本质是对 setter 方法的加工，如果我们直接访问属性或者定义成员变量（即非 `@property`，不会生成 getter setter），KVO 就不会被触发。而我们想手动触发而不想改变值时，手动进行调用 `willChangeValueForKey` 和 `didChangeValueForKey` 即可（但我真的不理解这样的操作意义何在）。
+所以综上，KVO 其实是在运行时为被监听者动态创建一个新类，并将其需要监听的属性的 setter 进行重写，在其中会先调用 `willChangeValueForKey`，进而调用存放在原本类对象中的 setter，之后再调用 `didChangeValueForKey`，在改变值后对监听者的方法进行回调。所以 KVO 本质是对 setter 方法的加工，如果我们直接访问属性或者定义成员变量（即非 `@property`，不会生成 getter & setter），KVO 就不会被触发。而我们想手动触发而不想改变值时，手动进行调用 `willChangeValueForKey` 和 `didChangeValueForKey` 即可（但这样的操作意义何在）。
 
 ```objc
 [self.cpt willChangeValueForKey:@"buttonClickTimes"];
