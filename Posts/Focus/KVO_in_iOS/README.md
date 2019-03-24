@@ -252,17 +252,154 @@ typedef NS_OPTIONS(NSUInteger, NSKeyValueObservingOptions) {
 
 #### context
 
-`context` 即上下文。上下文是一个在阅读中常用的词，指文章的上文与下文，编程中常用的上下文也与此类似，泛指环境条件等信息。关于此处的 `context`，主要意义是来区分不同的监听通知，在后续也可以根据 `context` 移除指定的通知。
+`context` 即上下文。上下文是一个在阅读中常用的词，指文章的上文与下文，编程中常用的上下文也与此类似，泛指环境条件等信息。关于此处的 `context`，主要意义是来区分不同的监听通知，在后续也可以根据 `context` 移除指定的通知。关于 `context` 的最佳实践，首先要做到唯一且私有，唯一是为了区分不同的监听通知，而私有代表其不能被外界知晓甚至随意更改。比较好的实践是将 `context` 定义为静态全局变量，只可在定义该变量的源文件（.m）中有效，防止子类或其他源文件使用，做到私有；进而将 `context` 赋值为指向其本身内存地址，做到唯一。`context` 在参数中的类型为 `void *`，则将地址转换为该类型；为了防止在同一源文件中对该变量的更改，将其声明为 `const` 保证了其本身为常量，不可更改。
 
-关于 `context` 的最佳实践，这里参考了 StackOverflow 上的一个高赞回答（Reference 详见文末），需要
+```objc
+static void * const kButtonClickTimesKVOContext = (void *)&kButtonClickTimesKVOContext;
+
+if (context == kButtonClickTimesKVOContext) {
+    NSLog(@"New: %@, old: %@ - isPrior %@ - %@ - %@", change[NSKeyValueChangeNewKey], change[NSKeyValueChangeOldKey], change[NSKeyValueChangeNotificationIsPriorKey], keyPath, object);
+}
+```
+
+需要注意的是，`addObserver` 方法中并不会对监听者、被监听者、以及上下文进行强引用，需要我们自己来保证不会被释放。
+
+### 监听者得到通知
+
+```objc
+@interface NSObject(NSKeyValueObserving)
+
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary<NSKeyValueChangeKey, id> *)change context:(nullable void *)context;
+
+@end
+```
+
+监听者要实现 `NSKeyValueObserving` 分类中的 `observeValueForKeyPath:ofObject:change:context:` 方法来接收被监听对象改变的通知，其中大部分参数与添加监听者中的一致。如果监听者不实现该方法，将在运行时发生崩溃：
+
+```objc
+// *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: '<ViewCotroller: 0x7f859a4093e0>: An -observeValueForKeyPath:ofObject:change:context: message was received but not handled.
+```
+
+#### change
+
+```objc
+typedef NSString * NSKeyValueChangeKey NS_STRING_ENUM;
+
+FOUNDATION_EXPORT NSKeyValueChangeKey const NSKeyValueChangeKindKey;
+FOUNDATION_EXPORT NSKeyValueChangeKey const NSKeyValueChangeNewKey;
+FOUNDATION_EXPORT NSKeyValueChangeKey const NSKeyValueChangeOldKey;
+FOUNDATION_EXPORT NSKeyValueChangeKey const NSKeyValueChangeIndexesKey;
+FOUNDATION_EXPORT NSKeyValueChangeKey const NSKeyValueChangeNotificationIsPriorKey API_AVAILABLE(macos(10.5), ios(2.0), watchos(2.0), tvos(9.0));
+```
+
+`NSKeyValueChangeKindKey` 指变更的类型，又有以下四个枚举。当被监听的对象为非集合类型时，总是为 `NSKeyValueChangeSetting`；当为集合类型时，插入、删除、替换操作分别对应其余的几个枚举。
+
+```objc
+typedef NS_ENUM(NSUInteger, NSKeyValueChange) {
+    NSKeyValueChangeSetting = 1,
+    NSKeyValueChangeInsertion = 2,
+    NSKeyValueChangeRemoval = 3,
+    NSKeyValueChangeReplacement = 4,
+};
+```
+
+`NSKeyValueChangeIndexesKey` 指变更的索引，类型为 `NSIndexSet`，仅当被监听对象为集合类型时，对应变更的索引集合。
 
 ### 移除监听者
 
-// 通过相对于接收者的键路径上，注册或反注册一个值的监听者。其中选项（options）参数用来确定监听通知的内容和发送时机，上下文（context）参数用来在监听通知中传递。应当尽可能使用 removeObserver:forKeyPath:context: 取代 removeObserver:forKeyPath:，因为前者允许更加精确指定意图。当同一个监听者多次注册相同的键路径，但每次使用不同的上下文指针时，removeObserver:forKeyPath: 在确定移除时不得不猜测上下文指针，且有可能猜错。
+当不再需要监听或当监听者销毁前，需要先移除监听者。前者比较容易理解，但为什么监听者销毁前也需要移除呢？我在 StackOverflow 上找到一个类似的问题，高赞回答的作者表示在 Symbolic Exception 中设定 `NSKVODeallocateBreak` 即可捕获其异常，但在我的尝试中并不能捕获到；他又提到不能被销毁的不是监听者也不是被监听者，而是实现 KVO 运行时自动创建的 `NSKeyValueObservationInfo` 对象不能被销毁，我尝试使用 Debug Memory Graph，但也没找到和手动移除的区别。我也在 Draveness 的博客上找到与 KVO 相关的文章，但其中 Crash 的例子也没有再次复现。KVO 的内部实现难道更新了吗？于是对于这个问题，我也在 StackOverflow 上重新进行了提问。
+
+KVO 给开发者带来个很强的自由性，但移除监听者中却有不少「坑」在这里的。
+
+#### 监听者销毁前移除监听者
+
+```objc
+Computer *cpt = [[Computer alloc] init];
+[self addObserver:cpt forKeyPath:@"number" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+// [self removeObserver:cpt forKeyPath:@"number"];
+cpt = nil;
+self.number += 1;
+
+// Crash: Thread 1: EXC_BAD_ACCESS
+```
+
+我们尝试下在监听者销毁后，对被监听者的值做出改变。这时程序将崩溃，为野指针错误。这说明在系统得知被观察者改变后，尝试去寻找监听者，但此时监听者已经被销毁，其保存的内存地址已经不再是监听者了，所以发生此错误。为了比较移除监听者的作用，首先我们在未移除的代码中 `self.number += 1;` 一行打个断点，查看 Debug Memory Graph：
+
+![](1.png)
+
+其中有两个 `NSKeyValueObservationInfo` 对象，尝试将它们打印出来：
+
+```objc
+// LLDB:
+// Printing description of $6:
+// <NSKeyValueObservationInfo 0x600001794720> (
+// <NSKeyValueObservance 0x6000019c5170: Observer: 0x7fb98f4024e0, Key path: cloned, Options: <New: YES, Old: NO, Prior: NO> Context: 0x10c01f500, Property: 0x6000019c50e0>
+// )
+// Printing description of $7:
+// <NSKeyValueObservationInfo 0x6000017cd780> (
+// <NSKeyValueObservance 0x60000198b840: Observer: 0x600001592720, Key path: number, Options: <New: YES, Old: YES, Prior: NO> Context: 0x0, Property: 0x60000198b7b0>
+// )
+```
+
+第一个 KVO 应该是系统在底层加入的，观察者是 `0x7fb98f4024e0`，查一下发现是 `UIScreen`，这里略过。
+
+![](2.png)
+
+第二 KVO 就是我们加入的对 `number` 的监听。由于我们没有手动移除监听者，虽然监听者已经销毁，但监听关系仍然存在。所以当我们继续执行，程序将发生崩溃。
+
+而如果令监听者在销毁前移除监听，那么 Debug Memory Graph 会是这样：
+
+![](3.png)
+
+即移除了之前我们加入的监听者，所以当我们继续执行，程序将不会发生崩溃。
+
+#### 被监听者销毁前移除监听者
+
+
+#### context
+
+```objc
+// 添加两次 KVO
+[_cpt addObserver:self
+       forKeyPath:NSStringFromSelector(@selector(buttonClickTimes))
+          options:NSKeyValueObservingOptionNew
+          context:kButtonClickTimesKVOContext1];
+[_cpt addObserver:self
+       forKeyPath:NSStringFromSelector(@selector(buttonClickTimes))
+          options:NSKeyValueObservingOptionNew
+          context:kButtonClickTimesKVOContext2];
+          
+- (IBAction)click:(id)sender {
+    NSLog(@"---");
+    // 移除一次
+    [self.cpt removeObserver:self forKeyPath:NSStringFromSelector(@selector(buttonClickTimes))];
+}
+
+// kButtonClickTimesKVOContext2
+// kButtonClickTimesKVOContext1
+// ---
+// kButtonClickTimesKVOContext1
+// ---
+```
+
+我们尝试添加两次 KVO，并在点击方法中移除而不指定 `context`，监听者收到通知会打印相应的 `context` 名。从输出可以看出 `removeObserver:forKeyPath:` 并没有移除所有的监听者。根据官方的注释：建议使用 `removeObserver:forKeyPath:context:` 取代 `removeObserver:forKeyPath:`，因为后者并未指定 `context` 将会自动猜测 `context` 指针，从而可能导致意想不到的错误。
+
+#### 多次移除
+
+```
+// 'NSRangeException', reason: 'Cannot remove an observer <ViewController 0x7fa953c18bd0> for the key path "buttonClickTimes" from <Computer 0x6000007731e0> because it is not registered as an observer.'
+```
+
+
 
 ## Why
+
+
+## Design Pattern
+
 
 ## Reference
 
 - [Key-Value Observing Programming Guide - Apple Inc.](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/KeyValueObserving/KeyValueObserving.html)
 - [Best practices for context parameter in addObserver (KVO) - StackOverflow](https://stackoverflow.com/questions/12719864/best-practices-for-context-parameter-in-addobserver-kvo)
+- [Do I have to removeObserver in KVO manually - StackOverflow](https://stackoverflow.com/questions/19514450/do-i-have-to-removeobserver-in-kvo-manually)
