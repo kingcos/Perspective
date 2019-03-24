@@ -408,12 +408,131 @@ self.number += 1;
 
 ## Why
 
+那么 KVO 的本质什么呢？官方文档在「Key-Value Observing Implementation Details」一节中描述如下：
 
+> Automatic key-value observing is implemented using a technique called *isa-swizzling*.
+> 
+> The `isa` pointer, as the name suggests, points to the object's class which maintains a dispatch table. This dispatch table essentially contains pointers to the methods(,) the class implements, among other data.
+> 
+> When an observer is registered for an attribute of an object(,) the isa pointer of the observed object is modified, pointing to an intermediate class rather than at the true class. As a result the value of the isa pointer does not necessarily reflect the actual class of the instance.
+> 
+> You should never rely on the `isa` pointer to determine class membership. Instead, you should use the class method to determine the `class` of an object instance.
+> 
+> —— [Key-Value Observing Implementation Details, Key-Value Observing Programming Guide, Apple](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/KeyValueObserving/Articles/KVOImplementation.html#//apple_ref/doc/uid/20002307-BAJEAIEE)
+> 
+> 译：
+> 
+> 自动键值监听使用一项叫做 *isa 交换*的技术实现。
+> 
+> 顾名思义，`isa` 指针指向维护调度表的对象的类。调度表本质上包含了指向方法、类实现、以及其他数据的指针。
+> 
+> 若监听者注册一个对象的属性时，被监听对象的 `isa` 指针将被改变，指向一个中间类而非真正的类。因此 `isa` 指针的值并不一定反映实例的真正类。
+> 
+> 我们绝不应当依赖 isa 指针来确定类的成员身份，相反，我们应当使用 `class` 方法来确定一个对象实例的类。
+> 
+> —— [键值监听实现细节，键值监听编程指南，苹果](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/KeyValueObserving/Articles/KVOImplementation.html#//apple_ref/doc/uid/20002307-BAJEAIEE)
 
+```objc
+[self.cpt addObserver:self
+           forKeyPath:NSStringFromSelector(@selector(buttonClickTimes))
+              options:NSKeyValueObservingOptionNew
+              context:ButtonClickTimesKVOContext];
+// LLDB:
+// 注意我们这里使用了 object_getClass 来获取其类对象
+// 因为如官方文档所写 class 中会隐藏一些细节，比如底层不太希望我们知道的类
+// (lldb) po object_getClass(self.cpt)
+// NSKVONotifying_Computer
+```
 
+通过官方这一段简短的解释，其实就能找到突破口了，即 `isa`。仍然拿最初的 Demo 举例，在添加监听者之前，`cpt` 实例对象的 `isa` 指向了 `Computer` 类对象，而当添加完监听者之后，`isa` 指向了 `NSKVONotifying_Computer` 类对象，即官方文档中提到的的「中间类」。`NSKVONotifying_Computer` 并不是我们手动建立的，所以它是由在运行时动态生成的，尝试打印其方法列表：
 
+```objc
+- (void)printMethodList:(Class)someClass {
+    unsigned int count;
+    Method *methods = class_copyMethodList([someClass class], &count);
+    for (int i = 0; i < count; i ++) {
+        Method method = methods[i];
+        SEL sel = method_getName(method);
+        const char *name = sel_getName(sel);
+        NSLog(@"%s", name);
+    }
+    free(methods);
+}
 
+// OUTPUT:
+// 添加监听前：
+// buttonClickTimes
+// setButtonClickTimes:
+// ---
+// 添加监听后：
+// setButtonClickTimes:
+// class
+// dealloc
+// _isKVOA
+```
 
+我们再进一步，尝试探究一下 `NSKVONotifying_Computer` 中方法。
+
+### class
+
+如官方文档所述，`class` 方法返回了实例对象「真正」的类，而原因其实是因为 `NSKVONotifying_Computer` 是运行时为了实现 KVO 所自行生成的类，其目的是来管理和实现 KVO，但作为开发者，其实多数时候不必关心其内部细节，所以，在 `NSKVONotifying_Computer` 中，`class` 需要重写为返回其原本的类。
+
+### dealloc
+
+`dealloc` 也比较容易理解，我们虽然无法得知其中的具体实现，但 `dealloc` 通常是做一些在对象销毁前的准备工作。`NSKVONotifying_Computer` 实现该方法也是为了在销毁前将其动态创建类和对象进行资源回收等。
+
+### _isKVOA
+
+```objc
+// LLDB:
+// (lldb) po (BOOL)[self.cpt _isKVOA]
+// YES
+```
+
+`_isKVOA` 通过其方法名可以认为是一个系统内部判断对象是否为 KVO 对象的方法。
+
+### setter
+
+```objc
+// LLDB:
+// (lldb) po [self.cpt methodForSelector:@selector(setButtonClickTimes:)]
+// (Foundation`_NSSetIntValueAndNotify)
+```
+
+`setButtonClickTimes:` 是 `NSKVONotifying_Computer` 中唯一和 `keyPath` 相关的方法。其 `IMP` 是 `Foundation` 中的 `_NSSetIntValueAndNotify`。注意观察该方法名，其中的 `Int` 其实是 `buttonClickTimes` 的类型，尝试在 `Foundation` 搜索一下类似的方法（`nm`，即 llvm symbol table dumper，LLVM 符号表 Dumper）：
+
+![](4.png)
+
+为了能一探 `_NSSetIntValueAndNotify` 究竟，此处稍微暴力一点，使用 Hopper 将 `Foundation` 中的类 dump 出来。
+
+![](5.png)
+
+其中能让我们比较熟悉的是 `willChangeValueForKey`，我们尝试在被监听者的该方法中个打个断点，就可以在 Xcode 中看到 `_NSSetIntValueAndNotify` 中先调用了 `willChangeValueForKey`，之后又调用了 `didChangeValueForKey`。
+
+![](6.png)
+
+在 `didChangeValueForKey` 和 setter 中也加入断点，就可以发现它们的调用顺序是：`willChangeValueForKey` -> `setButtonClickTimes` -> `didChangeValueForKey`。
+
+```objc
+- (void)willChangeValueForKey:(NSString *)key {
+    [super willChangeValueForKey:key];
+}
+
+- (void)setButtonClickTimes:(int)buttonClickTimes {
+    _buttonClickTimes = buttonClickTimes;
+}
+
+- (void)didChangeValueForKey:(NSString *)key {
+    [super didChangeValueForKey:key];
+}
+```
+
+所以综上，KVO 其实是在运行时为被监听者动态创建一个新类，并将其需要监听的属性的 setter 进行封装，并改变值后对监听者的方法进行回调。所以 KVO 本质是对 setter 方法的加工，如果我们直接访问属性或者定义成员变量（即非 `@property`，不会生成 getter setter），KVO 就不会被触发。而我们想手动触发而不想改变值时，手动进行调用 `willChangeValueForKey` 和 `didChangeValueForKey` 即可（但我真的不理解这样的操作意义何在）。
+
+```objc
+[self.cpt willChangeValueForKey:@"buttonClickTimes"];
+[self.cpt didChangeValueForKey:@"buttonClickTimes"];
+```
 
 ## Reference
 
@@ -421,3 +540,5 @@ self.number += 1;
 - [Best practices for context parameter in addObserver (KVO) - StackOverflow](https://stackoverflow.com/questions/12719864/best-practices-for-context-parameter-in-addobserver-kvo)
 - [Do I have to removeObserver in KVO manually - StackOverflow](https://stackoverflow.com/questions/19514450/do-i-have-to-removeobserver-in-kvo-manually)
 - [如何优雅地使用 KVO - Draveness](https://draveness.me/kvocontroller)
+- [Focus - iOS 中的 NSObject](https://github.com/kingcos/Perspective/tree/writing/Posts/Focus/NSObject_in_iOS)
+- [iOS KVO原理的探究实现 - chouson_chan](https://www.jianshu.com/p/4abbf4f3b4f0)
