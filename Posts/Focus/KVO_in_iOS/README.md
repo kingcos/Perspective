@@ -6,7 +6,7 @@
 
 ## Preface
 
-KVO 即 Key-Value Observing，译作键值监听，通常用于监听对象的某个属性值的变化。也是设计模式中观察者模式的实践，下面将由浅入深，谈谈 iOS 中的 KVO。
+KVO 即 Key-Value Observing，译作键值监听（下文简称 KVO），通常用于监听对象的某个特定属性值的变化。通常用于 MVC（Model-View-Controller）中 控制器与模型的交互，也是设计模式中观察者模式的实践，下面将由浅入深，谈谈 iOS 中的 KVO。
 
 ## How
 
@@ -99,7 +99,7 @@ KVO 即 Key-Value Observing，译作键值监听，通常用于监听对象的�
 @end
 ```
 
-`observer` 即监听者，当监听值发生改变后，它的 `observeValueForKeyPath:ofObject:change:context:` 方法就会被调用。而由于该方法定义在 Obj-C 中 NSObject 的 `NSKeyValueObserving` 分类中，所以任何 NSObject 的子类可以通过实现该方法来成为监听者（但这并不代表可以实现 KVO）。
+`observer` 即监听者，当监听的值发生改变后，监听者的 `observeValueForKeyPath:ofObject:change:context:` 方法就会被调用。而由于该方法定义在 Obj-C 中 NSObject 的 `NSKeyValueObserving` 分类中，所以任何 NSObject 的子类都是 KVO 兼容的。
 
 #### keyPath
 
@@ -527,7 +527,7 @@ self.number += 1;
 }
 ```
 
-所以综上，KVO 其实是在运行时为被监听者动态创建一个新类，并将其需要监听的属性的 setter 进行重写，在其中会先调用 `willChangeValueForKey`，进而调用存放在原本类对象中的 setter，之后再调用 `didChangeValueForKey`，在改变值后对监听者的方法进行回调。所以 KVO 本质是对 setter 方法的加工，如果我们直接访问属性或者定义成员变量但不手动生成 getter & setter，KVO 就不会被触发。而我们想手动触发而不想改变值时，手动进行调用 `willChangeValueForKey` 和 `didChangeValueForKey` 即可（但这样的操作意义何在）。
+所以综上，KVO 其实是在运行时为被监听者动态创建一个新类，并将其需要监听的属性的 setter 进行重写，在其中会先调用 `willChangeValueForKey`，进而调用存放在原本类对象中的 setter，之后再调用 `didChangeValueForKey`，在改变值后对监听者的方法进行回调。所以 KVO 本质是对 setter 方法的加工，如果我们直接访问属性（`_cpt`）或者定义成员变量但不手动生成 getter & setter，KVO 就不会被触发。而我们想手动触发而不想改变值时，手动进行调用 `willChangeValueForKey` 和 `didChangeValueForKey` 即可（但这样的操作意义何在）。
 
 ```objc
 [self.cpt willChangeValueForKey:@"buttonClickTimes"];
