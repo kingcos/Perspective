@@ -511,23 +511,45 @@ self.number += 1;
 
 ![](6.png)
 
-在 `didChangeValueForKey` 和 setter 中也加入断点，就可以发现它们的调用顺序是：`willChangeValueForKey` -> `setButtonClickTimes` -> `didChangeValueForKey`。
+在 `didChangeValueForKey` 和 setter 中也加入断点，就可以发现它们的调用顺序是：`willChangeValueForKey` -> `setButtonClickTimes` -> `didChangeValueForKey`（并在其中通知监听者：`observeValueForKeyPath`）。
 
 ```objc
 - (void)willChangeValueForKey:(NSString *)key {
+    NSLog(@"willChangeValueForKey ->");
     [super willChangeValueForKey:key];
+    NSLog(@"willChangeValueForKey ->");
 }
 
 - (void)setButtonClickTimes:(int)buttonClickTimes {
+    NSLog(@"setButtonClickTimes ->");
     _buttonClickTimes = buttonClickTimes;
+    NSLog(@"setButtonClickTimes ->");
 }
 
 - (void)didChangeValueForKey:(NSString *)key {
+    NSLog(@"didChangeValueForKey ->");
     [super didChangeValueForKey:key];
+    NSLog(@"didChangeValueForKey ->");
 }
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context {
+    NSLog(@"observeValueForKeyPath ->");
+}
+
+// OUTPUT:
+// willChangeValueForKey ->
+// willChangeValueForKey ->
+// setButtonClickTimes ->
+// setButtonClickTimes ->
+// didChangeValueForKey ->
+// observeValueForKeyPath ->
+// didChangeValueForKey ->
 ```
 
-所以综上，KVO 其实是在运行时为被监听者动态创建一个新类，并将其需要监听的属性的 setter 进行重写，在其中会先调用 `willChangeValueForKey`，进而调用存放在原本类对象中的 setter，之后再调用 `didChangeValueForKey`，在改变值后对监听者的方法进行回调。所以 KVO 本质是对 setter 方法的加工，如果我们直接访问属性（`_cpt`）或者定义成员变量但不手动生成 getter & setter，KVO 就不会被触发。而我们想手动触发而不想改变值时，手动进行调用 `willChangeValueForKey` 和 `didChangeValueForKey` 即可（但这样的操作意义何在）。
+所以综上，KVO 其实是在运行时为被监听者动态创建一个新类，并将其需要监听的属性的 setter 进行重写，在其中会先调用 `willChangeValueForKey`，进而调用存放在原本类对象中的 setter，之后再调用 `didChangeValueForKey`，并在其中通知监听者。所以 KVO 本质是对 setter 方法的加工，如果我们直接访问属性（`_cpt`）或者定义成员变量但不手动生成 getter & setter，KVO 就不会被触发。而我们想手动触发而不想改变值时，手动进行调用 `willChangeValueForKey` 和 `didChangeValueForKey` 即可（但这样的操作意义何在）。
 
 ```objc
 [self.cpt willChangeValueForKey:@"buttonClickTimes"];
