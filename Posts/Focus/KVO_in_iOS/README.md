@@ -527,7 +527,7 @@ self.number += 1;
 }
 ```
 
-所以综上，KVO 其实是在运行时为被监听者动态创建一个新类，并将其需要监听的属性的 setter 进行重写，在其中会先调用 `willChangeValueForKey`，进而调用存放在原本类对象中的 setter，之后再调用 `didChangeValueForKey`，在改变值后对监听者的方法进行回调。所以 KVO 本质是对 setter 方法的加工，如果我们直接访问属性或者定义成员变量（即非 `@property`，不会生成 getter & setter），KVO 就不会被触发。而我们想手动触发而不想改变值时，手动进行调用 `willChangeValueForKey` 和 `didChangeValueForKey` 即可（但这样的操作意义何在）。
+所以综上，KVO 其实是在运行时为被监听者动态创建一个新类，并将其需要监听的属性的 setter 进行重写，在其中会先调用 `willChangeValueForKey`，进而调用存放在原本类对象中的 setter，之后再调用 `didChangeValueForKey`，在改变值后对监听者的方法进行回调。所以 KVO 本质是对 setter 方法的加工，如果我们直接访问属性或者定义成员变量但不手动生成 getter & setter，KVO 就不会被触发。而我们想手动触发而不想改变值时，手动进行调用 `willChangeValueForKey` 和 `didChangeValueForKey` 即可（但这样的操作意义何在）。
 
 ```objc
 [self.cpt willChangeValueForKey:@"buttonClickTimes"];
