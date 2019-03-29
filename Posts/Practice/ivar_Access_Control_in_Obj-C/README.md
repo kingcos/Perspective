@@ -199,7 +199,7 @@ __attribute__((visibility("hidden")))
 @interface ClassName : SomeSuperclass
 ```
 
-在 Obj-C 中是 `__attribute__((visibility("hidden")))`，且定义为一个更简单使用的宏 `OBJC_VISIBLE`（当然，该宏在 Win 32 系统中为 `__declspec(dllexport)` 或 `__declspec(dllimport)`。
+在 Obj-C 中是通过 `__attribute__((visibility("hidden")))` 设定可见程度，且定义为一个更简单使用的宏 `OBJC_VISIBLE`（当然，该宏在 Win 32 系统中为 `__declspec(dllexport)` 或 `__declspec(dllimport)`）。
 
 ```objc
 // objc-api.h
