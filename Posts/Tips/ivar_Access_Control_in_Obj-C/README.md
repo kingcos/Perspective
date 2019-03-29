@@ -150,8 +150,6 @@ NSLog(@"%@", fruit->_name);
 
 ## 类的访问控制
 
-在 64 位的 Obj-C 中，每个类以及实例变量的访问控制都有一个与之关联的符号（如上 `_OBJC_IVAR_$_Fruit._name`），类或实例变量都会通过引用此符号来使用，这些符号受链接器的访问控制。
-
 ```
 // 误 import .m 文件时的错误
 // duplicate symbol _OBJC_CLASS_$_Fruit in:
@@ -163,12 +161,20 @@ NSLog(@"%@", fruit->_name);
 // ld: 2 duplicate symbols for architecture x86_64
 ```
 
-类在符号表中的名称为 ` _OBJC_CLASS_$_ClassName` 和 `_OBJC_METACLASS_$_ClassName` 的形式，前者类符号用于在消息发送机制中发送消息的一方（eg. `[ClassName someMessage]`），后者元类符号用于子类化的一方。默认情况下，类符号
+在 64 位的 Obj-C 中，每个类以及实例变量的访问控制都有一个与之关联的符号，类或实例变量都会通过引用此符号来使用，这些符号受链接器的访问控制。
+
+类符号的格式为 ` _OBJC_CLASS_$_ClassName` 和 `_OBJC_METACLASS_$_ClassName`，前者类符号用于在消息发送机制中发送消息的一方（eg. `[ClassName someMessage]`），后者元类符号用于子类化的一方。默认情况下，类符号是暴露的。但可被 gcc 符号标志控制，`-fvisibility=hidden` 使得类符号不暴露。链接器在导出表（Export List）中辨识出旧符号名 `.objc_class_name_ClassName`，并将其翻译为这些符号。
+
+`__attribute__` 中设置单个类的可见程度：
 
 ```objc
 __attribute__((visibility("hidden")))
 @interface ClassName : SomeSuperclass
 ```
+
+默认情况下，`default` 可见程度，类符号暴露，成员变量符号依下述决定；`hidden` 可见程度，类符号和成员变量赋均不暴露。
+
+成员变量符号的格式为 `_OBJC_IVAR_$_ClassName.IvarName`，用户读写成员变量的一方。默认情况下，`@private` 和 `@package` 修饰的成员变量不暴露，而 `@public` 和 `@protected` 修饰的成员变量暴露。但可由导出表、 `-fvisibility` 或类的可见程度属性改变（针对成员变量的可见程度属性暂不支持）。
 
 ## Reference
 
