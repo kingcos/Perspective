@@ -1,4 +1,4 @@
-# Tips - Obj-C 中成员变量和类的访问控制
+# Practice - Obj-C 中成员变量和类的访问控制
 
 | Platform |
 |:-----:|
@@ -146,12 +146,35 @@ NSLog(@"%@", fruit->_name);
 
 ### 类扩展
 
-在类扩展（Class Extension）中，我们可以定义一些不想暴露在外界（.h）的属性或成员变量，做到「物理」隔离。
+在类扩展（Class Extension）中，我们可以定义一些不想暴露在外界（.h）的属性、成员变量、或方法，做到「物理」隔离。
 
-## 类的访问控制
+```objc
+// Person-Inner.h
+#import "Person.h"
+
+@interface Person ()
+
+- (void)doSomething;
+
+@end
+
+// Person.m
+#import "Person.h"
+#import "Person-Inner.h"
+
+@implementation Person
+- (void)doSomething {
+    NSLog(@"Do something.");
+}
+@end
+```
+
+如上，对外我们只需要暴露 Person.h，而将类扩展所在的 Inner.h 不暴露为 Public Header 即可。
+
+## 类和成员变量符号
 
 ```
-// 误 import .m 文件时的错误
+// 误 import "Fruit.m" 文件时的错误
 // duplicate symbol _OBJC_CLASS_$_Fruit in:
 //     /path/to/Fruit.o
 //     /path/to/main.o
@@ -159,22 +182,39 @@ NSLog(@"%@", fruit->_name);
 //     /path/to/Fruit.o
 //     /path/to/main.o
 // ld: 2 duplicate symbols for architecture x86_64
-```
+``` 
 
-在 64 位的 Obj-C 中，每个类以及实例变量的访问控制都有一个与之关联的符号，类或实例变量都会通过引用此符号来使用，这些符号受链接器的访问控制。
+在 64 位的 Obj-C 中，每个类以及实例变量的访问控制都有一个与之关联的符号，类或实例变量都会通过引用此符号来使用。类符号的格式为 ` _OBJC_CLASS_$_ClassName` 和 `_OBJC_METACLASS_$_ClassName`，前者类符号用于在消息发送机制中发送消息的一方（eg. `[ClassName someMessage]`），后者元类符号用于子类化的一方。成员变量符号的格式为 `_OBJC_IVAR_$_ClassName.IvarName`，用于读写成员变量的一方。
 
-类符号的格式为 ` _OBJC_CLASS_$_ClassName` 和 `_OBJC_METACLASS_$_ClassName`，前者类符号用于在消息发送机制中发送消息的一方（eg. `[ClassName someMessage]`），后者元类符号用于子类化的一方。默认情况下，类符号是暴露的。但可被 gcc 符号标志控制，`-fvisibility=hidden` 使得类符号不暴露。链接器在导出表（Export List）中辨识出旧符号名 `.objc_class_name_ClassName`，并将其翻译为这些符号。
+## Visibility
 
-`__attribute__` 中设置单个类的可见程度：
+![]()
+
+默认情况下（即不明确指定），类符号均是暴露的。但 gcc 编译器可以通过 `-fvisibility` 参数设定编译时的可见程度，但优先级低于直接在源代码中声明可见程度。`-fvisibility=default` 即默认可见程度，`-fvisibility=hidden`，使得编译源文件内未明确指定的符号隐藏。
+
+在 C/C++源文件中，也可以通过 `__attribute((visibility("hidden")))` 设定某个方法或类的可见程度。
 
 ```objc
 __attribute__((visibility("hidden")))
 @interface ClassName : SomeSuperclass
 ```
 
-默认情况下，`default` 可见程度，类符号暴露，成员变量符号依下述决定；`hidden` 可见程度，类符号和成员变量赋均不暴露。
+在 Obj-C 中是 `__attribute__((visibility("hidden")))`，且定义为一个更简单使用的宏 `OBJC_VISIBLE`（当然，该宏在 Win 32 系统中为 `__declspec(dllexport)` 或 `__declspec(dllimport)`。
 
-成员变量符号的格式为 `_OBJC_IVAR_$_ClassName.IvarName`，用户读写成员变量的一方。默认情况下，`@private` 和 `@package` 修饰的成员变量不暴露，而 `@public` 和 `@protected` 修饰的成员变量暴露。但可由导出表、 `-fvisibility` 或类的可见程度属性改变（针对成员变量的可见程度属性暂不支持）。
+```objc
+// objc-api.h
+#if !defined(OBJC_VISIBLE)
+#   if TARGET_OS_WIN32
+#       if defined(BUILDING_OBJC)
+#           define OBJC_VISIBLE __declspec(dllexport)
+#       else
+#           define OBJC_VISIBLE __declspec(dllimport)
+#       endif
+#   else
+#       define OBJC_VISIBLE  __attribute__((visibility("default")))
+#   endif
+#endif
+```
 
 ## Reference
 
@@ -182,3 +222,4 @@ __attribute__((visibility("hidden")))
 - [Objective-C Release Notes - Apple](https://developer.apple.com/library/archive/releasenotes/Cocoa/RN-ObjectiveC/index.html#//apple_ref/doc/uid/TP40004309-CH1-DontLinkElementID_7)
 - [64-bit Class and Instance Variable Access Control - Apple](https://developer.apple.com/library/archive/releasenotes/Cocoa/RN-ObjectiveC/index.html#//apple_ref/doc/uid/TP40004309-CH1-SW1)
 - [What does the @package directive do in Objective-C? - StackOverflow](https://stackoverflow.com/questions/772600/what-does-the-package-directive-do-in-objective-c)
+- [GCC系列: __attribute__((visibility(""))) - veryitman](https://blog.csdn.net/veryitman/article/details/46756683)
