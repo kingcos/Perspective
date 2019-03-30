@@ -1,12 +1,12 @@
 # Practice - iOS 中的 KVO 
 
-| Date | Notes | iOS |
-|:-----:|:-----:|:-----:|
-| 2019-03-13 | 首次提交 | 12+ |
+| Date | Notes |
+|:-----:|:-----:|
+| 2019-03-13 | 首次提交 |
 
 ## Preface
 
-KVO 即 Key-Value Observing，译作键值监听（下文简称 KVO），通常用于监听对象的某个特定属性值的变化。通常用于 MVC（Model-View-Controller）中 控制器与模型的交互，也是设计模式中观察者模式的实践，下面将由浅入深，谈谈 iOS 中的 KVO。
+KVO 即 Key-Value Observing，译作键值监听（下文简称 KVO），通常用于监听对象的某个特定属性值的变化。通常用于 MVC（Model-View-Controller）中控制器与模型的交互，也是设计模式中观察者模式的实践，下面将由浅入深，谈谈 iOS 中的 KVO。
 
 ## How
 
