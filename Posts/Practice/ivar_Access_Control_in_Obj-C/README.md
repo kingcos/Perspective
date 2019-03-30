@@ -101,7 +101,7 @@ Mac *mac = [[Mac alloc] initWithDiskSize:512 memorySize:16];
 @end
 ```
 
-声明为 `@public` 的成员变量是访问控制中开放范围最小的，只能被本类访问到。
+声明为 `@private` 的成员变量是访问控制中开放范围最小的，只能被本类访问到。
 
 ### @package
 
