@@ -6,6 +6,8 @@
 | 2019.03.30 | macOS 10.14.4 | - |
 
 > 由于更换了电脑，上次好不容易折腾的配置也都无从参考，这次尽力把整个配置过程，以及音频输入输出的部分完善。直播推流使用了 OBS Studio，直播平台为 Bilibili。
+> 
+> 欢迎来围观我的直播间：[https://live.bilibili.com/7900407](https://live.bilibili.com/7900407)。
 
 ## Solution
 
