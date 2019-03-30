@@ -73,7 +73,7 @@ Mac *mac = [[Mac alloc] initWithDiskSize:512 memorySize:16];
 // My Mac's disk size is 512 GB, memory size is 16 GB.
 ```
 
-声明为 `@protected` 的成员变量只能在本类或子类中使用。注意，当不使用任何访问控制修饰符时，成员变量默认即为 `@protected`。
+声明为 `@protected` 的成员变量只能在本类或子类中使用。注意，当不使用任何访问控制修饰符时，成员变量默认即为 `@protected`。其实，声明为 `@property` 的属性，系统会自动为我们创建一个 `_ivar` 的成员变量，这个成员变量的可见程度默认也是 `@protected`。
 
 ### @private
 
@@ -173,7 +173,7 @@ NSLog(@"%@", fruit->_name);
 
 ## 符号（Symbols）
 
-`nm` 是 macOS 自带的命令行程序，可以用来查看 LLVM 符号表，但默认情况将打印全部的符号，如果希望只显示外部的全局符号，可以使用 `-g` 参数。
+`nm` 是 macOS 自带的命令行程序，可以用来查看 mach-o 文件的 LLVM 符号表，但默认情况将打印全部的符号，如果希望只显示外部的全局符号，可以使用 `-g` 参数。
 
 ```objc
 // main.m
@@ -194,6 +194,7 @@ NSLog(@"%@", fruit->_name);
     @private
     int _secret;
 }
+@property(nonatomic, copy) NSString *arch;
 @end
 
 @implementation Computer
@@ -204,33 +205,42 @@ int main(int argc, const char * argv[]) {
 }
 
 // nm executable-mach-o-file
-// 0000000100000ec0 t -[Computer .cxx_destruct]
-// 00000001000011d0 S _OBJC_CLASS_$_Computer
+// 0000000100000e00 t -[Computer .cxx_destruct]
+// 0000000100000d90 t -[Computer arch]
+// 0000000100000dc0 t -[Computer setArch:]
+// 0000000100001270 S _OBJC_CLASS_$_Computer
 //                  U _OBJC_CLASS_$_NSObject
-// 0000000100001198 S _OBJC_IVAR_$_Computer._diskSize
-// 0000000100001180 s _OBJC_IVAR_$_Computer._macAdress
-// 0000000100001190 S _OBJC_IVAR_$_Computer._memorySize
-// 00000001000011a0 s _OBJC_IVAR_$_Computer._secret
-// 0000000100001188 S _OBJC_IVAR_$_Computer._name
-// 00000001000011a8 S _OBJC_METACLASS_$_Computer
+// 0000000100001218 s _OBJC_IVAR_$_Computer._arch
+// 0000000100001238 S _OBJC_IVAR_$_Computer._diskSize
+// 0000000100001220 s _OBJC_IVAR_$_Computer._macAdress
+// 0000000100001230 S _OBJC_IVAR_$_Computer._memorySize
+// 0000000100001240 s _OBJC_IVAR_$_Computer._secret
+// 0000000100001228 S _OBJC_IVAR_$_Computer._name
+// 0000000100001248 S _OBJC_METACLASS_$_Computer
 //                  U _OBJC_METACLASS_$_NSObject
 // 0000000100000000 T __mh_execute_header
 //                  U __objc_empty_cache
-// 0000000100000f20 T _main
+// 0000000100000e70 T _main
+//                  U _objc_getProperty
+//                  U _objc_msgSend
+//                  U _objc_setProperty_nonatomic_copy
 //                  U _objc_storeStrong
 //                  U dyld_stub_binder
 
 // nm -g executable-mach-o-file
-// 00000001000011d0 S _OBJC_CLASS_$_Computer
+// 0000000100001270 S _OBJC_CLASS_$_Computer
 //                  U _OBJC_CLASS_$_NSObject
-// 0000000100001198 S _OBJC_IVAR_$_Computer._diskSize
-// 0000000100001190 S _OBJC_IVAR_$_Computer._memorySize
-// 0000000100001188 S _OBJC_IVAR_$_Computer._name
-// 00000001000011a8 S _OBJC_METACLASS_$_Computer
+// 0000000100001238 S _OBJC_IVAR_$_Computer._diskSize
+// 0000000100001230 S _OBJC_IVAR_$_Computer._memorySize
+// 0000000100001228 S _OBJC_IVAR_$_Computer._name
+// 0000000100001248 S _OBJC_METACLASS_$_Computer
 //                  U _OBJC_METACLASS_$_NSObject
 // 0000000100000000 T __mh_execute_header
 //                  U __objc_empty_cache
-// 0000000100000f20 T _main
+// 0000000100000e70 T _main
+//                  U _objc_getProperty
+//                  U _objc_msgSend
+//                  U _objc_setProperty_nonatomic_copy
 //                  U _objc_storeStrong
 //                  U dyld_stub_binder
 ``` 
