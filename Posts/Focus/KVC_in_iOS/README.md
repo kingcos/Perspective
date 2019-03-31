@@ -94,12 +94,172 @@ NSLog(@"%@", [cpt mutableArrayValueForKey:@"speakers"]);
 // )
 ```
 
-对于对象中的集合类型 `NSArray`、`NSSet`、`NSOrderedSet`，KVC 提供了比 `setValue:forKey:` 和 `valueForKey:` 更便捷、高效的 `mutableArrayValueForKey:`、`mutableSetValueForKey`、`mutableOrderedSetValueForKey:` 以及对应的 `KeyPath` 方法。它们都会返回一个可变（Mutable）类型的代理对象，在该代理对象上的操作将影响真实的属性值。
+对于对象中的集合类型 `NSArray`、`NSSet`、`NSOrderedSet`，KVC 提供了比 `setValue:forKey:` 和 `valueForKey:` 更便捷高效的 `mutableArrayValueForKey:`、`mutableSetValueForKey`、`mutableOrderedSetValueForKey:` 以及对应的 `KeyPath` 方法。它们都会返回一个可变（Mutable）类型的代理对象，在该代理对象上的操作将影响真实的属性值。
 
-### 集合类型操作符
+### 集合操作符
 
-对于对象中的集合类型，
+对于对象中的集合类型，KVC 提供了一些可以放置在键路径中的操作符，由 `@` 开头，整体结构为：`左键路径.@集合操作符.右键路径`，当然，左右键路径都可以根据需要选择是否忽略。集合操作符分为三种：聚合（Aggregation）操作符、数组操作符、嵌套（Nesting）操作符。
 
+<table>
+    <tr>
+        <th>类型</th>
+        <th>操作符</th>
+        <th>作用</th>
+    </tr>
+    <tr>
+        <td rowspan="6">聚合操作符<br>（针对数组或集合类型，最终返回反应集合某个特性的单一值）</td>
+    </tr>
+    <tr>
+        <td><code>@avg</code></td>
+        <td>将数值转换为 <code>double</code> 类型求和并计算平均值（<code>nil</code> 值为 <code>0</code>），并返回 <code>NSNumber</code> 类型的实例</td>
+    </tr>
+    <tr>
+        <td><code>@count</code></td>
+        <td>计算集合类型中的对象数量，将忽略右键路径</td>
+    </tr>
+    <tr>
+        <td><code>@max</code></td>
+        <td>内部使用 <code>compare:</code> 方法比对出最大值（忽略 <code>nil</code> 值），并返回 <code>NSNumber</code> 类型的实例</td>
+    </tr>
+    <tr>
+        <td><code>@min</code></td>
+        <td>内部使用 <code>compare:</code> 方法比对出最小值（忽略 <code>nil</code> 值），并返回 <code>NSNumber</code> 类型的实例</td>
+    </tr>
+    <tr>
+        <td><code>@sum</code></td>
+        <td>将数值转换为 <code>double</code> 类型求和（<code>nil</code> 值为 <code>0</code>），并返回 <code>NSNumber</code> 类型的实例</td>
+    </tr>
+    <tr>
+        <td rowspan="3">数组操作符<br>（返回特定的对象数组）</td>
+    </tr>
+    <tr>
+        <td><code>@unionOfObjects</code></td>
+        <td>返回包含右键路径指定属性的对象数组（即值为 <code>nil</code> 时不会被包含进来）</td>
+    </tr>
+    <tr>
+        <td><code>@distinctUnionOfObjects</code></td>
+        <td>返回包含右键路径指定属性的对象数组（即值为 <code>nil</code> 时不会被包含进来），并去重</td>
+    </tr>
+    <tr>
+        <td rowspan="4">嵌套操作符<br>（嵌套意为包含集合的集合）</td>
+    </tr>
+    <tr>
+        <td><code>@unionOfArrays</code></td>
+        <td>返回调用数组中所有数组中包含右键路径指定属性的对象数组（当指定属性的值为 <code>nil</code> 时，对象将返回空）</td>
+    </tr>
+    <tr>
+        <td><code>@distinctUnionOfArrays</code></td>
+        <td>返回调用数组中所有数组中包含右键路径指定属性的对象数组（当指定属性的值为 <code>nil</code> 时，对象将返回空，多个空对象也会被去重），并去重</td>
+    </tr>
+    <tr>
+        <td><code>@distinctUnionOfSets</code></td>
+        <td>返回调用集合（Set）中所有集合（Set）中包含右键路径指定属性的对象数组（即值为 <code>nil</code> 时不会被包含进来，多个空对象也会被去重），并去重</td>
+    </tr>
+</table>
+
+```objc
+@interface Speaker : NSObject
+// ⚠️ 注意：这里将 volume 改为 NSNumber * 类型，因为 int 时，属性将有默认值 0，不便于后续结果演示
+@property (nonatomic) NSNumber *volume;
+@end
+
+@implementation Speaker
+@end
+
+// main()
+Computer *cpt1 = [[Computer alloc] init];
+Speaker *s1 = [[Speaker alloc] init];
+s1.volume = @1;
+Speaker *s2 = [[Speaker alloc] init];
+s2.volume = @2;
+Speaker *s3 = [[Speaker alloc] init];
+s3.volume = @2;
+Speaker *s4 = [[Speaker alloc] init];
+// s4.volume = nil;
+Speaker *s5 = [[Speaker alloc] init];
+s5.volume = @5;
+
+[cpt1 setValue:@[s1, s2, s3, s4, s5] forKey:@"speakers"];
+
+// Aggregation Operators:
+NSLog(@"Aggregation Operators:");
+NSLog(@"Volumes at avg: %.2lf", [[cpt1 valueForKeyPath:@"speakers.@avg.volume"] doubleValue]);
+NSLog(@"Speakers at count: %d", [[cpt1 valueForKeyPath:@"speakers.@count"] intValue]);
+NSLog(@"Volumes at max: %.2lf", [[cpt1 valueForKeyPath:@"speakers.@max.volume"] doubleValue]);
+NSLog(@"Volumes at min: %.2lf", [[cpt1 valueForKeyPath:@"speakers.@min.volume"] doubleValue]);
+NSLog(@"Volumes at sum: %.2lf", [[cpt1 valueForKeyPath:@"speakers.@sum.volume"] doubleValue]);
+
+// OUTPUT:
+// Aggregation Operators:
+// Volumes at avg: 2.00
+// Speakers at count: 5
+// Volumes at max: 5.00
+// Volumes at min: 1.00
+// Volumes at sum: 10.00
+
+// Array Operators:
+NSLog(@"Array Operators:");
+NSLog(@"%@", [cpt1.speakers valueForKeyPath:@"@unionOfObjects.volume"]);
+NSLog(@"%@", [cpt1.speakers valueForKeyPath:@"@distinctUnionOfObjects.volume"]);
+
+Computer *cpt2 = [[Computer alloc] init];
+Speaker *s6 = [[Speaker alloc] init];
+s6.volume = @5;
+Speaker *s7 = [[Speaker alloc] init];
+// s7.volume = nil;
+Speaker *s8 = [[Speaker alloc] init];
+s8.volume = @8;
+cpt2.speakers = @[s6, s7, s8];
+
+// OUTPUT:
+// Array Operators:
+// (
+//     1,
+//     2,
+//     2,
+//     5
+// )
+// (
+//     2,
+//     5,
+//     1
+// )
+
+// Nesting Operators:
+NSLog(@"Nesting Operators:");
+NSArray *arrayOfArrays = @[cpt1.speakers, cpt2.speakers];
+NSLog(@"%@", [arrayOfArrays valueForKeyPath:@"@unionOfArrays.volume"]);
+NSLog(@"%@", [arrayOfArrays valueForKeyPath:@"@distinctUnionOfArrays.volume"]);
+
+NSSet *setOfSets = [NSSet setWithArray:@[[NSSet setWithArray:cpt1.speakers], [NSSet setWithArray:cpt2.speakers]]];
+NSLog(@"%@", [setOfSets valueForKeyPath:@"@distinctUnionOfSets.volume"]);
+
+// OUTPUT:
+// Nesting Operators:
+// (
+//     1,
+//     2,
+//     2,
+//     "<null>",
+//     5,
+//     5,
+//     "<null>",
+//     8
+// )
+// (
+//     5,
+//     1,
+//     2,
+//     "<null>",
+//     8
+// )
+// {(
+//     2,
+//     5,
+//     8,
+//     1
+// )}
+```
 
 ## Reference
 
