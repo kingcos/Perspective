@@ -6,13 +6,9 @@
 
 ## Preface
 
-KVO 即 Key-Value Observing，译作键值监听（下文简称 KVO），通常用于监听对象的某个特定属性值的变化。通常用于 MVC（Model-View-Controller）中控制器与模型的交互，也是设计模式中观察者模式的实践，下面将由浅入深，谈谈 iOS 中的 KVO。
+KVO 即 Key-Value Observing，译作键值监听（下文简称 KVO），通常用于监听对象的某个特定属性值的变化。本文将由浅入深，谈谈 iOS 中的 KVO。
 
 ## How
-
-先来简单尝试下 KVO 的「魔力」吧。KVO 总共分为三个步骤，添加监听者、监听者得到通知、移除监听者。
-
-在 `ViewController` 中，定义一个 `Computer` 类型的属性 `cpt`，并希望得知其中 `buttonClickTimes` 的每次变更。这时就可以将当前 `ViewController` 设置为 `cpt. buttonClickTimes` 的监听者；在按钮绑定的方法中，会对 `cpt.buttonClickTimes` 进行更新，所以当用户点击后，监听者就可以在 `observeValueForKeyPath:ofObject:change:context:` 中得知变更的通知；最后，在监听者销毁前，需要将其移除。
 
 ```objc
 #import "ViewController.h"
@@ -69,7 +65,11 @@ KVO 即 Key-Value Observing，译作键值监听（下文简称 KVO），通常�
 @end
 ```
 
+在 `ViewController` 中，定义一个 `Computer` 类型的属性 `cpt`，并希望得知其中 `buttonClickTimes` 的每次变更。这时就可以将当前 `ViewController` 设置为 `cpt. buttonClickTimes` 的监听者；在按钮绑定的方法中，会对 `cpt.buttonClickTimes` 进行更新，所以当用户点击后，监听者就可以在 `observeValueForKeyPath:ofObject:change:context:` 中得知变更的通知；最后，在监听者销毁前，需要将其移除。
+
 ## What
+
+简单来说，KVO 总共分为三个步骤，添加监听者、监听者得到通知、移除监听者。
 
 ```objc
 // NSKeyValueObserving.h

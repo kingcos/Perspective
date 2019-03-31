@@ -179,7 +179,7 @@ NSLog(@"%@", fruit->_name);
 // main.m
 #import <Foundation/Foundation.h>
 
-@interface Computer : NSObject  {
+@interface Computer : NSObject {
     int _memorySize;
     
     @public
