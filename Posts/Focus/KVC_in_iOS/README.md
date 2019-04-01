@@ -107,7 +107,7 @@ NSLog(@"%@", [cpt mutableArrayValueForKey:@"speakers"]);
         <th>作用</th>
     </tr>
     <tr>
-        <td rowspan="6">聚合操作符<br>（针对数组或集合类型，最终返回反应集合某个特性的单一值）</td>
+        <td rowspan="6" align="center">聚合操作符<br>（针对数组或集合类型，最终返回反应集合某个特性的单一值）</td>
     </tr>
     <tr>
         <td><code>@avg</code></td>
@@ -130,7 +130,7 @@ NSLog(@"%@", [cpt mutableArrayValueForKey:@"speakers"]);
         <td>将数值转换为 <code>double</code> 类型求和（<code>nil</code> 值为 <code>0</code>），并返回 <code>NSNumber</code> 类型的实例</td>
     </tr>
     <tr>
-        <td rowspan="3">数组操作符<br>（返回特定的对象数组）</td>
+        <td rowspan="3" align="center">数组操作符<br>（返回特定的对象数组）</td>
     </tr>
     <tr>
         <td><code>@unionOfObjects</code></td>
@@ -141,7 +141,7 @@ NSLog(@"%@", [cpt mutableArrayValueForKey:@"speakers"]);
         <td>返回包含右键路径指定属性的对象数组（即值为 <code>nil</code> 时不会被包含进来），并去重</td>
     </tr>
     <tr>
-        <td rowspan="4">嵌套操作符<br>（嵌套意为包含集合的集合）</td>
+        <td rowspan="4" align="center">嵌套操作符<br>（嵌套意为包含集合的集合）</td>
     </tr>
     <tr>
         <td><code>@unionOfArrays</code></td>
