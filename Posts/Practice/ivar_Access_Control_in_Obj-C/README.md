@@ -1,8 +1,8 @@
 # Practice - Obj-C 中成员变量和类的访问控制
 
-| Platform | Env |
-|:-----:|:-----:|
-| macOS 10.14.2 | gcc, clang |
+| Date | Notes | macOS |
+|:-----:|:-----:|:-----:|
+| 2019-03-30 | gcc, clang | macOS 10.14.2 |
 
 ## Preface
 
