@@ -261,6 +261,82 @@ NSLog(@"%@", [setOfSets valueForKeyPath:@"@distinctUnionOfSets.volume"]);
 // )}
 ```
 
+### 非对象属性
+
+当 KVC 中的 `valueForKey:` 或 `valueForKeyPath:` 获取到的值不是 Obj-C 对象时，将会以其值初始化 	`NSNumber` 对象（针对标量（Scalar））或 `NSValue` 对象（针对结构体）并返回。
+
+- 标量值
+
+```objc
+@interface Computer : NSObject {
+    @public
+    int _diskSize;
+}
+@end
+
+@implementation Computer
+@end
+
+Computer *cpt = [[Computer alloc] init];
+cpt->_diskSize = 512;
+NSNumber *diskSizeNum = [cpt valueForKey:@"diskSize"];
+NSLog(@"Disk size: %d.", [diskSizeNum intValue]);
+
+// LLDB:
+// (lldb) po object_getClass([cpt valueForKey:@"diskSize"])
+// __NSCFNumber
+
+// OUTPUT:
+// Disk size: 512.
+```
+
+- 结构体
+
+```objc
+typedef struct {
+    NSSize size;
+    double inch;
+} Screen;
+
+@interface Computer : NSObject {
+    @public
+    Screen _screen;
+}
+@end
+
+@implementation Computer
+@end
+
+Computer *cpt = [[Computer alloc] init];
+cpt->_screen.size = NSMakeSize(1920, 1090);
+cpt->_screen.inch = 15.6;
+
+// ➡️ valueForKey
+NSValue *value = [cpt valueForKey:@"screen"];
+
+Screen screen;
+[value getValue:&screen];
+
+NSLog(@"Screen size: %.f * %.f\nScreen inch: %.1lf", screen.size.width, screen.size.height, screen.inch);
+
+Screen retinaScreen;
+retinaScreen.size = NSMakeSize(2560, 1600);
+retinaScreen.inch = 13.3;
+
+NSValue *retinaValue = [NSValue valueWithBytes:&retinaScreen objCType:@encode(Screen)];
+
+// ➡️ setValue:forKey
+[cpt setValue:retinaValue forKey:@"screen"];
+
+NSLog(@"Screen size: %.f * %.f\nScreen inch: %.1lf", cpt->_screen.size.width, cpt->_screen.size.height, cpt->_screen.inch);
+
+// OUTPUT:
+// Screen size: 1920 * 1090
+// Screen inch: 15.6
+// Screen size: 2560 * 1600
+// Screen inch: 13.3
+```
+
 ## Reference
 
 - [Key-Value Coding Programming Guide](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/KeyValueCoding/index.html)
