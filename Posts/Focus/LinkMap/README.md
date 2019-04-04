@@ -28,7 +28,7 @@ Xcode 中默认是不会将 Link Map 文件在构建时暴露出来的，但我�
 # Path: /Users/kingcos/Library/Developer/Xcode/DerivedData/DemoiOS-hifhuapijabsaxgpelrpiwhbzlqv/Build/Products/Debug-iphonesimulator/DemoiOS.app/DemoiOS
 ```
 
-Path 为最终生成的「可执行文件」的路径。
+Path 为最终生成的「可执行文件」mach-o 的路径。
 
 ### Arch
 
@@ -40,7 +40,7 @@ Path 为最终生成的「可执行文件」的路径。
 # Arch: arm64
 ```
 
-Arch 为「可执行文件」的架构。当构建时，选择 iOS 模拟器为「」，选择 iPhone 5s 及之后的 iOS 真机为「arm64」（A12 架构为「arm64e」，但 Apple 还未允许包含 arm64e 架构的包上传 App Store），iPhone 5s 之前的 iOS 真机为「armv7」，Apple Watch 真机为「armv7s」或「arm64_32」（Apple Watch S4 为 arm64_32），Apple Watch 模拟器为「i386」。
+Arch 为「可执行文件」的架构，具体架构如下表。
 
 | Device | System | Arch |
 |:---:|:---:|:---:| 
