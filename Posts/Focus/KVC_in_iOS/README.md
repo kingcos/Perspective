@@ -8,9 +8,9 @@
 
 KVC，即 Key-Value Coding，译作键值编码（下文简称 KVC）。当对象兼容 KVC 时，可以通过统一的 API 访问对象中某个键对应的属性值。Cocoa 中的许多功能都依赖 KVC，比如，KVO、Cocoa 绑定机制、Core Data、以及 AppleScript 等。本文将主要探讨 KVC 及其本质相关，关于其它的内容可参考文末的「Reference」。
 
-## How
+## Basics
 
-### 基本使用
+### How
 
 ```objc
 #import <Foundation/Foundation.h>
@@ -77,7 +77,208 @@ int main(int argc, const char * argv[]) {
 
 定义一个 `Computer` 类，其拥有 `name` 和 `speakers` 属性，后者为数组类型，是容纳 `Speaker` 类型对象的集合。访问对象的属性，最自然的是通过 getter & setter，但 KVC 提供了通过键或键路径统一访问属性的方式。`setValue:forKey:` 和 `valueForKey:` 可以通过键来使用，键即是属性的名称，使用 ASCII 编码，不支持空格；`setValue:forKeyPath:` 和 `valueForKeyPath:` 是对应的键路径方法，键路径通过 `.` 连接键，对于多级嵌套的类型提供了便捷的方式。`dictionaryWithValuesForKeys:` 支持通过多个键（非键路径）的数组返回包含键和对应值的字典。
 
-### mutableValueForKey
+### Why
+
+KVC 中的方法都定义在 NSObject 的 `NSKeyValueCoding` 分类（Category）中，所以所有基于 NSObject 类型的对象都是 KVC 兼容的。那么 KVC 是如何根据键或键路径来搜索匹配到属性的呢？
+
+#### valueForKey
+
+```objc
+@interface Computer : NSObject
+@end
+
+@implementation Computer
+
+- (NSString *)getName {
+    return [NSString stringWithFormat:@"%s", __func__];
+}
+
+- (NSString *)name {
+    return [NSString stringWithFormat:@"%s", __func__];
+}
+
+- (NSString *)isName {
+    return [NSString stringWithFormat:@"%s", __func__];
+}
+
+- (NSString *)_name {
+    return [NSString stringWithFormat:@"%s", __func__];
+}
+
+@end
+
+Computer *cpt = [[Computer alloc] init];
+NSLog(@"%@", [cpt valueForKey:@"name"]);
+
+// 依次注释方法代码可得：
+// OUTPUT:
+// -[Computer getName]
+// -[Computer name]
+// -[Computer isName]
+// -[Computer _name]
+```
+
+当调用 `valueForKey` 时，会通过传入的 Key 按顺序寻找调用 `get<key>`、`<key>`、`is<key>`、`_<key>` **方法**，当前面的寻找到并返回后，即提前停止寻找，若该四个方法都没有实现，则进入下一步匹配。
+
+```objc
+@interface Computer : NSObject {
+    @public
+    NSArray *_namesArray;
+    NSSet *_namesSet;
+}
+@end
+
+@implementation Computer
+
+// 属性数量
+- (NSUInteger)countOfNamesArray {
+    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+    return [_namesArray count];
+}
+
+// 数组指定下标的元素（与 namesArrayAtIndexes: 择一实现即可）
+- (id)objectInNamesArrayAtIndex:(NSUInteger)index {
+    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+    return [_namesArray objectAtIndex:index];
+}
+
+// 数组下标集合的元素数组
+- (NSArray *)namesArrayAtIndexes:(NSIndexSet *)indexes {
+    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+    return [_namesArray objectsAtIndexes:indexes];
+}
+
+//- (void)getNamesArray:(NSString *)namesArray range:(NSRange)range {
+//    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+//}
+
+// ---
+
+// 属性数量
+- (NSUInteger)countOfNamesSet {
+    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+    return [_namesSet count];
+}
+
+// 集合枚举
+- (NSEnumerator *)enumeratorOfNamesSet {
+    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+    return [_namesSet objectEnumerator];
+}
+
+// 集合成员
+- (id)memberOfNamesSet:(NSSet *)namesSet {
+    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+    return [_namesSet member:namesSet];
+}
+
+@end
+
+Computer *cpt = [[Computer alloc] init];
+cpt->_namesArray = @[@"a", @"b", @"c"];
+NSLog(@"%@", [cpt valueForKey:@"namesArray"]);
+
+// OUTPUT:
+// -[Computer countOfNamesArray]
+// -[Computer countOfNamesArray]
+// -[Computer objectInNamesArrayAtIndex:] or -[Computer namesArrayAtIndexes:]
+// -[Computer objectInNamesArrayAtIndex:] or -[Computer namesArrayAtIndexes:]
+// -[Computer objectInNamesArrayAtIndex:] or -[Computer namesArrayAtIndexes:]
+// (
+//     a,
+//     b,
+//     c
+// )
+
+cpt->_namesSet = [NSSet setWithArray:@[@"a", @"b", @"c"]];
+NSLog(@"%@", [cpt valueForKey:@"namesSet"]);
+
+// OUTPUT:
+// -[Computer countOfNamesSet]
+// -[Computer countOfNamesSet]
+// -[Computer enumeratorOfNamesSet]
+// {(
+//     a,
+//     b,
+//     c
+// )}
+```
+
+接下来匹配的方法其实用到的场景并不是很多，总体来梳理下顺序：
+
+1. 首先如果 `countOf<key>`（其内部本质为调用 NSArray 或 NSSet 的 `count`）方法已经被实现，跳入第 2 步，如果未被实现，则直接跳入下一步匹配；
+2. 判断 `objectIn<key>AtIndex:` 或 `objectIn<key>AtIndex:` 两个方法之一有被实现，首先会调用两次 `countOf<key>`；之后会调用 `objectIn<key>AtIndex:` 或 `objectIn<key>AtIndex:`  中被实现的方法，如果均被实现时，只会调用 `objectIn<key>AtIndex:` 方法，调用后进入第 4 步；若该两个方法均未实现，跳入第 3 步；
+3. 判断 `enumeratorOf<key>` 和 `memberOf<key>:` 两个方法的实现，若两者都已实现，则调用 `enumeratorOf<key>`，若有其中之一未实现，则也进入下一步匹配。
+
+- 在 2 和 3 步骤中，当这些方法匹配到时，`valueForKey` 将返回一个集合代理对象。但对于空数组、空集合或非 NSArray/NSSet 类型的属性只会调用到 `countOf<key>`，当其返回 `0` 后续的方法便不会再调用了。
+
+> ⚠️ 注意
+> 
+> 官方文档中提到在上述第 2 步中，如果对象实现了 `get<key>:range:` 方法，代理对象会在合适的时机调用。但我在尝试中，在 `objectIn<key>AtIndex:` 或 `objectIn<key>AtIndex:` 中有被实现的方法时，即会在 `countOf<key>` 方法被调用后，调用 `get<key>:range:` 方法，但会发生崩溃：「Thread 1: EXC_BAD_ACCESS」。具体的原因尚未查明，欢迎大家指教。
+
+```objc
+@interface Computer : NSObject {
+    @public
+    NSString *_name;
+    NSString *_isName;
+    NSString *name;
+    NSString *isName;
+}
+@end
+
+@implementation Computer
+@end
+
+Computer *cpt = [[Computer alloc] init];
+
+cpt->_name = @"a";
+cpt->_isName = @"b";
+cpt->name = @"c";
+cpt->isName = @"d";
+
+NSLog(@"%@", [cpt valueForKey:@"name"]);
+
+// 依次注释方法和成员变量代码可得：
+// OUTPUT:
+// a
+// b
+// c
+// d
+```
+
+判断 `accessInstanceVariablesDirectly` 方法的返回，即是否允许直接访问成员变量，默认返回 `YES`；当为 `YES` 时，将按顺序尝试直接访问 `_<key>`、`_is<key>`、`<key>`、`<key>` 成员变量。当为 `NO` 或没有匹配到相应的成员变量时，将调用 `valueForUndefinedKey:` 方法，该方法默认实现为抛出异常「Terminating app due to uncaught exception 'NSUnknownKeyException', reason: '[<Computer 0x100702740> valueForUndefinedKey:]: this class is not key value coding-compliant for the key name.'」，但子类可以重写该方法以提供更灵活的行为。
+
+```objc
+@interface Computer : NSObject
+@end
+
+@implementation Computer
+
+- (id)valueForUndefinedKey:(NSString *)key {
+    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+    if ([key isEqualToString:@"name"]) {
+        return nil;
+    }
+    
+    return [super valueForUndefinedKey:key];
+}
+
+@end
+
+Computer *cpt = [[Computer alloc] init];
+NSLog(@"%@", [cpt valueForKey:@"name"]);
+
+// OUTPUT:
+// -[Computer valueForUndefinedKey:]
+// (null)
+```
+
+#### setValue:forKey:
+
+
+
+
+## mutableValueForKey
 
 ```objc
 NSMutableArray *arr = [cpt mutableArrayValueForKeyPath:@"speakers"];
@@ -96,7 +297,7 @@ NSLog(@"%@", [cpt mutableArrayValueForKey:@"speakers"]);
 
 对于对象中的集合类型 `NSArray`、`NSSet`、`NSOrderedSet`，KVC 提供了比 `setValue:forKey:` 和 `valueForKey:` 更便捷高效的 `mutableArrayValueForKey:`、`mutableSetValueForKey`、`mutableOrderedSetValueForKey:` 以及对应的 `KeyPath` 方法。它们都会返回一个可变（Mutable）类型的代理对象，在该代理对象上的操作将影响真实的属性值。
 
-### 集合操作符
+## 集合操作符
 
 对于对象中的集合类型，KVC 提供了一些可以放置在键路径中的操作符，由 `@` 开头，整体结构为：`左键路径.@集合操作符.右键路径`，当然，左右键路径都可以根据需要选择是否忽略。集合操作符分为三种：聚合（Aggregation）操作符、数组操作符、嵌套（Nesting）操作符。
 
@@ -261,7 +462,7 @@ NSLog(@"%@", [setOfSets valueForKeyPath:@"@distinctUnionOfSets.volume"]);
 // )}
 ```
 
-### 非对象属性
+## 非对象属性
 
 当 KVC 中的 `valueForKey:` 或 `valueForKeyPath:` 获取到的值不是 Obj-C 对象时，将会以其值初始化 	`NSNumber` 对象（针对标量（Scalar））或 `NSValue` 对象（针对结构体）并返回。
 
@@ -319,6 +520,10 @@ Screen screen;
 
 NSLog(@"Screen size: %.f * %.f\nScreen inch: %.1lf", screen.size.width, screen.size.height, screen.inch);
 
+// OUTPUT:
+// Screen size: 1920 * 1090
+// Screen inch: 15.6
+
 Screen retinaScreen;
 retinaScreen.size = NSMakeSize(2560, 1600);
 retinaScreen.inch = 13.3;
@@ -331,11 +536,60 @@ NSValue *retinaValue = [NSValue valueWithBytes:&retinaScreen objCType:@encode(Sc
 NSLog(@"Screen size: %.f * %.f\nScreen inch: %.1lf", cpt->_screen.size.width, cpt->_screen.size.height, cpt->_screen.inch);
 
 // OUTPUT:
-// Screen size: 1920 * 1090
-// Screen inch: 15.6
 // Screen size: 2560 * 1600
 // Screen inch: 13.3
 ```
+
+## 属性校验
+
+```objc
+static NSString * const kKVCValidateErrorDomain = @"kKVCValidateErrorDomain";
+
+typedef NS_ENUM(NSUInteger, KVCValidateError) {
+    KVCValidateErrorNilValue
+};
+
+@interface Computer : NSObject
+@property (nonatomic) NSString *name;
+@end
+
+@implementation Computer
+
+- (BOOL)validateValue:(inout id  _Nullable __autoreleasing *)ioValue
+               forKey:(NSString *)inKey
+                error:(out NSError * _Nullable __autoreleasing *)outError {
+    if ([inKey isEqualToString:NSStringFromSelector(@selector(name))]) {
+        if (*ioValue != nil) {
+            return YES;
+        } else {
+            *outError = [NSError errorWithDomain:kKVCValidateErrorDomain
+                                            code:KVCValidateErrorNilValue
+                                        userInfo:nil];
+            return NO;
+        }
+    }
+    
+    return [super validateValue:ioValue forKey:inKey error:outError];
+}
+
+@end
+
+Computer *cpt = [[Computer alloc] init];
+
+NSString *nilName = nil;
+NSError *err;
+
+if (![cpt validateValue:&nilName forKey:@"name" error:&err]) {
+    NSLog(@"Error domain: %@, code: %ld", err.domain, (long)err.code);
+} else {
+    [cpt setValue:nilName forKey:@"name"];
+}
+
+// OUTPUT:
+// Error domain: kKVCValidateErrorDomain, code: 0
+```
+
+KVC 中的属性校验的方法可以让我们在设置值前先进行校验，即 `validateValue:forKey:error:`。该方法会调用被观察对象的 `validateValue:forKey:error:` 方法，NSObject 中的默认实现是返回 `YES` 即不作校验。所以当我们需要校验 `value` 是否为空，需要自己实现该方法。需要注意的是，`validateValue:forKey:error:` 和 `validateValue:forKey:error:` 方法中的 `value` 和 `error` 参数均是引用传递，外界调用时要传入相应的地址 `&value` 和 `&error`，而在方法内部我们只需要在方法中将其赋值到 `*value` 和 `*error` 即可。
 
 ## Reference
 
