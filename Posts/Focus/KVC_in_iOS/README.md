@@ -83,6 +83,8 @@ KVC 中的方法都定义在 NSObject 的 `NSKeyValueCoding` 分类（Category�
 
 #### valueForKey
 
+##### getter
+
 ```objc
 @interface Computer : NSObject
 @end
@@ -118,7 +120,9 @@ NSLog(@"%@", [cpt valueForKey:@"name"]);
 // -[Computer _name]
 ```
 
-当调用 `valueForKey` 时，会通过传入的 Key 按顺序寻找调用 `get<key>`、`<key>`、`is<key>`、`_<key>` **方法**，当前面的寻找到并返回后，即提前停止寻找，若该四个方法都没有实现，则进入下一步匹配。
+当调用 `valueForKey` 方法时，首先会通过传入的 Key 按顺序寻找调用 `get<Key>`、`<key>`、`is<Key>`、`_<key>` getter **方法**，当前面的寻找到并返回后，即提前结束匹配，若该四个方法都没有实现，则进入下一阶段集合元素匹配。
+
+##### 集合匹配
 
 ```objc
 @interface Computer : NSObject {
@@ -204,17 +208,19 @@ NSLog(@"%@", [cpt valueForKey:@"namesSet"]);
 // )}
 ```
 
-接下来匹配的方法其实用到的场景并不是很多，总体来梳理下顺序：
+集合匹配主要是利用集合（Collection）类型的一些方法进行匹配：
 
-1. 首先如果 `countOf<key>`（其内部本质为调用 NSArray 或 NSSet 的 `count`）方法已经被实现，跳入第 2 步，如果未被实现，则直接跳入下一步匹配；
-2. 判断 `objectIn<key>AtIndex:` 或 `objectIn<key>AtIndex:` 两个方法之一有被实现，首先会调用两次 `countOf<key>`；之后会调用 `objectIn<key>AtIndex:` 或 `objectIn<key>AtIndex:`  中被实现的方法，如果均被实现时，只会调用 `objectIn<key>AtIndex:` 方法，调用后进入第 4 步；若该两个方法均未实现，跳入第 3 步；
-3. 判断 `enumeratorOf<key>` 和 `memberOf<key>:` 两个方法的实现，若两者都已实现，则调用 `enumeratorOf<key>`，若有其中之一未实现，则也进入下一步匹配。
+1. 首先如果 `countOf<Key>` 方法（其内部本质为 NSArray 或 NSSet 的 `count`）已经被实现，跳入第 2 步，如果未被实现，则直接跳入成员变量匹配；
+2. 若 `objectIn<Key>AtIndex:`（其内部本质为 NSArray 的 `objectAtIndex:`）或 `<key>AtIndexes:`（其内部本质为 NSArray 的 `objectsAtIndexes:`）两个方法中至少有一个被实现，首先会调用（两次）`countOf<Key>` 方法；之后会调用两者中被实现的方法，如果均被实现时，只会调用一次前者，并结束匹配；若该两个方法均未实现，跳入第 3 步；
+3. 判断 `enumeratorOf<Key>`（其内部本质为 NSSet 的 `objectEnumerator`）和 `memberOf<Key>:`（其内部本质为 NSSet 的 `member:`）两个方法的实现，若两者都已实现，则会调用 `enumeratorOf<Key>` 并跳入下一步匹配；若有其中之一未实现，则直接跳入下一步匹配。
 
-- 在 2 和 3 步骤中，当这些方法匹配到时，`valueForKey` 将返回一个集合代理对象。但对于空数组、空集合或非 NSArray/NSSet 类型的属性只会调用到 `countOf<key>`，当其返回 `0` 后续的方法便不会再调用了。
+- 在 2 和 3 步骤中，当这些方法匹配到时，`valueForKey` 将返回一个集合代理对象。但对于空数组、空集合（Set）或非 NSArray/NSSet 类型的属性只会调用到 `countOf<key>`，当其返回 `0` 后续的方法便不会再调用了。
 
 > ⚠️ 注意
 > 
-> 官方文档中提到在上述第 2 步中，如果对象实现了 `get<key>:range:` 方法，代理对象会在合适的时机调用。但我在尝试中，在 `objectIn<key>AtIndex:` 或 `objectIn<key>AtIndex:` 中有被实现的方法时，即会在 `countOf<key>` 方法被调用后，调用 `get<key>:range:` 方法，但会发生崩溃：「Thread 1: EXC_BAD_ACCESS」。具体的原因尚未查明，欢迎大家指教。
+> 官方文档中提到在上述第 2 步中，如果对象实现了 `get<Key>:range:` 方法，代理对象也会在合适的时机调用该方法以达到更好的性能。但我在尝试中，在 `objectIn<Key>AtIndex:` 或 `<key>AtIndexes:` 中有被实现的方法时，即会在 `countOf<Key>` 方法被调用后，调用 `get<Key>:range:` 方法，但会发生崩溃：「Thread 1: EXC_BAD_ACCESS」。具体的原因尚未查明，欢迎大家指教。
+
+#### 成员变量匹配
 
 ```objc
 @interface Computer : NSObject {
@@ -246,7 +252,7 @@ NSLog(@"%@", [cpt valueForKey:@"name"]);
 // d
 ```
 
-判断 `accessInstanceVariablesDirectly` 方法的返回，即是否允许直接访问成员变量，默认返回 `YES`；当为 `YES` 时，将按顺序尝试直接访问 `_<key>`、`_is<key>`、`<key>`、`<key>` 成员变量。当为 `NO` 或没有匹配到相应的成员变量时，将调用 `valueForUndefinedKey:` 方法，该方法默认实现为抛出异常「Terminating app due to uncaught exception 'NSUnknownKeyException', reason: '[<Computer 0x100702740> valueForUndefinedKey:]: this class is not key value coding-compliant for the key name.'」，但子类可以重写该方法以提供更灵活的行为。
+在成员变量匹配阶段首先判断 `accessInstanceVariablesDirectly` 方法的返回，即是否允许直接访问成员变量，默认返回 `YES`；当为 `YES` 时，将按顺序尝试直接访问 `_<key>`、`_is<Key>`、`<key>`、`is<Key>` 成员变量。当为 `NO` 或没有匹配到相应的成员变量时，将调用 `valueForUndefinedKey:` 方法，该方法默认实现为抛出「NSUnknownKeyException」异常，但子类可以重写该方法以提供更灵活的行为。
 
 ```objc
 @interface Computer : NSObject
@@ -273,18 +279,112 @@ NSLog(@"%@", [cpt valueForKey:@"name"]);
 // (null)
 ```
 
+##### 总结
+
+KVC `valueForKey:` 方法的调用确实深究起来比较复杂，画成图表更容易理解些：
+
+![](1.png)
+
 #### setValue:forKey:
 
+```objc
+@interface Computer : NSObject
+@end
 
+@implementation Computer
 
+- (void)setName:(NSString *)name {
+    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+    _name = name;
+}
+
+- (void)_setName:(NSString *)name {
+    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+    _name = name;
+}
+
+@end
+
+// 依次注释方法代码可得：
+// OUTPUT:
+// -[Computer setName:] or -[Computer _setName:]
+// a
+```
+
+当调用 `setValue:forKey:` 方法时，会通过传入的 Key 按顺序寻找调用 `set<Key>`、`_set<Key>` 方法，当前面的寻找到并设置后，即提前返回。
+
+```objc
+@interface Computer : NSObject {
+    @public
+    NSString *_name;
+    NSString *_isName;
+    NSString *name;
+    NSString *isName;
+}
+@end
+
+@implementation Computer
+
+@end
+
+// 依次注释成员变量代码可得：
+// OUTPUT:
+// a
+// a
+// a
+// a
+```
+
+若这两个方法都没有实现，则会判断 `accessInstanceVariablesDirectly` 方法的返回，即是否允许直接访问成员变量，默认返回 YES；当为 YES 时，将按顺序尝试直接通过 `_<key>`、`_is<Key>`、`<key>`、`is<Key>` 成员变量设置值。当为 NO 或没有匹配到相应的成员变量时，将调用 `setValue:forUndefinedKey:` 方法，该方法默认实现为抛出「NSUnknownKeyException」异常，但子类可以重写该方法以提供更灵活的行为。
+
+```objc
+@interface Computer : NSObject
+@end
+
+@implementation Computer
+
+- (void)setValue:(id)value forUndefinedKey:(NSString *)key {
+    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+    if ([key isEqualToString:@"name"]) {
+        return;
+    }
+    
+    return [super setValue:value forUndefinedKey:key];
+}
+
+@end
+
+Computer *cpt = [[Computer alloc] init];
+[cpt setValue:@"a" forKey:@"name"];
+NSLog(@"%@", [cpt valueForKey:@"name"]);
+
+// OUTPUT:
+// -[Computer setValue:forUndefinedKey:]
+// -[Computer valueForUndefinedKey:]
+// (null)
+```
 
 ## mutableValueForKey
 
+### How
+
 ```objc
+Computer *cpt = [[Computer alloc] init];
+
+Speaker *s1 = [[Speaker alloc] init];
+s1.volume = @1;
+Speaker *s2 = [[Speaker alloc] init];
+s1.volume = @2;
+
+cpt.speakers = @[s1, s2];
+
 NSMutableArray *arr = [cpt mutableArrayValueForKeyPath:@"speakers"];
+
 Speaker *s3 = [[Speaker alloc] init];
-s3.volume = 20;
+s3.volume = @20;
+
 [arr addObject:s3];
+
 NSLog(@"%@", [cpt mutableArrayValueForKey:@"speakers"]);
 
 // OUTPUT:
@@ -296,6 +396,145 @@ NSLog(@"%@", [cpt mutableArrayValueForKey:@"speakers"]);
 ```
 
 对于对象中的集合类型 `NSArray`、`NSSet`、`NSOrderedSet`，KVC 提供了比 `setValue:forKey:` 和 `valueForKey:` 更便捷高效的 `mutableArrayValueForKey:`、`mutableSetValueForKey`、`mutableOrderedSetValueForKey:` 以及对应的 `KeyPath` 方法。它们都会返回一个可变（Mutable）类型的代理对象，在该代理对象上的操作将影响真实的属性值。
+
+### Why
+
+```objc
+@interface Computer : NSObject {
+	@public
+	NSMutableArray *_speakers;
+}
+@end
+
+@implementation Computer
+- (void)insertObject:(id)value inSpeakersAtIndex:(NSUInteger)index {
+    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+    [_speakers insertObject:value atIndex:index];
+}
+
+- (void)removeObjectFromSpeakersAtIndex:(NSUInteger)index {
+    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+    [_speakers removeObjectAtIndex:index];
+}
+
+- (void)insertSpeakers:(id)object atIndexes:(NSIndexSet *)indexes {
+    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+    [_speakers insertObjects:@[object] atIndexes:indexes];
+}
+
+- (void)removeSpeakersAtIndexes:(NSIndexSet *)indexes {
+    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+    [_speakers removeObjectsAtIndexes:indexes];
+}
+@end
+
+Computer *cpt = [[Computer alloc] init];
+
+Speaker *s1 = [[Speaker alloc] init];
+s1.volume = @1;
+Speaker *s2 = [[Speaker alloc] init];
+s1.volume = @2;
+
+cpt->_speakers = [@[s1, s2] mutableCopy];
+
+NSMutableArray *arr = [cpt mutableArrayValueForKey:@"speakers"];
+
+Speaker *s3 = [[Speaker alloc] init];
+s3.volume = @20;
+
+Speaker *s4 = [[Speaker alloc] init];
+s4.volume = @30;
+
+[arr addObjectsFromArray:@[s3, s4]];
+
+NSLog(@"%@", [cpt mutableArrayValueForKey:@"speakers"]);
+
+// OUTPUT:
+// -[Computer insertObject:inSpeakersAtIndex:]
+// -[Computer insertObject:inSpeakersAtIndex:]
+// (
+//     "<Speaker: 0x10068cb00>",
+//     "<Speaker: 0x10067a880>",
+//     "<Speaker: 0x100705430>",
+//     "<Speaker: 0x100705020>"
+// )
+```
+
+当调用 `mutableArrayValueForKey:` 会首先寻找 `insertObject:in<key>AtIndex:`（其内部本质为 NSMutableArray 的 `insertObject:atIndex:`）、`removeObjectFrom<key>AtIndex:`（其内部本质为 NSMutableArray 的 `removeObjectAtIndex:`）、`insertSpeakers:atIndexes:`（其内部本质为 NSMutableArray 的 `insertObjects:atIndexes:`）、`removeKeyAtIndexes:`（其内部本质为 NSMutableArray 的 `removeObjectsAtIndexes:`），判断这四个方法中是否有至少一个插入和一个移除方法被实现，如果有，将返回 NSMutableArray 类型的代理对象，并通过调用已实现的插入和移除方法对实际的数组进行操作。
+
+```objc
+@implementation Computer
+
+- (void)setSpeakers:(NSMutableArray *)speakers {
+    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+    _speakers = speakers;
+}
+
+@end
+
+// OUTPUT:
+// -[Computer setSpeakers:]
+// -[Computer setSpeakers:]
+// (
+//     "<Speaker: 0x101808b90>",
+//     "<Speaker: 0x10180da20>",
+//     "<Speaker: 0x100613c00>",
+//     "<Speaker: 0x100613260>"
+// )
+```
+
+如果上述四个方法不符合至少一个插入和一个移除方法被实现，将寻找 setter `setKey:` 方法实现，若存在该实现，代理对象将通过它设置值。但若这一阶段的效率将低于上一阶段，因为每次更新数据都需要创建新的一个数组对象。
+
+```objc
+@interface Computer : NSObject {
+    @public
+    NSMutableArray *_speakers;
+    NSMutableArray *speakers;
+}
+@end
+
+@implementation Computer
+@end
+
+// 注释成员变量声明可得到同样的结果：
+// OUTPUT:
+// (
+//     "<Speaker: 0x100601550>",
+//     "<Speaker: 0x100604800>",
+//     "<Speaker: 0x100606190>",
+//     "<Speaker: 0x100600bd0>"
+// )
+```
+
+若 setter 也不存在，将会判断 `accessInstanceVariablesDirectly` 方法的返回，即是否允许直接访问成员变量，默认返回 YES；当为 YES 时，代理对象将按顺序尝试直接通过 `_<key>`、`<key>` 成员变量设置值。当为 NO 或没有匹配到相应的成员变量时，官方文档称将调用 `setValue:forUndefinedKey:` 方法，该方法默认实现为抛出「NSUnknownKeyException」异常，但子类可以重写该方法以提供更灵活的行为。
+
+```objc
+@interface Computer : NSObject
+@end
+
+@implementation Computer
+- (id)valueForUndefinedKey:(NSString *)key {
+    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+    return [super valueForUndefinedKey:key];
+}
+
+- (void)setValue:(id)value forUndefinedKey:(NSString *)key {
+    NSLog(@"%@", [NSString stringWithFormat:@"%s", __func__]);
+    return [super setValue:value forUndefinedKey:key];
+}
+@end
+
+Speaker *s3 = [[Speaker alloc] init];
+s3.volume = @20;
+
+[arr addObject:s3];
+
+// OUTPUT:
+// -[Computer valueForUndefinedKey:]
+// *** Terminating app due to uncaught exception 'NSUnknownKeyException', reason: '[<Computer 0x1005426d0> valueForUndefinedKey:]: this class is not key value coding-compliant for the key speakers.'
+```
+
+但其实经过测试，对代理对象进行插入操作，将首先进入 `valueForUndefinedKey:`，若该 key 无法匹配，将抛出「NSUnknownKeyException」异常，若这一步骤未抛出异常，才将会进入到 `setValue:forUndefinedKey:`。原因我认为是当我们对代理对象进行插入操作时，首先要获得其中原本的元素，所以此时如果无法匹配，将抛出异常提前终止。
 
 ## 集合操作符
 
