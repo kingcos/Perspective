@@ -339,7 +339,7 @@ Sections 中主要描述节（Section）相关的信息，分为四列：内存�
 0x100003D90	0x00000060	[  4] l_OBJC_PROTOCOL_$_UIApplicationDelegate
 ```
 
-Symbols 中为符号（Symbol）相关的信息，分为四列：内存地址、大小、文件（序号对应 Object files 中的文件）、符号名称。通过结合「Sections」来一起观察可以得知每一节的内容到底是什么。
+Symbols 中为符号（Symbol）相关的信息，分为四列：内存地址、大小、文件（序号对应 Object files 中的文件）、符号名称。通过结合「Sections」来一起观察可以得知每一节的内容到底是什么，并计算某个类或文件最终的大小，帮助我们分析减少包大小。
 
 ### Dead Stripped Symbols
 
