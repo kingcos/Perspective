@@ -6,21 +6,21 @@
 
 ## Preface
 
-Link Map File，译作链接映射文件（下文将称 Link Map 文件）。在构建可执行文件之前，需要先编译为目标文件（Object File），并链接所需要的其他库，那么 Link Map 文件就记录了链接器（Linker）在链接过程中产生的一些信息，从这些信息我们也能分析出一些有用的内容，那么本文就将谈谈这个文件。
+Link Map File，译作链接映射文件（下文将称 Link Map 文件）。在构建可执行文件之前，需要先编译为目标文件（Object File），并链接所需要的其他库，那么 Link Map 文件就记录了链接器（Linker）在链接过程中产生的一些信息，本文将谈谈这个文件的构成。
 
 ## What
 
-Xcode 中默认是不会将 Link Map 文件在构建时暴露出来的，但我们可以在「Build Settings」-「Write Link Map File」-「Yes」打开该选项。这样当我们再次编译项目，默认就可以在 `~/Library/Developer/Xcode/DerivedData/<TARGET_NAME>-<Random_ID>/Build/Intermediates.noindex/<TARGET_NAME>.build/Debug-<Device_Type>/<TARGET_NAME>.build/<TARGET_NAME>-LinkMap-normal-<Arch>.txt` 中找到。
+Xcode 中默认是不会将 Link Map 文件在构建时暴露出来的，需要我们手动在「Build Settings」-「Write Link Map File」-「Yes」打开该写入该文件的设置。这样当我们再次编译项目，默认就可以在 `~/Library/Developer/Xcode/DerivedData/<TARGET_NAME>-<Random_ID>/Build/Intermediates.noindex/<TARGET_NAME>.build/Debug-<Device_Type>/<TARGET_NAME>.build/<TARGET_NAME>-LinkMap-normal-<Arch>.txt` 中找到。如有更改 Link Map 文件路径的需求也可以在「Path to Link Map File」中更改。
 
 ![](1.png)
 
-举个例子，我这里的 Link Map 文件的完整路径就是：`/Users/kingcos/Library/Developer/Xcode/DerivedData/DemoiOS-hifhuapijabsaxgpelrpiwhbzlqv/Build/Intermediates.noindex/DemoiOS.build/Debug-iphonesimulator/DemoiOS.build/DemoiOS-LinkMap-normal-x86_64.txt`。
-
-![](2.png)
+举个例子，我的 DemoiOS 项目中 Link Map 文件的完整路径为：`/Users/kingcos/Library/Developer/Xcode/DerivedData/DemoiOS-hifhuapijabsaxgpelrpiwhbzlqv/Build/Intermediates.noindex/DemoiOS.build/Debug-iphonesimulator/DemoiOS.build/DemoiOS-LinkMap-normal-x86_64.txt`。
 
 ## How
 
 下面来分析一下 Link Map 文件的构成。
+
+![](2.png)
 
 ### Path
 
@@ -28,7 +28,7 @@ Xcode 中默认是不会将 Link Map 文件在构建时暴露出来的，但我�
 # Path: /Users/kingcos/Library/Developer/Xcode/DerivedData/DemoiOS-hifhuapijabsaxgpelrpiwhbzlqv/Build/Products/Debug-iphonesimulator/DemoiOS.app/DemoiOS
 ```
 
-Path 为最终生成的「可执行文件」的路径。
+Path 为最终生成「可执行文件」的路径。
 
 ### Arch
 
@@ -40,7 +40,7 @@ Path 为最终生成的「可执行文件」的路径。
 # Arch: arm64
 ```
 
-Arch 为「可执行文件」的架构，具体架构如下表。
+Arch 为「可执行文件」的架构，具体架构与设备的对照可参考下表：
 
 | Device | System | Arch |
 |:---:|:---:|:---:| 
@@ -65,7 +65,7 @@ Arch 为「可执行文件」的架构，具体架构如下表。
 [  7] /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator12.1.sdk/System/Library/Frameworks//UIKit.framework/UIKit.tbd
 ```
 
-Object files 为目标文件，该部分列出了所有的目标文件、记录系统动态库信息的文件等，其中第一列为序号，也对应了下面「Symbols」中的「File」一列，详见下表：
+Object files 为「目标文件」，该部分列出了所有的目标文件、记录系统动态库信息的文件等，其中第一列为序号，也对应了下面「Symbols」部分中的「File」一列。
 
 | No. | File | Notes |
 |:---:|:---:|:---:|
@@ -105,7 +105,7 @@ Object files 为目标文件，该部分列出了所有的目标文件、记录�
 0x100003D30	0x000000C0	__DATA	__data           // 数据段
 ```
 
-Sections 中主要描述节（Section）相关的信息，分为四列：内存地址、大小、段（Segment）、节。每一行的地址为上一行初始地址 + 内存大小（+ 偏移量）。`__TEXT` 和 `__DATA` 标示了段信息，并各自对应多个节信息。`__TEXT` 为只读代码段，存储了可执行的代码信息，`__DATA` 为数据段，存储了可读写但不可执行的数据。关于此处更为详细的信息，之后将在「Mach-O」专题中讲述。
+Sections 中主要描述了节（Section）相关的信息，分为四列：内存地址、大小、段（Segment）、节。每一行的地址为上一行初始地址 + 内存大小（+ 偏移量）。`__TEXT` 和 `__DATA` 标示了段信息，并各自对应多个节信息。`__TEXT` 为只读代码段，存储了可执行的代码信息，`__DATA` 为数据段，存储了可读写但不可执行的数据。关于此处更为详细的信息，之后将在「Mach-O」专题中讲述。
 
 ### Symbols
 
@@ -339,7 +339,7 @@ Sections 中主要描述节（Section）相关的信息，分为四列：内存�
 0x100003D90	0x00000060	[  4] l_OBJC_PROTOCOL_$_UIApplicationDelegate
 ```
 
-Symbols 中为符号（Symbol）相关的信息，分为四列：内存地址、大小、文件（序号对应 Object files 中的文件）、符号名称。通过结合「Sections」来一起观察可以得知每一节的内容到底是什么，并计算某个类或文件最终的大小，帮助我们分析减少包大小。
+Symbols 中为符号（Symbol）相关的信息，分为四列：内存地址、大小、文件（序号对应 Object files 中的文件）、符号名称。通过结合「Sections」部分可以得知每一节的具体符号内容，并可以计算某个类或文件编译后的大小，帮助我们分析包体积。
 
 ### Dead Stripped Symbols
 
@@ -353,7 +353,7 @@ Symbols 中为符号（Symbol）相关的信息，分为四列：内存地址、
 <<dead>> 	0x00000018	[  4] CIE
 ```
 
-Dead Stripped Symbols 也是和上面结构一致的符号表，但表里的符号已经不再存在，因此没有记录内存地址。
+Dead Stripped Symbols 也是和上面结构一致的符号表，但「Dead」意味着表里的符号已经不再存在，因此没有记录内存地址。
 
 ## Reference
 
