@@ -6,7 +6,7 @@
 
 ## Preface
 
-Obj-C 中的成员变量，即 Instance Variables，通常称为 ivar。在面向对象的概念中，一个类的对外暴露决定了其所提供的能力，对子类则提供扩展性，但有些时候我们也不希望外界甚至子类不知道一些细节，这时就用到了访问控制（Access Control）。在 C++、Java、Swift 等大多数高级语言中都有这样的概念，Obj-C 中总共有四种等级，这次就来简单谈谈 Obj-C 中成员变量的访问控制。
+Obj-C 中的成员变量，即 Instance Variables，简称为 ivar。在面向对象的概念中，一个类的对外暴露决定了其所提供的能力，对子类则需要提供一定的扩展性，但有些时候我们不希望外界甚至子类知道一些细节，这时就用到了访问控制（Access Control）。在 C++、Java、Swift 等大多数高级语言中都有这样的概念，这次就来谈谈 Obj-C 中成员变量和类的访问控制。
 
 ## 访问控制修饰符
 
@@ -73,7 +73,7 @@ Mac *mac = [[Mac alloc] initWithDiskSize:512 memorySize:16];
 // My Mac's disk size is 512 GB, memory size is 16 GB.
 ```
 
-声明为 `@protected` 的成员变量只能在本类或子类中使用。注意，当不使用任何访问控制修饰符时，成员变量默认即为 `@protected`。其实，声明为 `@property` 的属性，系统会自动为我们创建一个 `_ivar` 的成员变量，这个成员变量的可见程度默认也是 `@protected`。
+声明为 `@protected` 的成员变量只能在本类或子类中使用。注意，当不使用任何访问控制修饰符时，成员变量默认即为 `@protected`。其实，声明为 `@property` 的属性，系统会自动为我们创建一个 `_` 开头的成员变量，这个成员变量的可见程度也是默认 `@protected`。
 
 ### @private
 
@@ -101,9 +101,17 @@ Mac *mac = [[Mac alloc] initWithDiskSize:512 memorySize:16];
 @end
 ```
 
-声明为 `@private` 的成员变量是访问控制中开放范围最小的，只能被本类访问到。
+声明为 `@private` 的成员变量是访问控制中开放范围最小的，只能被本类访问到，子类中也无法访问。
 
 ### @package
+
+`@package` 在平时并不多见，根据官方文档所述：
+
+- 32 位下，`@package` 等同于 `@public`
+- 64 位下，且在定义该类的 Framework 中，`@package` 为 `@public`
+- 64 位下，但不在定义该类的 Framework 中，`@package` 为 `@private`
+
+> 现代 Obj-C 所运行的平台基本上都是 64 位。
 
 建立一个 Cocoa Framework 的工程，导入以下代码：
 
@@ -134,15 +142,16 @@ NSLog(@"%@", fruit->_name);
 // Apple
 ```
 
-将构建后的 `.framework` 导入到另外的 macOS Command Line 工程中，尝试发现：当 Framework 的 Mach-O Type 为动态库（Dynamic Library）时，将出现上述错误，无法访问到 `@package` 修饰的 `_name` 成员变量；但当 Framework 的 Mach-O Type 为静态库（Static Library）时，却可以正常编译并运行。在 StackOverflow 上的一个问题中提到了 Image（镜像），`@package` 其实开放于同一个镜像内，可能是动态库与静态库的差别，但具体原因我仍在尝试找寻答案，也希望有理解的读者能够提供一些思路。
+将构建后的 `.framework` 导入到另外的 macOS Command Line 工程中，尝试发现：
 
-根据官方文档和上述实践的 Demo：
+1. 当 Framework 的 Mach-O Type 为动态库（Dynamic Library）时，将出现上述错误，无法访问到 `@package` 修饰的 `_name` 成员变量
+2. 当 Framework 的 Mach-O Type 为静态库（Static Library）时，可以正常编译并运行
 
-- 在 32 位系统中，`@package` 等同于 `@public`
-- 在 64 位系统中，且在定义该类的 Framework 中，为 `@public`
-- 在 64 位系统中，但不在定义该类的 Framework 中，为 `@private`
+在 StackOverflow 上的一个问题中提到了 Image（镜像），`@package` 其实开放于同一个镜像内，可能是动态库与静态库的差别，但具体原因我仍在尝试找寻答案，也希望有理解的读者能够提供一些思路。
 
-在 64 位系统，将不会导出声明为 `@package` 的成员变量符号，当在该类框架外使用时，将会出现链接错误。
+
+
+在现代 Obj-C 中，
 
 ### 类扩展
 
