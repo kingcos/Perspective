@@ -196,6 +196,15 @@ public protocol CustomReflectable {
 Swift 中有单独针对反射设计的相关 API，默认情况下所有类型都支持创建镜像（Mirror），开发者也可以根据需要实现 `CustomReflectable` 协议来自定义镜像。
 
 ```swift
+struct Computer {
+    var system: String
+    var memorySize: Int
+    
+    let run = {
+        print(#function)
+    }
+}
+
 let cpt = Computer(system: "macOS", memorySize: 16)
 let mirror = Mirror(reflecting: cpt)
 
@@ -206,20 +215,30 @@ if let displayStyle = mirror.displayStyle {
 print("mirror's properties count: \(mirror.children.count)")
 
 for (label, value) in mirror.children {
-    print("\(label ?? "nil") - \(value)")
+    switch value {
+    case let function as () -> Void:
+        function()
+    default:
+        print("\(label ?? "nil") - \(value)")
+    }
 }
 
-// OUTPUT:
+// DEBUG OUTPUT:
 // mirror's style: struct.
 // mirror's properties count: 2
 // system - macOS
 // memorySize - 16
+// Computer
+// param: 
 ```
 
-通过镜像类型，可以获取到类型的属性等信息，但目前 Swift 中的反射还不支持修改等更加高级的特性。这可能也是 Swift 安全的原因之一。
+通过镜像类型，可以获取到类型的属性等信息，其中的 `children` 属性是 `Mirror.Child` 集合，`Child` 是键值元组 `(label: String?, value: Any)`。由于 Swift 中，函数也是一类公民（First class），可以当作一种属性。在 `children` 中拿到后可以将其转换为函数类型，即可以执行。需要注意的是，这里的函数其实是闭包（Closure），即匿名函数，此时 `#function` 并不能得到函数名称。另外，含有参数的函数类型暂时还不能支持，在 Debug 模式下，程序没有崩溃，但参数无法打印，切换到 Release 模式下，程序将发生野指针错误导致崩溃「Thread 1: EXC_BAD_ACCESS」。
+
+可见，反射在 Swift 中目前还比较弱，在类型安全还是运行时强大的自由选择题中，Swift 显然更加倾向于前者。
 
 ## Reference
 
 - [Wikipedia - Type introspection](https://en.wikipedia.org/wiki/Type_introspection)
 - [Wikipedia - Reflection (computer programming)](https://en.wikipedia.org/wiki/Reflection_(computer_programming))
 - [REFLECTION 和 MIRROR - onevcat](https://swifter.tips/reflect/)
+- [Swift 中的 Reflection（反射） - 贾物体](https://zhuanlan.zhihu.com/p/33945268)

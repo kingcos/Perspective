@@ -33,5 +33,12 @@ if let displayStyle = mirror.displayStyle {
 print("mirror's properties count: \(mirror.children.count)")
 
 for (label, value) in mirror.children {
-    print("\(label ?? "nil") - \(value)")
+    switch value {
+    case let function as () -> Void:
+        function()
+    case let function as (String) -> Void:
+            function("Param")
+    default:
+        print("\(label ?? "nil") - \(value)")
+    }
 }

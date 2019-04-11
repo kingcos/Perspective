@@ -11,4 +11,12 @@ import Foundation
 struct Computer {
     var system: String
     var memorySize: Int
+    
+    let run: () -> Void = {
+        print(#function)
+    }
+    
+    let runWithParam: (String) -> Void = { param in
+        print("param: \(param)")
+    }
 }
