@@ -2,7 +2,7 @@
 
 | Date | Notes | Swift | Demo |
 |:-----:|:-----:|:-----:|:-----:|
-| 2019-04-08 | 首次提交 | 4.2 | []() |
+| 2019-04-08 | 首次提交 | 4.2 | [Type_Introspection_and_Reflection](Type_Introspection_and_Reflection/) |
 
 ## Preface
 
@@ -171,7 +171,7 @@ class Animal {
 // playWithToyCar()
 ```
 
-Swift 中的 `Any` 比 `AnyObject` 更加通用，可以代表任何类型的对象实例。又推出了 `is` 关键字，可以判断是否为结构体、枚举等类型，对于 `class` 类型，其等同于 `isKind(of: )`。
+Swift 中的 `Any` 比 `AnyObject` 更加通用，可以代表任何类型的对象实例。又推出了 `is` 关键字，可以判断是否为结构体、枚举等类型，对于 `class` 类型，其等同于 `isKind(of: )`，判断是否为本类或子类的类型。
 
 ### 反射
 
