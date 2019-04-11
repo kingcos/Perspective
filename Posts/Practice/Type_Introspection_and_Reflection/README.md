@@ -102,7 +102,7 @@ typedef struct objc_object *id;
 // Orange - -[Fruit tasteOrange]
 ```
 
-在 Obj-C 中实现反射只需要利用其运行时的「黑魔法」即可，我们可以直接在运行时通过字符串得到类对象，进而创建实例对象，并执行方法。但这种灵活性也会带来一些风险，正如在 `performSelector:` 方法处，编译器会警告「PerformSelector may cause a leak because its selector is unknown」。
+由于 Obj-C 本身的运行时已经非常强大，反射的概念很少提及，但其实这些运行时的「黑魔法」就可以被认为是反射。我们可以直接在运行时通过字符串得到类对象，进而创建实例对象，并执行方法。但这种灵活性也会带来一些风险，正如在 `performSelector:` 方法处，编译器会警告「PerformSelector may cause a leak because its selector is unknown」。
 
 ## Swift
 
@@ -114,6 +114,7 @@ typedef struct objc_object *id;
 class Animal {
     func play(_ toy: AnyObject) {
         // 检查是否是 Toy 或其子类
+        // Type.self 可以得到类型本身
         if toy.isKind(of: Toy.self) {
             if toy.isMember(of: Ball.self) {
                 // 检查是否是 Ball 类
@@ -175,9 +176,50 @@ Swift 中的 `Any` 比 `AnyObject` 更加通用，可以代表任何类型的对
 
 ### 反射
 
+```swift
+/// A type that explicitly supplies its own mirror.
+///
+/// You can create a mirror for any type using the `Mirror(reflecting:)`
+/// initializer, but if you are not satisfied with the mirror supplied for
+/// your type by default, you can make it conform to `CustomReflectable` and
+/// return a custom `Mirror` instance.
+public protocol CustomReflectable {
 
+    /// The custom mirror for this instance.
+    ///
+    /// If this type has value semantics, the mirror should be unaffected by
+    /// subsequent mutations of the instance.
+    public var customMirror: Mirror { get }
+}
+```
+
+Swift 中有单独针对反射设计的相关 API，默认情况下所有类型都支持创建镜像（Mirror），开发者也可以根据需要实现 `CustomReflectable` 协议来自定义镜像。
+
+```swift
+let cpt = Computer(system: "macOS", memorySize: 16)
+let mirror = Mirror(reflecting: cpt)
+
+if let displayStyle = mirror.displayStyle {
+    print("mirror's style: \(displayStyle).")
+}
+
+print("mirror's properties count: \(mirror.children.count)")
+
+for (label, value) in mirror.children {
+    print("\(label ?? "nil") - \(value)")
+}
+
+// OUTPUT:
+// mirror's style: struct.
+// mirror's properties count: 2
+// system - macOS
+// memorySize - 16
+```
+
+通过镜像类型，可以获取到类型的属性等信息，但目前 Swift 中的反射还不支持修改等更加高级的特性。这可能也是 Swift 安全的原因之一。
 
 ## Reference
 
 - [Wikipedia - Type introspection](https://en.wikipedia.org/wiki/Type_introspection)
 - [Wikipedia - Reflection (computer programming)](https://en.wikipedia.org/wiki/Reflection_(computer_programming))
+- [REFLECTION 和 MIRROR - onevcat](https://swifter.tips/reflect/)

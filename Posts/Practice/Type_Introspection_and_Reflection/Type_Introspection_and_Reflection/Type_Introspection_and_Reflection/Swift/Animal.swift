@@ -71,8 +71,4 @@ class Animal {
         
         dog.play2(car)
     }
-    
-    class func reflectionDemo() {
-        
-    }
 }

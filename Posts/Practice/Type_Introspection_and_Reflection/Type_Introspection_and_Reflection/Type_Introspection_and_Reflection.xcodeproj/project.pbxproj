@@ -10,6 +10,7 @@
 		311353AA225DD62200B08C70 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311353A9225DD62200B08C70 /* main.swift */; };
 		311353B5225DD66A00B08C70 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 311353B4225DD66A00B08C70 /* Person.m */; };
 		311353B8225DF05000B08C70 /* Animal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311353B7225DF05000B08C70 /* Animal.swift */; };
+		311353BC225F186A00B08C70 /* Computer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311353BB225F186A00B08C70 /* Computer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,6 +32,7 @@
 		311353B3225DD66A00B08C70 /* Person.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
 		311353B4225DD66A00B08C70 /* Person.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		311353B7225DF05000B08C70 /* Animal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animal.swift; sourceTree = "<group>"; };
+		311353BB225F186A00B08C70 /* Computer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Computer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				311353B7225DF05000B08C70 /* Animal.swift */,
+				311353BB225F186A00B08C70 /* Computer.swift */,
 			);
 			path = Swift;
 			sourceTree = "<group>";
@@ -146,6 +149,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				311353BC225F186A00B08C70 /* Computer.swift in Sources */,
 				311353B5225DD66A00B08C70 /* Person.m in Sources */,
 				311353AA225DD62200B08C70 /* main.swift in Sources */,
 				311353B8225DF05000B08C70 /* Animal.swift in Sources */,
