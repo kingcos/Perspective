@@ -242,7 +242,7 @@ for (label, value) in mirror.children {
 
 ## Reference
 
-- [Wikipedia - Type introspection](https://en.wikipedia.org/wiki/Type_introspection)
-- [Wikipedia - Reflection (computer programming)](https://en.wikipedia.org/wiki/Reflection_(computer_programming))
+- [Type introspection - Wikipedia](https://en.wikipedia.org/wiki/Type_introspection)
+- [Reflection (computer programming) - Wikipedia](https://en.wikipedia.org/wiki/Reflection_(computer_programming))
 - [REFLECTION 和 MIRROR - onevcat](https://swifter.tips/reflect/)
 - [Swift 中的 Reflection（反射） - 贾物体](https://zhuanlan.zhihu.com/p/33945268)
