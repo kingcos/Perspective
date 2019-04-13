@@ -404,7 +404,7 @@ NSLog(@"double size - %zd", sizeof(double));
 
 比较让人困惑的是 `myMac` 的实例大小与实际分配大小。`Mac` 除了自己的一个成员变量，还有两个继承自父类 `Computer` 的成员变量，以及一个继承自基类 `NSObject` 的 `isa`。在 64 位操作系统上，共计占用 8+4+4+1=17 字节，经过字长对齐后即 24 字节，与 `class_getInstanceSize` 返回的结果一致。但为什么最终 `malloc_size` 却是 32 字节呢？
 
-因为在分配内存时，除了字长对齐，还存在另外的内存对齐。其将按照 16 的倍数进行对齐。
+因为在分配内存时，除了字长对齐，还存在另外的内存对齐。其将按照 16 的倍数进行对齐：
 
 ```
 // nano_zone_common.h
@@ -442,5 +442,5 @@ NSLog(@"double size - %zd", sizeof(double));
 ## Reference
 
 - [将 Obj-C 代码翻译为 C++ 代码](https://github.com/kingcos/Perspective/issues/72)
-- [StackOverflow - Where is __LP64__ defined for default builds of C++ applications on OSX 10.6?](https://stackoverflow.com/questions/6721037/where-is-lp64-defined-for-default-builds-of-c-applications-on-osx-10-6)
+- [StackOverflow - Where is `__LP64__` defined for default builds of C++ applications on OSX 10.6?](https://stackoverflow.com/questions/6721037/where-is-lp64-defined-for-default-builds-of-c-applications-on-osx-10-6)
 - [Wikipedia - sizeof](https://en.wikipedia.org/wiki/Sizeof)
