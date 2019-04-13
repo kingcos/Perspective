@@ -320,7 +320,7 @@ map_images_nolock(unsigned mhCount, const char * const mhPaths[],
     // (The executable may not be present in this infoList if the 
     // executable does not contain Objective-C code but Objective-C 
     // is dynamically loaded later.
-    // 在找到可执行文件本身之前必须延迟执行一次性运行时初始化时。
+    // 在找到可执行文件本身之前必须延迟执行一次性运行时初始化。
     // 这需要在进一步初始化之前完成。
     // （如果可执行文件不包含 Obj-C 代码但 Obj-C 在之后动态加载，则 infoList 中可能不包含该可执行文件。）
     if (firstTime) {
@@ -380,11 +380,11 @@ map_images_nolock(unsigned mhCount, const char * const mhPaths[],
     }
 
     if (hCount > 0) {
-        // ➡️ 读取镜像（传入 header_info 列表，前者数量，类的总数，未优化的类的总数）
+        // ➡️ 读取镜像（传入 header_info 列表，数量，类的总数，未优化的类的总数）
         _read_images(hList, hCount, totalClasses, unoptimizedTotalClasses);
     }
 
-    // 第一次执行完毕，置为 NO
+    // 第一次执行完毕后，置为 NO
     firstTime = NO;
 }
 
@@ -398,7 +398,7 @@ static header_info * addHeader(const headerType *mhdr, const char *path, int &to
     bool inSharedCache = false;
 
     // Look for hinfo from the dyld shared cache.
-    // 在 dyld 共享缓存中寻找 hinfo（关于 dyld 共享缓存可参考文末「谈谈 iOS 中的 dyld_shared_cache」）。
+    // 在 dyld 共享缓存中寻找 hinfo（关于 dyld 共享缓存可参考文末「谈谈 iOS 中的 dyld_shared_cache」一文）。
     // 为头部预优化 hinfo
     hi = preoptimizedHinfoForHeader(mhdr);
     if (hi) {
@@ -440,7 +440,7 @@ static header_info * addHeader(const headerType *mhdr, const char *path, int &to
     else 
     {
         // Didn't find an hinfo in the dyld shared cache.
-        // 在 dyld 共享缓存中未找到 hinfo
+        // 在 dyld 共享缓存中未找到 hinfo。
 
         // Weed out duplicates
         // 去除重复
@@ -464,7 +464,7 @@ static header_info * addHeader(const headerType *mhdr, const char *path, int &to
         // 分配一个 header_info。
         // Note we also allocate space for a single header_info_rw in the
         // rw_data[] inside header_info.
-        // 注意我们也在 header_info 内部的 rw_data[] 也为单个 header_info_rw 分配了空间。
+        // 注意我们在 header_info 内部的 rw_data[] 也为单个 header_info_rw 分配了空间。
         hi = (header_info *)calloc(sizeof(header_info) + sizeof(header_info_rw), 1);
 
         // Set up the new header_info entry.
@@ -493,7 +493,7 @@ static header_info * addHeader(const headerType *mhdr, const char *path, int &to
         if (_getObjc2ClassList(hi, &count)) {
             // totalClasses 设置为获取到的类数量
             totalClasses += (int)count;
-            // 若获取的 header_info 不在共享缓存，则视为未优化类，更新 unoptimizedTotalClasses
+            // 若获取的 header_info 不在共享缓存中，则视为未优化类，更新 unoptimizedTotalClasses
             if (!inSharedCache) unoptimizedTotalClasses += count;
         }
     }
@@ -966,7 +966,7 @@ static void remethodizeClass(Class cls)
 
 // objc-runtime-new.mm
 // Attach method lists and properties and protocols from categories to a class.
-// 将所以 Category 的方法列表、属性列表、协议列表附加到类上。
+// 将所有 Category 的方法列表、属性列表、协议列表附加到类上。
 // Assumes the categories in cats are all loaded and sorted by load order, 
 // oldest categories first.
 // 假设 cats 中的 Category 都已加载并由加载顺序排序，则最后（编译）的 Category 排在最先。
@@ -974,7 +974,7 @@ static void
 attachCategories(Class cls, category_list *cats, bool flush_caches)
 {
     if (!cats) return;
-    // Xcode 中 OBJC_PRINT_REPLACED_METHODS 环境变量值为 YES 时，将可在控制台打印该信息
+    // ➡️ Xcode 中 OBJC_PRINT_REPLACED_METHODS 环境变量值为 YES 时，将可在控制台打印该信息
     // OPTION(PrintReplacedMethods, OBJC_PRINT_REPLACED_METHODS, "log methods replaced by category implementations")
     if (PrintReplacedMethods) printReplacements(cls, cats);
 
@@ -999,7 +999,7 @@ attachCategories(Class cls, category_list *cats, bool flush_caches)
     // i = Category 的个数
     int i = cats->count;
     bool fromBundle = NO;
-    // ➡️ 将所有分类中的方法、属性、协议提取出
+    // ➡️ 将所有 Category 中的方法、属性、协议提取出
     // 倒数 i
     while (i--) {
         // entry = 一个 Category
@@ -1094,14 +1094,14 @@ class list_array_tt {
 
 ![](3.png)
 
-因此，对于 Category 在运行时将其中的方法、属性、协议加载到主类的过程搞明白后，之前的结论就水落石出。越靠后编译的 Category，其方法列表最终就越靠前。因此在调用时，虽然主类和其他 Category 中的方法并没有被覆盖，但会因为在前面已经被找到而无法调用到。在上面源码中我们也可以发现，在 Xcode 设置 `OBJC_PRINT_REPLACED_METHODS` 环境变量为 `YES` 后，就可以在运行时输出被替换的方法（若添加后仍未输出我们自定义类的替换信息，可以在尝试主类和所有 Category 中添加 `+ (void)load` 方法实现后重试）：
+因此，对于 Category 在运行时将其中的方法、属性、协议加载到主类的过程搞明白后，之前的结论就水落石出。越靠后编译的 Category，其方法列表最终就越靠前。因此在调用时，虽然主类和其他 Category 中的方法并没有被覆盖，但会因为在前面已经被找到并调用而无法调用到。在上面源码中我们也可以发现，在 Xcode 设置 `OBJC_PRINT_REPLACED_METHODS` 环境变量为 `YES` 后，就可以在运行时输出被替换的方法（若添加后仍未输出我们自定义类的替换信息，可以在尝试主类和所有 Category 中添加 `+ (void)load` 方法实现后重试）：
 
 ```
 objc[17895]: REPLACED: -[Person smile]  by category Life  (IMP was 0x100001b90 (/Users/kingcos/Library/Developer/Xcode/DerivedData/Category_in_Obj-C-cgesibqaizbvgnckrzeofmpfkmmy/Build/Products/Debug/Category_in_Obj-C), now 0x100001b00 (/Users/kingcos/Library/Developer/Xcode/DerivedData/Category_in_Obj-C-cgesibqaizbvgnckrzeofmpfkmmy/Build/Products/Debug/Category_in_Obj-C))
 objc[17895]: REPLACED: -[Person smile]  by category Work  (IMP was 0x100001b00 (/Users/kingcos/Library/Developer/Xcode/DerivedData/Category_in_Obj-C-cgesibqaizbvgnckrzeofmpfkmmy/Build/Products/Debug/Category_in_Obj-C), now 0x100001b40 (/Users/kingcos/Library/Developer/Xcode/DerivedData/Category_in_Obj-C-cgesibqaizbvgnckrzeofmpfkmmy/Build/Products/Debug/Category_in_Obj-C))
 ```
 
-第一条的替换，是指 Category Life 替换了主类的 `smile` 方法，而第二条指 Category Work 再次替换了 Category Life 的 `smile` 方法，最终也与我们的结果一致。
+第一条的替换，是指 Category `Life` 替换了主类中的 `smile` 方法，而第二条指 Category `Work` 再次替换了 Category `Life` 中的 `smile` 方法，因此最终也由 `Work` 中的方法被调用，最终也与我们的结论一致。
 
 ## Reference
 
