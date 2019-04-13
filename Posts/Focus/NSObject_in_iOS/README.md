@@ -442,5 +442,5 @@ NSLog(@"double size - %zd", sizeof(double));
 ## Reference
 
 - [将 Obj-C 代码翻译为 C++ 代码](https://github.com/kingcos/Perspective/issues/72)
-- [StackOverflow - Where is `__LP64__` defined for default builds of C++ applications on OSX 10.6?](https://stackoverflow.com/questions/6721037/where-is-lp64-defined-for-default-builds-of-c-applications-on-osx-10-6)
-- [Wikipedia - sizeof](https://en.wikipedia.org/wiki/Sizeof)
+- [Where is `__LP64__` defined for default builds of C++ applications on OSX 10.6? - StackOverflow](https://stackoverflow.com/questions/6721037/where-is-lp64-defined-for-default-builds-of-c-applications-on-osx-10-6)
+- [sizeof - Wikipedia](https://en.wikipedia.org/wiki/Sizeof)
