@@ -97,7 +97,7 @@ Object files 为「目标文件」，该部分列出了所有的目标文件、�
 0x100003068	0x00000010	__DATA	__objc_protolist // 协议列表
 0x100003078	0x00000008	__DATA	__objc_imageinfo // 镜像信息
 0x100003080	0x00000BE8	__DATA	__objc_const     // 常量
-0x100003C68	0x00000010	__DATA	__objc_selrefs   // self 引用
+0x100003C68	0x00000010	__DATA	__objc_selrefs   // selector 引用
 0x100003C78	0x00000008	__DATA	__objc_classrefs // 类引用
 0x100003C80	0x00000008	__DATA	__objc_superrefs // 父类引用
 0x100003C88	0x00000008	__DATA	__objc_ivar      // 成员变量
