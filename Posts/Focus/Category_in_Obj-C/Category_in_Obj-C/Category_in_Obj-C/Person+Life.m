@@ -10,6 +10,10 @@
 
 @implementation Person (Life)
 
++ (void)load {
+    
+}
+
 // Instance method
 - (void)run {
     NSLog(@"%s", __func__);
@@ -23,6 +27,10 @@
 // Protocol method
 - (void)eat {
     NSLog(@"%s", __func__);
+}
+
+- (void)smile {
+    NSLog(@"Person (Life) - %s", __func__);
 }
 
 @end

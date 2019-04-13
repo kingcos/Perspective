@@ -1,5 +1,5 @@
 //
-//  Person.m
+//  Person+Work.h
 //  Category_in_Obj-C
 //
 //  Created by kingcos on 2019/4/13.
@@ -8,14 +8,12 @@
 
 #import "Person.h"
 
-@implementation Person
+NS_ASSUME_NONNULL_BEGIN
 
-+ (void)load {
+@interface Person (Work)
 
-}
-
-- (void)smile {
-    NSLog(@"Person - %s", __func__);
-}
+- (void)smile;
 
 @end
+
+NS_ASSUME_NONNULL_END

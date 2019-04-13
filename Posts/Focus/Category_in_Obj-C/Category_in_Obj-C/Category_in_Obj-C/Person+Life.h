@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 // Protocol method
 - (void)eat;
 
+- (void)smile;
+
 @end
 
 NS_ASSUME_NONNULL_END

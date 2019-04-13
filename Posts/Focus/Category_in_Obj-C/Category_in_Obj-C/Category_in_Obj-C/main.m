@@ -9,13 +9,12 @@
 #import <Foundation/Foundation.h>
 
 #import "Person+Life.h"
+#import "Person+Work.h"
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        
-        
-        
-        
+        Person *p = [[Person alloc] init];
+        [p smile];
     }
     return 0;
 }
