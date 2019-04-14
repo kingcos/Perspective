@@ -7,6 +7,16 @@
 //
 
 #import "Person.h"
+#import "Person+Inner.h"
+
+@interface Person () {
+    // 默认为 private
+    int _age;
+    @protected
+    NSString *_name;
+}
+
+@end
 
 @implementation Person
 
@@ -16,6 +26,23 @@
 
 - (void)smile {
     NSLog(@"Person - %s", __func__);
+}
+
+- (void)bar {
+    NSLog(@"Person - %s", __func__);
+}
+
+@end
+
+@interface Student : Person
+
+@end
+
+@implementation Student
+
+- (void)bar {
+//    NSLog(@"%d", _age);
+    NSLog(@"%@", _name);
 }
 
 @end

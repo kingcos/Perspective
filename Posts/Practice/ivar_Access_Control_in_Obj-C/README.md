@@ -73,7 +73,7 @@ Mac *mac = [[Mac alloc] initWithDiskSize:512 memorySize:16];
 // My Mac's disk size is 512 GB, memory size is 16 GB.
 ```
 
-声明为 `@protected` 的成员变量只能在本类或子类中使用。注意，当不使用任何访问控制修饰符时，成员变量默认即为 `@protected`。其实，声明为 `@property` 的属性，系统会自动为我们创建一个 `_` 开头的成员变量，这个成员变量的可见程度也是默认 `@protected`。
+声明为 `@protected` 的成员变量只能在本类或子类中使用。注意，当不使用任何访问控制修饰符时，类中成员变量默认即为 `@protected`（注意：类扩展中是个例外，详见「类扩展」一节）。其实，声明为 `@property` 的属性，系统会自动为我们创建一个 `_` 开头的成员变量，这个成员变量的可见程度也是默认 `@protected`。
 
 ### @private
 
@@ -155,7 +155,7 @@ NSLog(@"%@", fruit->_name);
 
 ### 类扩展
 
-在 Obj-C 的类扩展（Class Extension）中，我们可以定义一些不想暴露在外界（.h）的属性、成员变量、或方法，做到「物理」隔离。
+在 Obj-C 的类扩展（Class Extension）中，我们可以定义一些不想暴露在外界（.h）的成员变量、属性、或方法，做到「物理」隔离。需要注意的是，定义在类扩展中的成员变量，默认为 `@private`，仅供本类使用。
 
 ```objc
 // Person-Inner.h
@@ -163,7 +163,7 @@ NSLog(@"%@", fruit->_name);
 
 @interface Person ()
 
-- (void)doSomething;
+- (void)foo;
 
 @end
 
@@ -171,14 +171,28 @@ NSLog(@"%@", fruit->_name);
 #import "Person.h"
 #import "Person-Inner.h"
 
+@interface Person () {
+    // 默认为 private
+    int _age;
+    @protected
+    NSString *_name;
+}
+- (void)bar;
+@end
+
 @implementation Person
-- (void)doSomething {
-    NSLog(@"Do something.");
+- (void)foo {
+    NSLog(@"%@", __func__);
+}
+
+- (void)bar {
+    // NSLog(@"%d", _age);
+    NSLog(@"%@", _name);
 }
 @end
 ```
 
-如上，对外我们只需要暴露 Person.h，而将类扩展所在的 Inner.h 不暴露为 Public Header 即可。
+如上，对外我们只需要暴露 Person.h，而将类扩展所在的 Inner.h 不暴露为 Public Header 即可；或者也可以将类扩展直接定义在 .m 中。
 
 ## 符号（Symbols）
 

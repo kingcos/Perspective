@@ -2,7 +2,7 @@
 
 | Date | Notes | Source Code | Demo |
 |:-----:|:-----:|:-----:|:-----:|
-| 2019-04-13 | 首次提交 | [objc4-750](https://opensource.apple.com/tarballs/objc4/) | [Category_in_Obj-C](Category_in_Obj-C/) |
+| 2019-04-13 | 首次提交 | [objc4-750](https://opensource.apple.com/tarballs/objc4/) 、[xnu-4903.221.2](https://opensource.apple.com/tarballs/xnu/) | [Category_in_Obj-C](Category_in_Obj-C/) |
 
 ## Preface
 
@@ -130,13 +130,13 @@ struct category_t {
 };
 ```
 
-## 执行顺序
+## 加载
 
-在上一节中，我们了解了 Category 的结构，那么当定义多个 Category 时，每个 Category 和本类中都有相同的方法时执行顺序会是怎么样呢？
+在上一节中，我们了解了 Category 的结构。当我们编译完，Category 中的信息将被存储在 `category_t` 的结构体中，那么它到底是如何被加载的呢？
 
 ### What
 
-尝试分别在 `Person` 主类、`Person (Life)` 和 `Person (Work)` Category 中定义并实现 `smile` 方法。有个细节是，我们在 Category 中实现主类中已经实现的方法时，编译器会警告「Category is implementing a method which will also be implemented by its primary class」，这又是为什么呢？
+我们尝试分别在 `Person` 主类、`Person (Life)` 和 `Person (Work)` Category 中定义并实现 `smile` 方法。有个细节是，我们在 Category 中实现主类中已经实现的方法时，编译器会警告「Category is implementing a method which will also be implemented by its primary class」，这又是为什么呢？
 
 ```objc
 // Person.h
@@ -1090,7 +1090,7 @@ class list_array_tt {
 };
 ```
 
-`realloc` 到 `memmove` 和 `memcpy` 部分可以参考下图：
+从 `realloc` 到 `memmove` 和 `memcpy` 部分可以参考下图：
 
 ![](3.png)
 
@@ -1103,8 +1103,261 @@ objc[17895]: REPLACED: -[Person smile]  by category Work  (IMP was 0x100001b00 (
 
 第一条的替换，是指 Category `Life` 替换了主类中的 `smile` 方法，而第二条指 Category `Work` 再次替换了 Category `Life` 中的 `smile` 方法，因此最终也由 `Work` 中的方法被调用，最终也与我们的结论一致。
 
+## `memmove` & `memcpy`
+
+上一节中，Category 中内容列表与主类融合时，调用了 `memmove` 和 `memcpy` 函数，它们其实是 C 语言标准库中的函数，目的都是将一定长度的源内存地址的内容拷贝到目标内存地址中。在 Apple 开源的 XNU - libsyscall 中，`memmove` 和 `memcpy` 本质其实是一致的：
+
+```c
+// _libc_funcptr.c
+__attribute__((visibility("hidden")))
+void *
+memmove(void *dst, const void *src, size_t n)
+{
+	return _libkernel_string_functions->memmove(dst, src, n);
+}
+
+__attribute__((visibility("hidden")))
+void *
+memcpy(void *dst, const void *src, size_t n)
+{
+	return _libkernel_string_functions->memmove(dst, src, n);
+}
+
+// _libc_funcptr.c
+/*
+ * Upcalls to optimized libplatform string functions
+ */
+
+static const struct _libkernel_string_functions
+		_libkernel_generic_string_functions = {
+	.bzero = _libkernel_bzero,
+	.memmove = _libkernel_memmove,
+	.memset = _libkernel_memset,
+	.strchr = _libkernel_strchr,
+	.strcmp = _libkernel_strcmp,
+	.strcpy = _libkernel_strcpy,
+	.strlcpy = _libkernel_strlcpy,
+	.strlen = _libkernel_strlen,
+};
+static _libkernel_string_functions_t _libkernel_string_functions =
+		&_libkernel_generic_string_functions;
+
+// memcpy.c
+/*
+ * sizeof(word) MUST BE A POWER OF TWO
+ * SO THAT wmask BELOW IS ALL ONES
+ */
+typedef    int word;        /* "word" used for optimal copy speed "字"用作优化拷贝速度 */
+
+#define    wsize    sizeof(word)
+#define    wmask    (wsize - 1)
+
+/*
+ * Copy a block of memory, handling overlap.
+ * 拷贝一块内存，并处理重叠部分。
+ * This is the routine that actually implements
+ * (the portable versions of) bcopy, memcpy, and memmove.
+ * 这是个实际实现了（可移植版本的）bcopy、memcpy、以及 memmove 的例行程序。
+ */
+
+// visibility("hidden")：隐藏函数符号
+__attribute__((visibility("hidden")))
+void * _libkernel_memmove(void *dst0, const void *src0, size_t length)
+{
+    // 保存一份目标、源，但源是常量，而目标是可变的
+    char *dst = dst0;
+    const char *src = src0;
+    size_t t;
+    
+    // 长度为 0 或目标等于源时，无需移动
+    if (length == 0 || dst == src)        /* nothing to do */
+        goto done;
+    
+    /*
+     * Macros: loop-t-times; and loop-t-times, t>0
+     * 定义循环宏，t 大于 0 时，循环 t 次
+     */
+#define    TLOOP(s) if (t) TLOOP1(s)
+#define    TLOOP1(s) do { s; } while (--t)
+    
+    // 如果源 > 目标（高地址 -> 低地址，小端就是向前）
+    printf("(unsigned long)dst: %lu; (unsigned long)src: %lu\n", (unsigned long)dst, (unsigned long)src);
+    if ((unsigned long)dst < (unsigned long)src) {
+        /*
+         * Copy forward.
+         * 正向拷贝。
+         */
+        // typedef unsigned long           uintptr_t;
+        t = (uintptr_t)src;    /* only need low bits 只需要低位 */
+        printf("(t | (uintptr_t)dst) & wmask: %lu\n", (t | (uintptr_t)dst) & wmask);
+        if ((t | (uintptr_t)dst) & wmask) {
+            /*
+             * Try to align operands.  This cannot be done
+             * unless the low bits match.
+             * 尝试对齐操作数。除非低位匹配，否则不可这样做。
+             */
+            if ((t ^ (uintptr_t)dst) & wmask || length < wsize)
+                t = length;
+            else
+                t = wsize - (t & wmask);
+            length -= t;
+            //
+//            TLOOP1(*dst++ = *src++);
+            do {
+                *dst++ = *src++;
+            } while (--t);
+        }
+        /*
+         * Copy whole words, then mop up any trailing bytes.
+         * 拷贝整个字，然后删除所有尾字节。
+         */
+        t = length / wsize;
+        printf("t: %zu\n", t);
+//        TLOOP(*(word *)dst = *(word *)src; src += wsize; dst += wsize);
+        if (t) {
+            do {
+                // 更改指针指向的一个字长的内容（src -> dst）
+                *(word *)dst = *(word *)src;
+                // dst & src 向前移动一个字长
+                src += wsize;
+                dst += wsize;
+            } while (--t);
+        }
+        printf("(unsigned long)dst: %lu; (unsigned long)src: %lu\n", (unsigned long)dst, (unsigned long)src);
+        
+        t = length & wmask;
+        printf("t: %zu\n", t);
+//        TLOOP(*dst++ = *src++);
+        if (t) {
+            do {
+                *dst++ = *src++;
+            } while (--t);
+        }
+    } else {
+        /*
+         * Copy backwards.  Otherwise essentially the same.
+         * Alignment works as before, except that it takes
+         * (t&wmask) bytes to align, not wsize-(t&wmask).
+         * 反向拷贝。否则基本一致。
+         * 与之前一样对齐，除了它是以 (t&wmask) 字节对齐，而非 wsize-(t&wmask)。
+         */
+        src += length;
+        dst += length;
+        t = (uintptr_t)src;
+        printf("(t | (uintptr_t)dst) & wmask: %lu\n", (t | (uintptr_t)dst) & wmask);
+        if ((t | (uintptr_t)dst) & wmask) {
+            if ((t ^ (uintptr_t)dst) & wmask || length <= wsize)
+                t = length;
+            else
+                t &= wmask;
+            length -= t;
+//            TLOOP1(*--dst = *--src);
+            do {
+                *--dst = *--src;
+            } while (--t);
+        }
+        t = length / wsize;
+//        TLOOP(src -= wsize; dst -= wsize; *(word *)dst = *(word *)src);
+        if (t) {
+            do {
+                src -= wsize;
+                dst -= wsize;
+                *(word *)dst = *(word *)src;
+            } while (--t);
+        }
+        
+        t = length & wmask;
+//        TLOOP(*--dst = *--src);
+        if (t) {
+            do {
+                *--dst = *--src;
+            } while (--t);
+        }
+    }
+done:
+    printf("(unsigned long)dst: %lu; (unsigned long)src: %lu\n", (unsigned long)dst, (unsigned long)src);
+    return (dst0);
+}
+```
+
+我已经将该函数移植到 Demo 中，可以尝试低地址拷贝到高地址，也可以将高地址拷贝到低地址：
+
+```objc
+// b -> a
+int a = 10;
+int b = 20;
+NSLog(@"Before: a: %d, b: %d", a, b);
+_libkernel_memmove(&a, &b, sizeof(int));
+// memmove(&a, &b, sizeof(int));
+// memcpy(&a, &b, sizeof(int));
+NSLog(@"After: a: %d, b: %d", a, b);
+
+// OUTPUT:
+// Before: a: 10, b: 20
+// After: a: 20, b: 20
+    
+// c -> d
+int c = 30;
+int d = 40;
+NSLog(@"Before: c: %d, d: %d", c, d);
+// _libkernel_memmove2 是个简化版本的 _libkernel_memmove
+_libkernel_memmove2(&d, &c, sizeof(int));
+NSLog(@"After: c: %d, d: %d", c, d);
+
+// OUTPUT:
+// Before: c: 30, d: 40
+// After: c: 30, d: 30
+```
+
+但在有些编译器中，根据不同的标准库具体实现可能会有所不同。其中最主要的差别便是 `memcpy` 的实现通常并非一定是安全的，当源内存和目标内存存在重叠时，`memcpy` 将发生错误：
+
+```c
+void * v_memcpy(void * dest, const void * src, size_t n)
+{
+    char * d = (char *) dest;
+    const char * s = (const char*) src;
+    while (n--)
+        *d++ = *s++;
+    return dest;
+}
+```
+
+上面是摘抄另外一个 C 标准库中的实现，下面尝试下，将一个数组的前半截拷贝到其中间的地址，这样源地址与目标地址就出现了重叠部分。需要注意的是，开发者要保证内存是已经分配好的。如果目标地址无法容纳足够长的源地址内容长度，则仍将溢出。
+
+```objc
+// e[0, 1] -> e[1, 2]
+int e[5] = {1, 2, 3};
+NSLog(@"Before: e[0]: %d, e[1]: %d, e[2]: %d, e[3]: %d, e[4]: %d", e[0], e[1], e[2], e[3], e[4]);
+_libkernel_memmove3(&e[2], &e[0], sizeof(int) * 3);
+NSLog(@"After: e[0]: %d, e[1]: %d, e[2]: %d, e[3]: %d, e[4]: %d", e[0], e[1], e[2], e[3], e[4]);
+
+/ OUTPUT:
+// Before: e[0]: 1, e[1]: 2, e[2]: 3, e[3]: 0, e[4]: 0
+// After: e[0]: 1, e[1]: 2, e[2]: 1, e[3]: 2, e[4]: 3
+
+// f[0, 1] -> f[1, 2]
+int f[5] = {1, 2, 3};
+NSLog(@"Before: f[0]: %d, f[1]: %d, f[2]: %d, f[3]: %d, f[4]: %d", f[0], f[1], f[2], f[3], f[4]);
+v_memcpy(&f[2], &f[0], sizeof(int) * 3);
+NSLog(@"After: f[0]: %d, f[1]: %d, f[2]: %d, f[3]: %d, f[4]: %d", f[0], f[1], f[2], f[3], f[4]);
+
+// OUTPUT:
+// Before: f[0]: 1, f[1]: 2, f[2]: 3, f[3]: 0, f[4]: 0
+// After: f[0]: 1, f[1]: 2, f[2]: 1, f[3]: 2, f[4]: 1
+```
+
+结果很明显，`v_memcpy`（其他标准库实现的 `memcpy`）在重叠部分出现了差错，而 `memmove` 却能够正确的处理。这是因为在 `memmove` 内部会判断源地址和目标地址的大小，进而进行正向或反向拷贝，避免了丢弃数据。
+
+## Class Extension
+
+与 Category 十分容易混淆的一个概念便是 Class Extension（类扩展），其定义方法也十分类似于 Category，因此有人称其为「匿名分类（Category）」。但本质上说，Category 和类扩展除了定义的语法类似，实质上没有太大关系的。
+
+类扩展可以定义在单独的 .h 抑或直接在 .m 中，其主要是为了将信息私有化，使得外界无法直接访问到。关于访问控制相关更加详细的内容，可以参考「Obj-C 中成员变量和类的访问控制」一文。
+
 ## Reference
 
 - [将 Obj-C 代码翻译为 C++ 代码](https://github.com/kingcos/Perspective/issues/72)
 - [谈谈 iOS 中的 `dyld_shared_cache`](https://github.com/kingcos/Perspective/issues/55)
 - [Xcode 中的 Link Map 文件](https://github.com/kingcos/Perspective/issues/75)
+- [Obj-C 中成员变量和类的访问控制](https://github.com/kingcos/Perspective/issues/74)
+- [What is the difference between memmove and memcpy? - StackOverflow](https://stackoverflow.com/questions/1201319/what-is-the-difference-between-memmove-and-memcpy)
