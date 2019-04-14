@@ -8,7 +8,7 @@
 
 ![](1.png)
 
-在 Obj-C 中，我们经常会使用 Category（中文常译作分类，但为表述清晰，下文仍将使用 Category）来对一个类进行扩展，使得类可以具备更多的功能；也会对一个类进行拆分，使得其结构更加清晰条理。本文将由浅入深，谈谈 iOS 中的 Category。
+在 Obj-C 中，我们经常会使用 Category（中文常译作分类，但为表述清晰，下文仍将使用 Category）来对一个类进行扩展，使得类可以具备更多的功能；也会对一个类进行拆分，使得其结构更加清晰条理。本文将由浅入深，谈谈 iOS 中的 Category 结构、实现原理、以及与 Class Extension 的区别，对于 `+load` 等专题性更强的内容，将单独放置在独立篇章中讲述，请各位参考文末的「Reference」。
 
 ## `category_t`
 
@@ -130,9 +130,9 @@ struct category_t {
 };
 ```
 
-## 加载
+## 实现原理
 
-在上一节中，我们了解了 Category 的结构。当我们编译完，Category 中的信息将被存储在 `category_t` 的结构体中，那么它到底是如何被加载的呢？
+在上一节中，我们了解了 Category 的结构。当我们编译完，Category 中的信息将被存储在 `category_t` 的结构体中，那么 Category 的实现原理到底是什么呢？
 
 ### What
 
