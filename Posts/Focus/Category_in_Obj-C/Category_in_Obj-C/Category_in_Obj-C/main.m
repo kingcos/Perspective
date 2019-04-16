@@ -11,13 +11,24 @@
 #import "Person+Life.h"
 #import "Person+Work.h"
 
+#import "Person+Category.h"
+#import "Person+Extension.h"
+
 #import "xnu-memcpy.h"
+
+// Class Extension
+@interface Person ()
+- (void)secret;
+@end
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // Category:
         Person *p = [[Person alloc] init];
         [p smile];
+        
+        [p eat];
+        [p drink];
         
         // memmove
         // b -> a

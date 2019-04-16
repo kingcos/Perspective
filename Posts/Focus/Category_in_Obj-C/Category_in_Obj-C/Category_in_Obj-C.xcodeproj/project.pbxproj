@@ -12,6 +12,7 @@
 		84CBAB842261C23E00E1B946 /* Person+Life.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CBAB832261C23E00E1B946 /* Person+Life.m */; };
 		84CBAB882261FDC300E1B946 /* Person+Work.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CBAB872261FDC300E1B946 /* Person+Work.m */; };
 		84CBAB8E2262FE1A00E1B946 /* xnu-memcpy.c in Sources */ = {isa = PBXBuildFile; fileRef = 84CBAB8D2262FE1A00E1B946 /* xnu-memcpy.c */; };
+		84CBAB9322662F1300E1B946 /* Person+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CBAB9222662F1300E1B946 /* Person+Category.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -39,6 +40,9 @@
 		84CBAB8C2262FE1A00E1B946 /* xnu-memcpy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xnu-memcpy.h"; sourceTree = "<group>"; };
 		84CBAB8D2262FE1A00E1B946 /* xnu-memcpy.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "xnu-memcpy.c"; sourceTree = "<group>"; };
 		84CBAB8F22632E6000E1B946 /* Person+Inner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Person+Inner.h"; sourceTree = "<group>"; };
+		84CBAB9022662EFF00E1B946 /* Person+Extension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Person+Extension.h"; sourceTree = "<group>"; };
+		84CBAB9122662F1300E1B946 /* Person+Category.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Person+Category.h"; sourceTree = "<group>"; };
+		84CBAB9222662F1300E1B946 /* Person+Category.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Person+Category.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +86,9 @@
 				84CBAB8C2262FE1A00E1B946 /* xnu-memcpy.h */,
 				84CBAB8D2262FE1A00E1B946 /* xnu-memcpy.c */,
 				84CBAB8F22632E6000E1B946 /* Person+Inner.h */,
+				84CBAB9122662F1300E1B946 /* Person+Category.h */,
+				84CBAB9222662F1300E1B946 /* Person+Category.m */,
+				84CBAB9022662EFF00E1B946 /* Person+Extension.h */,
 			);
 			path = "Category_in_Obj-C";
 			sourceTree = "<group>";
@@ -142,6 +149,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84CBAB9322662F1300E1B946 /* Person+Category.m in Sources */,
 				84CBAB842261C23E00E1B946 /* Person+Life.m in Sources */,
 				84CBAB8E2262FE1A00E1B946 /* xnu-memcpy.c in Sources */,
 				84CBAB882261FDC300E1B946 /* Person+Work.m in Sources */,

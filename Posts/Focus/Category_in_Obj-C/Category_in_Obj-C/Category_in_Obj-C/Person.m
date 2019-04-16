@@ -16,9 +16,19 @@
     NSString *_name;
 }
 
+- (void)secret;
+
 @end
 
 @implementation Person
+
+- (void)eat {
+    NSLog(@"%s", __func__);
+}
+
+- (void)drink {
+    NSLog(@"%s", __func__);
+}
 
 + (void)load {
 
@@ -29,6 +39,10 @@
 }
 
 - (void)bar {
+    NSLog(@"Person - %s", __func__);
+}
+
+- (void)secret {
     NSLog(@"Person - %s", __func__);
 }
 
