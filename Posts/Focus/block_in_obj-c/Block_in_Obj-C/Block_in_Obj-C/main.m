@@ -227,6 +227,7 @@ int main_8(int argc, const char * argv[]) {
     void (^block)(void) = ^() {
         NSLog(@"a == %d", a);
     };
+    
     a = 10;
 
     block();
