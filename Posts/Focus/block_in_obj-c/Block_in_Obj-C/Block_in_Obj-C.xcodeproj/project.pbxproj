@@ -25,6 +25,7 @@
 /* Begin PBXFileReference section */
 		8477627F2388D72500BA87A9 /* Block_in_Obj-C */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Block_in_Obj-C"; sourceTree = BUILT_PRODUCTS_DIR; };
 		847762822388D72500BA87A9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		84776289238AEC1D00BA87A9 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +58,7 @@
 		847762812388D72500BA87A9 /* Block_in_Obj-C */ = {
 			isa = PBXGroup;
 			children = (
+				84776289238AEC1D00BA87A9 /* main.cpp */,
 				847762822388D72500BA87A9 /* main.m */,
 			);
 			path = "Block_in_Obj-C";
@@ -238,6 +240,7 @@
 		847762872388D72500BA87A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = LEG7CXMPKJ;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -248,6 +251,7 @@
 		847762882388D72500BA87A9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = LEG7CXMPKJ;
 				ENABLE_HARDENED_RUNTIME = YES;
